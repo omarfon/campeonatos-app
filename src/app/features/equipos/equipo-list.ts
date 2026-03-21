@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@a
 import { RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 
 @Component({
@@ -16,23 +16,23 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
           <h2 class="text-2xl font-bold text-slate-900">Equipos y Participantes</h2>
           <p class="text-slate-500 mt-1">Gestión de equipos, jugadores y elegibilidad</p>
         </div>
-        <a routerLink="nuevo" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'equipos'], panel: ['maestros', 'equipos', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <span aria-hidden="true">+</span> Nuevo Equipo
         </a>
       </div>
 
-      <!-- Filtro campeonato -->
+      <!-- Filtro competencia -->
       <div class="flex flex-wrap gap-2">
         <button
           class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
-          [class]="filtroCampeonato() === 'todos' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
-          (click)="filtroCampeonato.set('todos')"
+          [class]="filtroCompetencia() === 'todos' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
+          (click)="filtroCompetencia.set('todos')"
         >Todos</button>
-        @for (camp of campeonatos(); track camp.id) {
+        @for (camp of competencias(); track camp.id) {
           <button
             class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
-            [class]="filtroCampeonato() === camp.id ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
-            (click)="filtroCampeonato.set(camp.id)"
+            [class]="filtroCompetencia() === camp.id ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
+            (click)="filtroCompetencia.set(camp.id)"
           >{{ camp.nombre }}</button>
         }
       </div>
@@ -43,7 +43,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
             <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
               <a [routerLink]="[equipo.id]" class="text-lg font-bold text-white hover:underline">{{ equipo.nombre }}</a>
               <div class="flex gap-2 mt-1">
-                <span class="text-indigo-200 text-xs">{{ getCampeonatoNombre(equipo.campeonatoId) }}</span>
+                <span class="text-indigo-200 text-xs">{{ getCompetenciaNombre(equipo.competenciaId) }}</span>
                 <span class="text-indigo-300 text-xs">·</span>
                 <span class="text-indigo-200 text-xs">{{ getDisciplinaNombre(equipo.disciplinaId) }}</span>
               </div>
@@ -106,16 +106,16 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
 })
 export class EquipoListComponent {
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
-  protected readonly campeonatos = this.campeonatoService.items;
-  protected readonly filtroCampeonato = signal<string>('todos');
+  protected readonly competencias = this.competenciaService.items;
+  protected readonly filtroCompetencia = signal<string>('todos');
 
   protected readonly filteredEquipos = computed(() => {
-    const filtro = this.filtroCampeonato();
+    const filtro = this.filtroCompetencia();
     const equipos = this.equipoService.equipos();
-    return filtro === 'todos' ? equipos : equipos.filter((e) => e.campeonatoId === filtro);
+    return filtro === 'todos' ? equipos : equipos.filter((e) => e.competenciaId === filtro);
   });
 
   protected readonly elegibilidadClasses: Record<string, string> = {
@@ -125,8 +125,8 @@ export class EquipoListComponent {
     transferido: 'bg-purple-100 text-purple-700',
   };
 
-  protected getCampeonatoNombre(id: string): string {
-    return this.campeonatoService.getById(id)?.nombre ?? id;
+  protected getCompetenciaNombre(id: string): string {
+    return this.competenciaService.getById(id)?.nombre ?? id;
   }
 
   protected getDisciplinaNombre(id: string): string {

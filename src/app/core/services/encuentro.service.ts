@@ -51,7 +51,7 @@ const now = '2026-01-15T00:00:00Z';
 const MOCK_ENCUENTROS: Encuentro[] = [
   {
     id: 'enc-1',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -75,7 +75,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-2',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -99,7 +99,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-3',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'B',
@@ -121,7 +121,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-4',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'B',
@@ -144,7 +144,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   // ── camp-3 (finalizado) ──
   {
     id: 'enc-5',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -168,7 +168,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-6',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -192,7 +192,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-7',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -216,7 +216,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-8',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -240,7 +240,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-9',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     fase: 'semifinal',
     numeroFecha: 3,
@@ -264,7 +264,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   // ── camp-6 (en_ejecucion, basquet) ──
   {
     id: 'enc-10',
-    campeonatoId: 'camp-6',
+    competenciaId: 'camp-6',
     disciplinaId: 'disc-basquet',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -288,7 +288,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-11',
-    campeonatoId: 'camp-6',
+    competenciaId: 'camp-6',
     disciplinaId: 'disc-basquet',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -311,7 +311,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   // ── camp-12 (en_ejecucion, futbol) ──
   {
     id: 'enc-12',
-    campeonatoId: 'camp-12',
+    competenciaId: 'camp-12',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -333,7 +333,7 @@ const MOCK_ENCUENTROS: Encuentro[] = [
   },
   {
     id: 'enc-13',
-    campeonatoId: 'camp-12',
+    competenciaId: 'camp-12',
     disciplinaId: 'disc-futbol',
     fase: 'fase_grupos',
     grupo: 'A',
@@ -356,15 +356,15 @@ const MOCK_ENCUENTROS: Encuentro[] = [
 ];
 
 const MOCK_FECHAS: FechaCompetencia[] = [
-  { id: 'fecha-1', campeonatoId: 'camp-1', numero: 1, fecha: '2026-03-15', encuentroIds: ['enc-1', 'enc-2'], estado: 'completada' },
-  { id: 'fecha-2', campeonatoId: 'camp-1', numero: 2, fecha: '2026-03-22', encuentroIds: ['enc-3', 'enc-4'], estado: 'pendiente' },
-  { id: 'fecha-3', campeonatoId: 'camp-3', numero: 1, fecha: '2025-08-10', encuentroIds: ['enc-5', 'enc-6'], estado: 'completada' },
-  { id: 'fecha-4', campeonatoId: 'camp-3', numero: 2, fecha: '2025-08-17', encuentroIds: ['enc-7', 'enc-8'], estado: 'completada' },
-  { id: 'fecha-5', campeonatoId: 'camp-3', numero: 3, fecha: '2025-08-24', encuentroIds: ['enc-9'], estado: 'completada' },
-  { id: 'fecha-6', campeonatoId: 'camp-6', numero: 1, fecha: '2025-10-05', encuentroIds: ['enc-10'], estado: 'completada' },
-  { id: 'fecha-7', campeonatoId: 'camp-6', numero: 2, fecha: '2025-10-12', encuentroIds: ['enc-11'], estado: 'pendiente' },
-  { id: 'fecha-8', campeonatoId: 'camp-12', numero: 1, fecha: '2026-06-01', encuentroIds: ['enc-12'], estado: 'pendiente' },
-  { id: 'fecha-9', campeonatoId: 'camp-12', numero: 2, fecha: '2026-06-08', encuentroIds: ['enc-13'], estado: 'pendiente' },
+  { id: 'fecha-1', competenciaId: 'camp-1', numero: 1, fecha: '2026-03-15', encuentroIds: ['enc-1', 'enc-2'], estado: 'completada' },
+  { id: 'fecha-2', competenciaId: 'camp-1', numero: 2, fecha: '2026-03-22', encuentroIds: ['enc-3', 'enc-4'], estado: 'pendiente' },
+  { id: 'fecha-3', competenciaId: 'camp-3', numero: 1, fecha: '2025-08-10', encuentroIds: ['enc-5', 'enc-6'], estado: 'completada' },
+  { id: 'fecha-4', competenciaId: 'camp-3', numero: 2, fecha: '2025-08-17', encuentroIds: ['enc-7', 'enc-8'], estado: 'completada' },
+  { id: 'fecha-5', competenciaId: 'camp-3', numero: 3, fecha: '2025-08-24', encuentroIds: ['enc-9'], estado: 'completada' },
+  { id: 'fecha-6', competenciaId: 'camp-6', numero: 1, fecha: '2025-10-05', encuentroIds: ['enc-10'], estado: 'completada' },
+  { id: 'fecha-7', competenciaId: 'camp-6', numero: 2, fecha: '2025-10-12', encuentroIds: ['enc-11'], estado: 'pendiente' },
+  { id: 'fecha-8', competenciaId: 'camp-12', numero: 1, fecha: '2026-06-01', encuentroIds: ['enc-12'], estado: 'pendiente' },
+  { id: 'fecha-9', competenciaId: 'camp-12', numero: 2, fecha: '2026-06-08', encuentroIds: ['enc-13'], estado: 'pendiente' },
 ];
 
 const MOCK_LLAVES: Llave[] = [];
@@ -400,19 +400,19 @@ export class EncuentroService {
     return this._encuentros().find((e) => e.id === id);
   }
 
-  getByCampeonato(campeonatoId: string): Encuentro[] {
-    return this._encuentros().filter((e) => e.campeonatoId === campeonatoId);
+  getByCompetencia(competenciaId: string): Encuentro[] {
+    return this._encuentros().filter((e) => e.competenciaId === competenciaId);
   }
 
-  getByFecha(numeroFecha: number, campeonatoId: string): Encuentro[] {
+  getByFecha(numeroFecha: number, competenciaId: string): Encuentro[] {
     return this._encuentros().filter(
-      (e) => e.numeroFecha === numeroFecha && e.campeonatoId === campeonatoId
+      (e) => e.numeroFecha === numeroFecha && e.competenciaId === competenciaId
     );
   }
 
-  getByFase(fase: FaseEncuentro, campeonatoId: string): Encuentro[] {
+  getByFase(fase: FaseEncuentro, competenciaId: string): Encuentro[] {
     return this._encuentros().filter(
-      (e) => e.fase === fase && e.campeonatoId === campeonatoId
+      (e) => e.fase === fase && e.competenciaId === competenciaId
     );
   }
 
@@ -464,12 +464,12 @@ export class EncuentroService {
     return this._arbitros().filter((a) => a.disciplinaIds.includes(disciplinaId));
   }
 
-  getFechasByCampeonato(campeonatoId: string): FechaCompetencia[] {
-    return this._fechas().filter((f) => f.campeonatoId === campeonatoId);
+  getFechasByCompetencia(competenciaId: string): FechaCompetencia[] {
+    return this._fechas().filter((f) => f.competenciaId === competenciaId);
   }
 
-  getLlavesByCampeonato(campeonatoId: string): Llave[] {
-    return this._llaves().filter((l) => l.campeonatoId === campeonatoId);
+  getLlavesByCompetencia(competenciaId: string): Llave[] {
+    return this._llaves().filter((l) => l.competenciaId === competenciaId);
   }
 
   // ──── CRUD ────
@@ -718,15 +718,15 @@ export class EncuentroService {
   // ──── Generación de Fixture (Round-Robin) ────
 
   generarFixture(
-    campeonatoId: string,
+    competenciaId: string,
     disciplinaId: string,
     equipoIds: string[],
     fechaInicio: string
   ): { encuentros: number; fechas: number } | string {
     if (equipoIds.length < 2) return 'Se necesitan al menos 2 equipos para generar encuentros.';
 
-    const existentes = this.getByCampeonato(campeonatoId);
-    if (existentes.length > 0) return 'Ya existen encuentros para este campeonato.';
+    const existentes = this.getByCompetencia(competenciaId);
+    if (existentes.length > 0) return 'Ya existen encuentros para este competencia.';
 
     const teams = [...equipoIds];
     if (teams.length % 2 !== 0) teams.push('__BYE__');
@@ -757,7 +757,7 @@ export class EncuentroService {
 
         newEncuentros.push({
           id: encId,
-          campeonatoId,
+          competenciaId,
           disciplinaId,
           fase: 'fase_grupos',
           numeroFecha: round + 1,
@@ -779,7 +779,7 @@ export class EncuentroService {
 
       newFechas.push({
         id: crypto.randomUUID(),
-        campeonatoId,
+        competenciaId,
         numero: round + 1,
         fecha: fechaStr,
         encuentroIds: encounterIds,
@@ -799,12 +799,12 @@ export class EncuentroService {
 
   // ──── Reportes ────
 
-  resumenPorCampeonato(campeonatoId: string): {
+  resumenPorCompetencia(competenciaId: string): {
     total: number;
     porEstado: Record<string, number>;
     porFase: Record<string, number>;
   } {
-    const encs = this.getByCampeonato(campeonatoId);
+    const encs = this.getByCompetencia(competenciaId);
     const porEstado: Record<string, number> = {};
     const porFase: Record<string, number> = {};
 

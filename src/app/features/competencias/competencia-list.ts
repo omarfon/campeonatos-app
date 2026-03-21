@@ -1,16 +1,16 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import {
-  EstadoCampeonato,
-  TipoCampeonato,
-  ModalidadCampeonato,
+  EstadoCompetencia,
+  TipoCompetencia,
+  ModalidadCompetencia,
   ESTADO_LABELS, TIPO_LABELS, MODALIDAD_LABELS, ESTRUCTURA_LABELS,
-} from '../../core/models/campeonato.model';
+} from '../../core/models/competencia.model';
 
 @Component({
-  selector: 'app-campeonato-list',
+  selector: 'app-competencia-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
@@ -21,12 +21,12 @@ import {
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h60v60H0z%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z%22%20fill%3D%22rgba(255%2C255%2C255%2C0.06)%22%2F%3E%3C%2Fsvg%3E')] opacity-50"></div>
         <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h2 class="text-xl font-extrabold tracking-tight">Campeonatos</h2>
-            <p class="text-indigo-200 text-xs mt-0.5">Administra campeonatos, controla estados y gestiona eventos deportivos.</p>
+            <h2 class="text-xl font-extrabold tracking-tight">Competencias</h2>
+            <p class="text-indigo-200 text-xs mt-0.5">Administra competencias, controla estados y gestiona eventos deportivos.</p>
           </div>
-          <a routerLink="nuevo" class="btn-primary !from-white !to-indigo-50 !text-indigo-700 !shadow-xl !shadow-indigo-900/20 shrink-0 !text-xs !px-3 !py-1.5">
+          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'competencias'], panel: ['gestion', 'competencias', 'nuevo'] } }]" class="btn-primary !from-white !to-indigo-50 !text-indigo-700 !shadow-xl !shadow-indigo-900/20 shrink-0 !text-xs !px-3 !py-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            Nuevo Campeonato
+            Nuevo Competencia
           </a>
         </div>
 
@@ -65,7 +65,7 @@ import {
               placeholder="Buscar por nombre, descripción..."
               [value]="busqueda()"
               (input)="busqueda.set($any($event.target).value)"
-              aria-label="Buscar campeonatos"
+              aria-label="Buscar competencias"
             />
           </div>
 
@@ -137,7 +137,7 @@ import {
           @if (busqueda() || filtroTipo() !== 'todos' || filtroModalidad() !== 'todos' || filtroAnio() !== null || filtroDisciplina() !== 'todos' || filtroEstado() !== 'todos') {
             <div class="flex items-center justify-between pt-2 border-t border-slate-100">
               <p class="text-sm text-slate-500">
-                {{ filteredItems().length }} campeonato(s) encontrado(s)
+                {{ filteredItems().length }} competencia(s) encontrado(s)
               </p>
               <button class="text-xs text-indigo-600 font-medium hover:text-indigo-800 transition-colors" (click)="limpiarFiltros()">
                 Limpiar filtros
@@ -259,11 +259,11 @@ import {
         } @empty {
           <div class="col-span-full flex flex-col items-center justify-center py-16 section-card">
             <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-3xl mb-4">🏆</div>
-            <p class="text-slate-500 font-medium">No se encontraron campeonatos</p>
-            <p class="text-sm text-slate-400 mt-1">Crea tu primer campeonato para comenzar</p>
-            <a routerLink="nuevo" class="btn-primary mt-4">
+            <p class="text-slate-500 font-medium">No se encontraron competencias</p>
+            <p class="text-sm text-slate-400 mt-1">Crea tu primer competencia para comenzar</p>
+            <a [routerLink]="['/', { outlets: { primary: ['gestion', 'competencias'], panel: ['gestion', 'competencias', 'nuevo'] } }]" class="btn-primary mt-4">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-              Nuevo Campeonato
+              Nuevo Competencia
             </a>
           </div>
         }
@@ -271,24 +271,24 @@ import {
     </div>
   `,
 })
-export class CampeonatoListComponent {
-  private readonly campeonatoService = inject(CampeonatoService);
+export class CompetenciaListComponent {
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
-  protected readonly filtroEstado = signal<EstadoCampeonato | 'todos'>('todos');
+  protected readonly filtroEstado = signal<EstadoCompetencia | 'todos'>('todos');
   protected readonly filtroAnio = signal<number | null>(null);
-  protected readonly filtroTipo = signal<TipoCampeonato | 'todos'>('todos');
-  protected readonly filtroModalidad = signal<ModalidadCampeonato | 'todos'>('todos');
+  protected readonly filtroTipo = signal<TipoCompetencia | 'todos'>('todos');
+  protected readonly filtroModalidad = signal<ModalidadCompetencia | 'todos'>('todos');
   protected readonly filtroDisciplina = signal<string>('todos');
   protected readonly busqueda = signal('');
 
   protected readonly aniosDisponibles = computed(() => {
-    const anios = new Set(this.campeonatoService.items().map((c) => c.anio));
+    const anios = new Set(this.competenciaService.items().map((c) => c.anio));
     return Array.from(anios).sort((a, b) => b - a);
   });
 
   protected readonly disciplinasDisponibles = computed(() => {
-    const ids = new Set(this.campeonatoService.items().flatMap((c) => c.disciplinaIds));
+    const ids = new Set(this.competenciaService.items().flatMap((c) => c.disciplinaIds));
     return Array.from(ids).map((id) => ({ id, nombre: this.getDisciplinaNombre(id) })).sort((a, b) => a.nombre.localeCompare(b.nombre));
   });
 
@@ -300,7 +300,7 @@ export class CampeonatoListComponent {
     const disciplina = this.filtroDisciplina();
     const texto = this.busqueda().toLowerCase().trim();
 
-    let items = this.campeonatoService.items();
+    let items = this.competenciaService.items();
     if (estado !== 'todos') items = items.filter((c) => c.estado === estado);
     if (anio !== null) items = items.filter((c) => c.anio === anio);
     if (tipo !== 'todos') items = items.filter((c) => c.tipo === tipo);
@@ -326,7 +326,7 @@ export class CampeonatoListComponent {
     this.busqueda.set('');
   }
 
-  protected readonly estados: { value: EstadoCampeonato | 'todos'; label: string }[] = [
+  protected readonly estados: { value: EstadoCompetencia | 'todos'; label: string }[] = [
     { value: 'todos', label: 'Todos' },
     { value: 'borrador', label: 'Borrador' },
     { value: 'programado', label: 'Programados' },
@@ -336,7 +336,7 @@ export class CampeonatoListComponent {
     { value: 'anulado', label: 'Anulados' },
   ];
 
-  protected readonly estadoClasses: Record<EstadoCampeonato, string> = {
+  protected readonly estadoClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-50 text-slate-600 border border-slate-200',
     programado: 'bg-blue-50 text-blue-700 border border-blue-200',
     en_ejecucion: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
@@ -345,7 +345,7 @@ export class CampeonatoListComponent {
     anulado: 'bg-red-50 text-red-700 border border-red-200',
   };
 
-  protected readonly estadoDotClasses: Record<EstadoCampeonato, string> = {
+  protected readonly estadoDotClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-400',
     programado: 'bg-blue-500',
     en_ejecucion: 'bg-emerald-500',
@@ -364,8 +364,8 @@ export class CampeonatoListComponent {
     abierto: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
   };
 
-  protected contarPorEstado(value: EstadoCampeonato | 'todos'): number {
-    const items = this.campeonatoService.items();
+  protected contarPorEstado(value: EstadoCompetencia | 'todos'): number {
+    const items = this.competenciaService.items();
     return value === 'todos' ? items.length : items.filter((c) => c.estado === value).length;
   }
 
@@ -373,20 +373,20 @@ export class CampeonatoListComponent {
     return this.disciplinaService.getById(id)?.nombre ?? id;
   }
 
-  protected cambiarEstado(id: string, nuevoEstado: EstadoCampeonato): void {
-    const result = this.campeonatoService.cambiarEstado(id, nuevoEstado);
+  protected cambiarEstado(id: string, nuevoEstado: EstadoCompetencia): void {
+    const result = this.competenciaService.cambiarEstado(id, nuevoEstado);
     if (result !== true) {
       alert(result);
     }
   }
 
   protected publicar(id: string): void {
-    this.campeonatoService.publicar(id);
+    this.competenciaService.publicar(id);
   }
 
   protected eliminar(id: string): void {
-    if (confirm('¿Está seguro de eliminar este campeonato?')) {
-      this.campeonatoService.delete(id);
+    if (confirm('¿Está seguro de eliminar este competencia?')) {
+      this.competenciaService.delete(id);
     }
   }
 }

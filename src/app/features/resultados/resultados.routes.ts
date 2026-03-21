@@ -10,6 +10,11 @@ export const RESULTADO_ROUTES: Routes = [
     loadComponent: () => import('./resultado-form').then((m) => m.ResultadoFormComponent),
   },
   {
+    path: 'nuevo',
+    outlet: 'panel',
+    loadComponent: () => import('./resultado-form').then((m) => m.ResultadoFormComponent),
+  },
+  {
     path: ':id/editar',
     loadComponent: () => import('./resultado-form').then((m) => m.ResultadoFormComponent),
   },

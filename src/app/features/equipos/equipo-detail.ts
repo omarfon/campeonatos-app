@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
 
@@ -16,7 +16,7 @@ import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
           <div>
             <a routerLink="/maestros/equipos" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver</a>
             <h2 class="text-2xl font-bold text-slate-900 mt-1">{{ eq.nombre }}</h2>
-            <p class="text-slate-500">{{ getCampeonatoNombre(eq.campeonatoId) }} · {{ getDisciplinaNombre(eq.disciplinaId) }}</p>
+            <p class="text-slate-500">{{ getCompetenciaNombre(eq.competenciaId) }} · {{ getDisciplinaNombre(eq.disciplinaId) }}</p>
           </div>
           <a [routerLink]="['editar']" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
             Editar
@@ -116,7 +116,7 @@ import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
 export class EquipoDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
   protected readonly equipo = signal<Equipo | undefined>(undefined);
@@ -143,8 +143,8 @@ export class EquipoDetailComponent implements OnInit {
     }
   }
 
-  protected getCampeonatoNombre(id: string): string {
-    return this.campeonatoService.getById(id)?.nombre ?? id;
+  protected getCompetenciaNombre(id: string): string {
+    return this.competenciaService.getById(id)?.nombre ?? id;
   }
 
   protected getDisciplinaNombre(id: string): string {

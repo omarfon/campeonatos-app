@@ -16,7 +16,7 @@ import { EquipoService } from '../../core/services/equipo.service';
           <h2 class="text-2xl font-bold text-slate-900">Registro de Resultados</h2>
           <p class="text-slate-500 mt-1">Scores, penales y cierres de partido</p>
         </div>
-        <a routerLink="nuevo" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['gestion', 'resultados'], panel: ['gestion', 'resultados', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <span aria-hidden="true">+</span> Registrar Resultado
         </a>
       </div>
@@ -97,7 +97,7 @@ import { EquipoService } from '../../core/services/equipo.service';
                   <span class="font-medium">{{ getEquipoNombre(enc.equipoVisitanteId) }}</span>
                   <span class="text-sm text-slate-500">— Fecha {{ enc.numeroFecha }}</span>
                 </div>
-                <a [routerLink]="['nuevo']" [queryParams]="{encuentroId: enc.id}"
+                <a [routerLink]="['/', { outlets: { primary: ['gestion', 'resultados'], panel: ['gestion', 'resultados', 'nuevo'] } }]" [queryParams]="{encuentroId: enc.id}"
                   class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Registrar</a>
               </div>
             }

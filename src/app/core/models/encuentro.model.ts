@@ -91,7 +91,7 @@ export interface ParametrosEncuentro {
 
 export interface Encuentro {
   id: string;
-  campeonatoId: string;
+  competenciaId: string;
   disciplinaId: string;
   fase: FaseEncuentro;
   numeroFecha: number;
@@ -122,7 +122,7 @@ export interface Encuentro {
 
 export interface Llave {
   id: string;
-  campeonatoId: string;
+  competenciaId: string;
   disciplinaId: string;
   fase: FaseEncuentro;
   ronda: number;
@@ -134,7 +134,7 @@ export interface Llave {
 
 export interface FechaCompetencia {
   id: string;
-  campeonatoId: string;
+  competenciaId: string;
   numero: number;
   fecha: string;
   encuentroIds: string[];

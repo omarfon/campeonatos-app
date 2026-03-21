@@ -10,6 +10,11 @@ export const EQUIPO_ROUTES: Routes = [
     loadComponent: () => import('./equipo-form').then((m) => m.EquipoFormComponent),
   },
   {
+    path: 'nuevo',
+    outlet: 'panel',
+    loadComponent: () => import('./equipo-form').then((m) => m.EquipoFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./equipo-detail').then((m) => m.EquipoDetailComponent),
   },

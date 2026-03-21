@@ -10,6 +10,16 @@ export type EstadoClase = 'abierta' | 'cerrada' | 'llena';
 
 export type EstadoPrograma = 'activo' | 'inactivo' | 'finalizado';
 
+export type EstadoMatriculaAcademica = 'activa' | 'bloqueada';
+
+export type TipoPrograma = 'vacacional' | 'regular' | 'intensivo';
+
+export type TipoHorarioClase = 'cerrado' | 'abierto';
+
+export type TipoDuracionClase = 'finita' | 'continua';
+
+export type TipoBloqueoInstitucional = 'feriado' | 'evento_interno';
+
 export type DiaSemana = 'lunes' | 'martes' | 'miercoles' | 'jueves' | 'viernes' | 'sabado' | 'domingo';
 
 // ──── Estructura Jerárquica (Árbol de Clasificación) ────
@@ -95,13 +105,24 @@ export interface Docente {
 export interface Ambiente {
   id: string;
   nombre: string;
+  zona: string;
   tipo: string;
+  aforoFisico: number;
+  aforoPedagogico: number;
+  aforoComodin: number;
   capacidad: number;
 }
 
 // ──── Clase (Producto Final) ────
 
 export interface HorarioClase {
+  dia: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface SesionProgramadaClase {
+  fecha: string;
   dia: DiaSemana;
   horaInicio: string;
   horaFin: string;
@@ -114,13 +135,33 @@ export interface Clase {
   nivelId?: string;
   ambienteId: string;
   docenteId: string;
+  tipoHorario: TipoHorarioClase;
   horarios: HorarioClase[];
+  frecuenciaSemanal?: number;
+  tipoDuracion: TipoDuracionClase;
+  fechaInicio?: string;
+  fechaFin?: string;
   vacantes: number;
   matriculados: number;
   tarifaMensual?: number;
   tarifaMatricula?: number;
   estado: EstadoClase;
   periodo: string;
+  sesionesProgramadas?: SesionProgramadaClase[];
+}
+
+export interface BloqueoInstitucional {
+  id: string;
+  fecha: string;
+  tipo: TipoBloqueoInstitucional;
+  motivo: string;
+  zona?: string;
+}
+
+export interface ValidacionProgramacionClaseResultado {
+  permitido: boolean;
+  mensajes: string[];
+  sesionesReplica: number;
 }
 
 // ──── Programa (Paquete Comercial) ────
@@ -129,11 +170,40 @@ export interface Programa {
   id: string;
   nombre: string;
   descripcion: string;
-  tipo: 'vacacional' | 'regular' | 'intensivo';
+  tipo: TipoPrograma;
   fechaInicio: string;
   fechaFin: string;
+  cursoIds: string[];
   claseIds: string[];
   estado: EstadoPrograma;
+}
+
+export interface NivelAcreditadoSocio {
+  id: string;
+  socioId: string;
+  cursoId: string;
+  nivelId: string;
+  fechaAcreditacion: string;
+  observacion?: string;
+}
+
+export interface MatriculaAcademica {
+  id: string;
+  socioId: string;
+  claseId: string;
+  fechaRegistro: string;
+  estado: EstadoMatriculaAcademica;
+  observaciones?: string;
+}
+
+export interface ValidacionMatriculaResultado {
+  permitido: boolean;
+  mensajes: string[];
+  edadSocio?: number;
+  categoriaEdad?: CategoriaEdad;
+  nivelRequerido?: NivelHabilidad;
+  nivelAcreditado?: NivelHabilidad;
+  vacantesDisponibles?: number;
 }
 
 // ──── Constantes ────
@@ -166,6 +236,32 @@ export const ESTADO_PROGRAMA_LABELS: Record<EstadoPrograma, string> = {
   activo: 'Activo',
   inactivo: 'Inactivo',
   finalizado: 'Finalizado',
+};
+
+export const TIPO_PROGRAMA_LABELS: Record<TipoPrograma, string> = {
+  vacacional: 'Vacacional',
+  regular: 'Regular',
+  intensivo: 'Intensivo',
+};
+
+export const TIPO_HORARIO_CLASE_LABELS: Record<TipoHorarioClase, string> = {
+  cerrado: 'Horario cerrado',
+  abierto: 'Horario abierto',
+};
+
+export const TIPO_DURACION_CLASE_LABELS: Record<TipoDuracionClase, string> = {
+  finita: 'Duración finita',
+  continua: 'Duración continua',
+};
+
+export const ESTADO_MATRICULA_LABELS: Record<EstadoMatriculaAcademica, string> = {
+  activa: 'Activa',
+  bloqueada: 'Bloqueada',
+};
+
+export const TIPO_BLOQUEO_INSTITUCIONAL_LABELS: Record<TipoBloqueoInstitucional, string> = {
+  feriado: 'Feriado',
+  evento_interno: 'Evento interno',
 };
 
 export const DIA_SEMANA_LABELS: Record<DiaSemana, string> = {

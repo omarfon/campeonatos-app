@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { EncuentroService } from './encuentro.service';
 import { EquipoService } from './equipo.service';
-import { CampeonatoService } from './campeonato.service';
+import { CompetenciaService } from './competencia.service';
 import { DisciplinaService } from './disciplina.service';
 import { SancionService } from './sancion.service';
 import { Participante } from '../models/equipo.model';
-import { Campeonato } from '../models/campeonato.model';
+import { Competencia } from '../models/competencia.model';
 import { FASE_LABELS } from '../models/encuentro.model';
 import {
   CausalInhabilitacion,
@@ -17,7 +17,7 @@ import {
 export class ControlPrePartidoService {
   private readonly encuentroService = inject(EncuentroService);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
   private readonly sancionService = inject(SancionService);
 
@@ -25,8 +25,8 @@ export class ControlPrePartidoService {
     const encuentro = this.encuentroService.getById(encuentroId);
     if (!encuentro) return null;
 
-    const campeonato = this.campeonatoService.getById(encuentro.campeonatoId);
-    if (!campeonato) return null;
+    const competencia = this.competenciaService.getById(encuentro.competenciaId);
+    if (!competencia) return null;
 
     const equipoLocal = this.equipoService.getEquipoById(encuentro.equipoLocalId);
     const equipoVisitante = this.equipoService.getEquipoById(encuentro.equipoVisitanteId);
@@ -37,13 +37,13 @@ export class ControlPrePartidoService {
     const campo = encuentro.campoId ? this.encuentroService.getCampoById(encuentro.campoId) : undefined;
     const arbitro = encuentro.arbitroId ? this.encuentroService.getArbitroById(encuentro.arbitroId) : undefined;
 
-    const inhabilitadosLocal = this.evaluarEquipo(equipoLocal.participantes, equipoLocal.id, equipoLocal.nombre, campeonato);
-    const inhabilitadosVisitante = this.evaluarEquipo(equipoVisitante.participantes, equipoVisitante.id, equipoVisitante.nombre, campeonato);
+    const inhabilitadosLocal = this.evaluarEquipo(equipoLocal.participantes, equipoLocal.id, equipoLocal.nombre, competencia);
+    const inhabilitadosVisitante = this.evaluarEquipo(equipoVisitante.participantes, equipoVisitante.id, equipoVisitante.nombre, competencia);
 
     return {
       encuentroId,
-      campeonatoId: campeonato.id,
-      campeonatoNombre: campeonato.nombre,
+      competenciaId: competencia.id,
+      competenciaNombre: competencia.nombre,
       disciplinaNombre: disciplina?.nombre ?? 'Desconocida',
       fase: FASE_LABELS[encuentro.fase],
       numeroFecha: encuentro.numeroFecha,
@@ -69,12 +69,12 @@ export class ControlPrePartidoService {
     participantes: Participante[],
     equipoId: string,
     equipoNombre: string,
-    campeonato: Campeonato,
+    competencia: Competencia,
   ): InhabilitacionJugador[] {
     const inhabilitados: InhabilitacionJugador[] = [];
 
     for (const p of participantes) {
-      const causales = this.evaluarCausales(p, campeonato);
+      const causales = this.evaluarCausales(p, competencia);
       if (causales.length > 0) {
         inhabilitados.push({
           participanteId: p.id,
@@ -93,7 +93,7 @@ export class ControlPrePartidoService {
     return inhabilitados;
   }
 
-  private evaluarCausales(participante: Participante, campeonato: Campeonato): CausalInhabilitacion[] {
+  private evaluarCausales(participante: Participante, competencia: Competencia): CausalInhabilitacion[] {
     const causales: CausalInhabilitacion[] = [];
 
     // 1. Deuda pendiente (cuota de mantenimiento)
@@ -102,14 +102,14 @@ export class ControlPrePartidoService {
     }
 
     // 2. Falta de declaración jurada de salud (exigida en categorías master)
-    if (campeonato.requiereDeclaracionSalud && !participante.declaracionJuradaSalud) {
+    if (competencia.requiereDeclaracionSalud && !participante.declaracionJuradaSalud) {
       causales.push('falta_declaracion_salud');
     }
 
     // 3. Suspensión por tarjetas (sanción activa)
     const sancionesActivas = this.sancionService
       .getSancionesByParticipante(participante.id)
-      .filter(s => s.estado === 'activa' && s.campeonatoId === campeonato.id);
+      .filter(s => s.estado === 'activa' && s.competenciaId === competencia.id);
     if (sancionesActivas.length > 0) {
       causales.push('suspension_tarjetas');
     }

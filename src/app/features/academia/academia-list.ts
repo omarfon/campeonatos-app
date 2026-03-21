@@ -16,10 +16,22 @@ import { TIPO_RUBRO_LABELS, ESTADO_CURSO_LABELS } from '../../core/models/academ
           <p class="text-slate-500 mt-1">Árbol de clasificación de cursos y disciplinas</p>
         </div>
         <div class="flex gap-2">
+          <a routerLink="/academia/estructura" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+            🗂️ Estructura
+          </a>
+          <a routerLink="/academia/ambientes" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+            🏟️ Ambientes
+          </a>
+          <a routerLink="/academia/calendario" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+            📅 Calendario
+          </a>
+          <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos'], panel: ['academia', 'matriculas', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+            📝 Matrículas
+          </a>
           <a routerLink="/academia/programas" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
             📦 Programas
           </a>
-          <a routerLink="/academia/cursos/nuevo" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+          <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos'], panel: ['academia', 'cursos', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
             <span aria-hidden="true">+</span> Nuevo Curso
           </a>
         </div>

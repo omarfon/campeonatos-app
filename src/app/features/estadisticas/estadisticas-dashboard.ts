@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { EstadisticaService } from '../../core/services/estadistica.service';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 
 @Component({
@@ -17,12 +17,12 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
       <!-- Selectors -->
       <div class="flex gap-4 flex-wrap">
         <div class="flex gap-2 flex-wrap">
-          <span class="self-center text-sm font-medium text-slate-500">Campeonato:</span>
-          @for (camp of campeonatos(); track camp.id) {
+          <span class="self-center text-sm font-medium text-slate-500">Competencia:</span>
+          @for (camp of competencias(); track camp.id) {
             <button
               class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              [class]="selectedCampeonato() === camp.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border'"
-              (click)="selectedCampeonato.set(camp.id)"
+              [class]="selectedCompetencia() === camp.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border'"
+              (click)="selectedCompetencia.set(camp.id)"
             >{{ camp.nombre }}</button>
           }
         </div>
@@ -157,27 +157,27 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
 })
 export class EstadisticasDashboardComponent {
   private readonly estadisticaService = inject(EstadisticaService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly competencias = this.competenciaService.items;
   protected readonly disciplinas = this.disciplinaService.items;
-  protected readonly selectedCampeonato = signal('camp-1');
+  protected readonly selectedCompetencia = signal('camp-1');
   protected readonly selectedDisciplina = signal('disc-futbol');
 
   protected readonly posiciones = computed(() => {
     const tabla = this.estadisticaService.calcularTablaPosiciones(
-      this.selectedCampeonato(),
+      this.selectedCompetencia(),
       this.selectedDisciplina()
     );
     return tabla.posiciones;
   });
 
   protected readonly goleadores = computed(() =>
-    this.estadisticaService.calcularGoleadores(this.selectedCampeonato(), this.selectedDisciplina())
+    this.estadisticaService.calcularGoleadores(this.selectedCompetencia(), this.selectedDisciplina())
   );
 
   protected readonly amonestados = computed(() =>
-    this.estadisticaService.calcularAmonestados(this.selectedCampeonato())
+    this.estadisticaService.calcularAmonestados(this.selectedCompetencia())
   );
 }

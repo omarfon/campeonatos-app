@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@ang
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import { TipoParticipante, EstadoElegibilidad } from '../../core/models/equipo.model';
 
@@ -29,11 +29,11 @@ import { TipoParticipante, EstadoElegibilidad } from '../../core/models/equipo.m
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="campeonato" class="block text-sm font-medium text-slate-700 mb-1">Campeonato</label>
-              <select id="campeonato" formControlName="campeonatoId"
+              <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
+              <select id="competencia" formControlName="competenciaId"
                 class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">Seleccionar...</option>
-                @for (camp of campeonatos(); track camp.id) {
+                @for (camp of competencias(); track camp.id) {
                   <option [value]="camp.id">{{ camp.nombre }}</option>
                 }
               </select>
@@ -109,17 +109,17 @@ export class EquipoFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
   protected readonly isEdit = signal(false);
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly competencias = this.competenciaService.items;
   protected readonly disciplinas = this.disciplinaService.items;
   private editId = '';
 
   readonly form = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
-    campeonatoId: ['', Validators.required],
+    competenciaId: ['', Validators.required],
     disciplinaId: ['', Validators.required],
     participantes: this.fb.array<FormGroup>([]),
   });
@@ -180,13 +180,13 @@ export class EquipoFormComponent implements OnInit {
     if (this.isEdit()) {
       this.equipoService.updateEquipo(this.editId, {
         nombre: value.nombre,
-        campeonatoId: value.campeonatoId,
+        competenciaId: value.competenciaId,
         disciplinaId: value.disciplinaId,
       });
     } else {
       this.equipoService.createEquipo({
         nombre: value.nombre,
-        campeonatoId: value.campeonatoId,
+        competenciaId: value.competenciaId,
         disciplinaId: value.disciplinaId,
       });
     }

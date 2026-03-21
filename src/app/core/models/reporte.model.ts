@@ -1,9 +1,9 @@
-export type TipoReporte = 'campeonato' | 'disciplina' | 'jugador' | 'equipo';
+export type TipoReporte = 'competencia' | 'disciplina' | 'jugador' | 'equipo';
 export type FormatoExportacion = 'pdf' | 'excel' | 'csv';
 
 export interface FiltroReporte {
   tipo: TipoReporte;
-  campeonatoId?: string;
+  competenciaId?: string;
   disciplinaId?: string;
   equipoId?: string;
   participanteId?: string;

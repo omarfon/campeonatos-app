@@ -30,7 +30,7 @@ import {
           <h1 class="text-lg font-bold text-slate-900 uppercase tracking-wide">Control Pre-Partido</h1>
           <p class="text-xs text-slate-500 mt-1">Filtro de Inhabilitaciones — Planilla de Juego</p>
           <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-slate-600">
-            <span><strong>Campeonato:</strong> {{ r.campeonatoNombre }}</span>
+            <span><strong>Competencia:</strong> {{ r.competenciaNombre }}</span>
             <span><strong>Disciplina:</strong> {{ r.disciplinaNombre }}</span>
           </div>
         </div>

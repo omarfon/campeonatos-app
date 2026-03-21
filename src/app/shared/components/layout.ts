@@ -1,5 +1,6 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 
 interface NavItem {
   path: string;
@@ -21,10 +22,10 @@ function isGroup(entry: NavEntry): entry is NavGroup {
 
 const NAV_ENTRIES: NavEntry[] = [
   {
-    label: 'Gestión de Campeonatos',
+    label: 'Gestión de Competencias',
     icon: '🏆',
     children: [
-      { path: '/gestion/campeonatos', label: 'Campeonatos', icon: '🏆' },
+      { path: '/gestion/competencias', label: 'Competencias', icon: '🏆' },
       { path: '/gestion/encuentros', label: 'Encuentros', icon: '📅' },
       { path: '/gestion/resultados', label: 'Resultados', icon: '📊' },
       { path: '/gestion/sanciones', label: 'Sanciones', icon: '🟨' },
@@ -40,14 +41,17 @@ const NAV_ENTRIES: NavEntry[] = [
       { path: '/maestros/sedes', label: 'Sedes', icon: '🏟️' },
       { path: '/maestros/socios', label: 'Socios', icon: '🧑‍🤝‍🧑' },
       { path: '/maestros/areas', label: 'Áreas', icon: '📐' },
+      { path: '/academia/cursos', label: 'Cursos y Árbol', icon: '📖' },
+      { path: '/academia/ambientes', label: 'Ambientes y Zonas', icon: '🏟️' },
+      { path: '/academia/programas', label: 'Programas', icon: '📦' },
     ],
   },
   {
     label: 'Estructura Académica',
     icon: '🎓',
     children: [
-      { path: '/academia/cursos', label: 'Cursos y Árbol', icon: '📖' },
-      { path: '/academia/programas', label: 'Programas', icon: '📦' },
+      { path: '/academia/estructura', label: 'Rubros y Categorías', icon: '🗂️' },
+      { path: '/academia/matriculas/nueva', label: 'Matrículas', icon: '📝' },
     ],
   },
   { path: '/reportes', label: 'Reportes', icon: '📋' },
@@ -58,7 +62,7 @@ const NAV_ENTRIES: NavEntry[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   template: `
-    <div class="min-h-screen flex bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
+    <div class="min-h-screen flex" style="background-color: #EBF4F6;">
       <!-- Sidebar -->
       <aside
         class="fixed inset-y-0 left-0 z-30 w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto"
@@ -70,7 +74,7 @@ const NAV_ENTRIES: NavEntry[] = [
           <a routerLink="/" class="flex items-center gap-3 group">
             <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-lg shadow-lg shadow-indigo-500/30 transition-transform duration-200 group-hover:scale-110">🏆</span>
             <div>
-              <span class="text-lg font-bold tracking-tight">Campeonatos</span>
+              <span class="text-lg font-bold tracking-tight">Competencias</span>
               <span class="block text-[10px] font-medium text-indigo-300 uppercase tracking-widest">Sistema de gestión</span>
             </div>
           </a>
@@ -156,6 +160,15 @@ const NAV_ENTRIES: NavEntry[] = [
         ></div>
       }
 
+      <!-- Backdrop panel derecho -->
+      @if (panelOpen()) {
+        <div
+          class="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-[1px]"
+          (click)="closePanel()"
+          aria-hidden="true"
+        ></div>
+      }
+
       <!-- Main content -->
       <div class="flex-1 flex flex-col min-w-0">
         <header class="h-12 glass sticky top-0 z-10 flex items-center px-4 lg:px-8 shadow-sm shadow-slate-100">
@@ -168,18 +181,52 @@ const NAV_ENTRIES: NavEntry[] = [
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
           </button>
-          <h1 class="text-base font-semibold text-slate-700 tracking-tight">Sistema de Gestión de Campeonatos</h1>
+          <h1 class="text-base font-semibold text-slate-700 tracking-tight">Sistema de Gestión de Competencias</h1>
         </header>
         <main class="flex-1 p-4 lg:p-8 overflow-auto">
           <router-outlet />
         </main>
       </div>
+
+      <!-- Panel lateral derecho -->
+      <aside
+        class="fixed right-0 top-0 z-40 h-screen w-full max-w-2xl transform border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-in-out"
+        [class.translate-x-full]="!panelOpen()"
+        [class.translate-x-0]="panelOpen()"
+        [class.pointer-events-none]="!panelOpen()"
+        [class.pointer-events-auto]="panelOpen()"
+        [attr.aria-hidden]="!panelOpen()"
+      >
+        <div class="flex h-14 items-center justify-between border-b border-slate-200 px-4">
+          <h2 class="text-sm font-semibold text-slate-700">Nuevo registro</h2>
+          <button
+            type="button"
+            class="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Cerrar panel"
+            (click)="closePanel()"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="h-[calc(100vh-3.5rem)] overflow-auto p-4" style="background-color: #EBF4F6;">
+          <router-outlet
+            name="panel"
+            (activate)="panelOpen.set(true)"
+            (deactivate)="panelOpen.set(false)"
+          />
+        </div>
+      </aside>
     </div>
   `,
 })
 export class LayoutComponent {
+  private readonly router = inject(Router);
+
   protected readonly sidebarOpen = signal(false);
-  protected readonly openGroups = signal(new Set(['Gestión de Campeonatos', 'Maestros', 'Estructura Académica']));
+  protected readonly panelOpen = signal(false);
+  protected readonly openGroups = signal(new Set(['Gestión de Competencias', 'Maestros', 'Estructura Académica']));
   protected readonly navEntries = NAV_ENTRIES;
   protected readonly isGroup = isGroup;
 
@@ -190,5 +237,14 @@ export class LayoutComponent {
       else next.add(label);
       return next;
     });
+  }
+
+  protected closePanel(): void {
+    const tree = this.router.parseUrl(this.router.url);
+    if (tree.root.children['panel']) {
+      delete tree.root.children['panel'];
+      void this.router.navigateByUrl(tree);
+    }
+    this.panelOpen.set(false);
   }
 }

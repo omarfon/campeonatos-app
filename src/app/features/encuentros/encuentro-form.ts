@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { EncuentroService } from '../../core/services/encuentro.service';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import {
   FaseEncuentro,
@@ -51,16 +51,16 @@ import {
       </div>
 
       <form [formGroup]="form" (ngSubmit)="guardar()" class="section-card space-y-6">
-        <!-- Step 0: Campeonato y Disciplina -->
+        <!-- Step 0: Competencia y Disciplina -->
         @if (currentStep() === 0) {
           <div class="space-y-4">
-            <h3 class="font-semibold text-slate-800 text-lg">Campeonato y Disciplina</h3>
+            <h3 class="font-semibold text-slate-800 text-lg">Competencia y Disciplina</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="campeonato" class="block text-sm font-medium text-slate-700 mb-1">Campeonato</label>
-                <select id="campeonato" formControlName="campeonatoId" class="input-modern">
-                  <option value="">Seleccionar campeonato...</option>
-                  @for (camp of campeonatos(); track camp.id) {
+                <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
+                <select id="competencia" formControlName="competenciaId" class="input-modern">
+                  <option value="">Seleccionar competencia...</option>
+                  @for (camp of competencias(); track camp.id) {
                     <option [value]="camp.id">{{ camp.nombre }}</option>
                   }
                 </select>
@@ -217,20 +217,20 @@ export class EncuentroFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly encuentroService = inject(EncuentroService);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
   protected readonly isEdit = signal(false);
   protected readonly currentStep = signal(0);
   protected readonly errorMsg = signal('');
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly competencias = this.competenciaService.items;
   protected readonly disciplinas = this.disciplinaService.items;
   protected readonly equipos = this.equipoService.equipos;
   protected readonly sedes = this.encuentroService.sedes;
   private editId = '';
 
   readonly steps = [
-    { id: 0, label: 'Campeonato' },
+    { id: 0, label: 'Competencia' },
     { id: 1, label: 'Equipos' },
     { id: 2, label: 'Programación' },
   ];
@@ -257,7 +257,7 @@ export class EncuentroFormComponent implements OnInit {
   });
 
   readonly form = this.fb.nonNullable.group({
-    campeonatoId: ['', Validators.required],
+    competenciaId: ['', Validators.required],
     disciplinaId: ['', Validators.required],
     fase: ['fase_grupos' as FaseEncuentro],
     grupo: [''],
@@ -280,7 +280,7 @@ export class EncuentroFormComponent implements OnInit {
         this.isEdit.set(true);
         this.editId = id;
         this.form.patchValue({
-          campeonatoId: enc.campeonatoId,
+          competenciaId: enc.competenciaId,
           disciplinaId: enc.disciplinaId,
           fase: enc.fase,
           grupo: enc.grupo ?? '',

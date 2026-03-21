@@ -1,18 +1,18 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import { EquipoService } from '../../core/services/equipo.service';
 import { EncuentroService } from '../../core/services/encuentro.service';
 import {
-  Campeonato, EstadoCampeonato,
+  Competencia, EstadoCompetencia,
   ESTADO_LABELS, TIPO_LABELS, MODALIDAD_LABELS, ESTRUCTURA_LABELS, DIAS_SEMANA_LABELS,
-} from '../../core/models/campeonato.model';
+} from '../../core/models/competencia.model';
 import { Encuentro, EstadoEncuentro, FechaCompetencia } from '../../core/models/encuentro.model';
 import { Equipo } from '../../core/models/equipo.model';
 
 @Component({
-  selector: 'app-campeonato-detail',
+  selector: 'app-competencia-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
@@ -26,7 +26,7 @@ import { Equipo } from '../../core/models/equipo.model';
           </div>
           <div class="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <a routerLink="/gestion/campeonatos"
+              <a routerLink="/gestion/competencias"
                 class="inline-flex items-center gap-1.5 text-white/70 hover:text-white text-sm font-medium transition-colors mb-2">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
                 Volver al listado
@@ -375,9 +375,9 @@ import { Equipo } from '../../core/models/equipo.model';
               </div>
             </div>
           }
-          @if (equiposCampeonato().length > 0) {
+          @if (equiposCompetencia().length > 0) {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              @for (eq of equiposCampeonato(); track eq.id) {
+              @for (eq of equiposCompetencia(); track eq.id) {
                 <button (click)="selectEquipo(eq.id)" class="group relative rounded-xl border border-slate-200/80 bg-white p-4 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-50 transition-all duration-300 text-left w-full cursor-pointer">
                   <div class="flex items-center gap-3">
                     <span class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center text-sm font-bold text-indigo-600 shrink-0">
@@ -415,8 +415,8 @@ import { Equipo } from '../../core/models/equipo.model';
               <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
             </span>
             <h3 class="text-base font-bold text-slate-800">Encuentros</h3>
-            @if (encuentrosCampeonato().length > 0) {
-              <span class="ml-auto text-sm font-semibold text-slate-500">{{ encuentrosCampeonato().length }} encuentros</span>
+            @if (encuentrosCompetencia().length > 0) {
+              <span class="ml-auto text-sm font-semibold text-slate-500">{{ encuentrosCompetencia().length }} encuentros</span>
             }
           </div>
           @if (fechasAgrupadas().length > 0) {
@@ -485,7 +485,7 @@ import { Equipo } from '../../core/models/equipo.model';
               <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto">
                 <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
               </div>
-              <p class="text-slate-700 font-semibold">{{ equiposCampeonato().length }} equipos registrados</p>
+              <p class="text-slate-700 font-semibold">{{ equiposCompetencia().length }} equipos registrados</p>
               <p class="text-slate-400 text-sm">Se generará un fixture todos contra todos (round-robin)</p>
               <button (click)="generarEncuentros()"
                 class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all">
@@ -626,8 +626,8 @@ import { Equipo } from '../../core/models/equipo.model';
         <div class="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
           <svg class="w-10 h-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
         </div>
-        <p class="text-slate-400 text-lg font-medium">Campeonato no encontrado</p>
-        <a routerLink="/gestion/campeonatos" class="btn-primary mt-4 inline-flex">Volver al listado</a>
+        <p class="text-slate-400 text-lg font-medium">Competencia no encontrado</p>
+        <a routerLink="/gestion/competencias" class="btn-primary mt-4 inline-flex">Volver al listado</a>
       </div>
     }
 
@@ -667,7 +667,7 @@ import { Equipo } from '../../core/models/equipo.model';
               }
             </div>
 
-            <!-- Encuentros del equipo en este campeonato -->
+            <!-- Encuentros del equipo en este competencia -->
             @if (encuentrosEquipoSeleccionado().length > 0) {
               <div>
                 <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Encuentros</h4>
@@ -731,35 +731,35 @@ import { Equipo } from '../../core/models/equipo.model';
     }
   `,
 })
-export class CampeonatoDetailComponent implements OnInit {
+export class CompetenciaDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
   private readonly equipoService = inject(EquipoService);
   private readonly encuentroService = inject(EncuentroService);
 
-  protected readonly camp = signal<Campeonato | undefined>(undefined);
+  protected readonly camp = signal<Competencia | undefined>(undefined);
   protected readonly selectedEquipo = signal<Equipo | undefined>(undefined);
   protected readonly showRegistroEquipo = signal(false);
   protected readonly nuevoEquipoNombre = signal('');
   protected readonly selectedDisciplinaId = signal('');
 
-  protected readonly equiposCampeonato = computed(() => {
+  protected readonly equiposCompetencia = computed(() => {
     const c = this.camp();
     if (!c) return [] as Equipo[];
-    return this.equipoService.getEquiposByCampeonato(c.id);
+    return this.equipoService.getEquiposByCompetencia(c.id);
   });
 
-  protected readonly encuentrosCampeonato = computed(() => {
+  protected readonly encuentrosCompetencia = computed(() => {
     const c = this.camp();
     if (!c) return [];
-    return this.encuentroService.getByCampeonato(c.id);
+    return this.encuentroService.getByCompetencia(c.id);
   });
 
   protected readonly fechasAgrupadas = computed(() => {
     const c = this.camp();
     if (!c) return [];
-    const fechas = this.encuentroService.getFechasByCampeonato(c.id);
+    const fechas = this.encuentroService.getFechasByCompetencia(c.id);
     return fechas
       .map(f => ({
         ...f,
@@ -774,7 +774,7 @@ export class CampeonatoDetailComponent implements OnInit {
     const eq = this.selectedEquipo();
     const c = this.camp();
     if (!eq || !c) return [];
-    return this.encuentroService.getByCampeonato(c.id).filter(
+    return this.encuentroService.getByCompetencia(c.id).filter(
       e => e.equipoLocalId === eq.id || e.equipoVisitanteId === eq.id
     );
   });
@@ -782,7 +782,7 @@ export class CampeonatoDetailComponent implements OnInit {
   protected readonly transicionesDisponibles = computed(() => {
     const c = this.camp();
     if (!c) return [];
-    return this.campeonatoService.transicionesDisponibles(c.id);
+    return this.competenciaService.transicionesDisponibles(c.id);
   });
 
   protected readonly puedeRegistrarEquipos = computed(() => {
@@ -796,11 +796,11 @@ export class CampeonatoDetailComponent implements OnInit {
     if (!c) return false;
     return c.publicado
       && c.estado !== 'finalizado' && c.estado !== 'suspendido' && c.estado !== 'anulado'
-      && this.equiposCampeonato().length >= 2
-      && this.encuentrosCampeonato().length === 0;
+      && this.equiposCompetencia().length >= 2
+      && this.encuentrosCompetencia().length === 0;
   });
 
-  protected readonly estadoClasses: Record<EstadoCampeonato, string> = {
+  protected readonly estadoClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-100 text-slate-700',
     programado: 'bg-blue-100 text-blue-800',
     en_ejecucion: 'bg-green-100 text-green-800',
@@ -815,10 +815,10 @@ export class CampeonatoDetailComponent implements OnInit {
   protected readonly estructuraLabelsMap = ESTRUCTURA_LABELS;
   protected readonly diasSemanaLabelsMap = DIAS_SEMANA_LABELS;
 
-  protected readonly transicionLabelsMap: Record<EstadoCampeonato, string> = {
+  protected readonly transicionLabelsMap: Record<EstadoCompetencia, string> = {
     borrador: 'Volver a borrador',
     programado: 'Programar',
-    en_ejecucion: 'Iniciar campeonato',
+    en_ejecucion: 'Iniciar competencia',
     finalizado: 'Finalizar',
     suspendido: 'Suspender',
     anulado: 'Anular',
@@ -827,7 +827,7 @@ export class CampeonatoDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.camp.set(this.campeonatoService.getById(id));
+      this.camp.set(this.competenciaService.getById(id));
     }
   }
 
@@ -839,29 +839,29 @@ export class CampeonatoDetailComponent implements OnInit {
     return tipo.replace(/_/g, ' ');
   }
 
-  protected transicionar(nuevoEstado: EstadoCampeonato): void {
+  protected transicionar(nuevoEstado: EstadoCompetencia): void {
     const c = this.camp();
     if (!c) return;
-    const result = this.campeonatoService.cambiarEstado(c.id, nuevoEstado);
+    const result = this.competenciaService.cambiarEstado(c.id, nuevoEstado);
     if (result !== true) {
       alert(result);
       return;
     }
-    this.camp.set(this.campeonatoService.getById(c.id));
+    this.camp.set(this.competenciaService.getById(c.id));
   }
 
   protected publicar(): void {
     const c = this.camp();
     if (!c) return;
-    this.campeonatoService.publicar(c.id);
-    this.camp.set(this.campeonatoService.getById(c.id));
+    this.competenciaService.publicar(c.id);
+    this.camp.set(this.competenciaService.getById(c.id));
   }
 
   protected despublicar(): void {
     const c = this.camp();
     if (!c) return;
-    this.campeonatoService.despublicar(c.id);
-    this.camp.set(this.campeonatoService.getById(c.id));
+    this.competenciaService.despublicar(c.id);
+    this.camp.set(this.competenciaService.getById(c.id));
   }
 
   // ──── Registro de Equipos ────
@@ -889,7 +889,7 @@ export class CampeonatoDetailComponent implements OnInit {
 
     this.equipoService.createEquipo({
       nombre,
-      campeonatoId: c.id,
+      competenciaId: c.id,
       disciplinaId,
     });
 
@@ -903,7 +903,7 @@ export class CampeonatoDetailComponent implements OnInit {
     const c = this.camp();
     if (!c) return;
 
-    const equipos = this.equiposCampeonato();
+    const equipos = this.equiposCompetencia();
     if (equipos.length < 2) return;
 
     const disciplinaId = equipos[0]!.disciplinaId;
@@ -921,8 +921,8 @@ export class CampeonatoDetailComponent implements OnInit {
     }
   }
 
-  protected transicionBtnClass(estado: EstadoCampeonato): string {
-    const map: Record<EstadoCampeonato, string> = {
+  protected transicionBtnClass(estado: EstadoCompetencia): string {
+    const map: Record<EstadoCompetencia, string> = {
       borrador: 'border-slate-300 text-slate-700 hover:bg-slate-50',
       programado: 'border-blue-300 text-blue-700 hover:bg-blue-50',
       en_ejecucion: 'border-green-300 text-green-700 hover:bg-green-50',

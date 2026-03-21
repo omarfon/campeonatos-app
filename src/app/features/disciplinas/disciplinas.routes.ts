@@ -12,6 +12,12 @@ export const DISCIPLINA_ROUTES: Routes = [
       import('./disciplina-form').then((m) => m.DisciplinaFormComponent),
   },
   {
+    path: 'nueva',
+    outlet: 'panel',
+    loadComponent: () =>
+      import('./disciplina-form').then((m) => m.DisciplinaFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./disciplina-detail').then((m) => m.DisciplinaDetailComponent),

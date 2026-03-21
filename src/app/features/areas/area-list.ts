@@ -15,7 +15,7 @@ import { ESTADO_AREA_LABELS, TIPO_AREA_LABELS, EstadoArea, TipoArea } from '../.
           <h2 class="text-2xl font-bold text-slate-900">Áreas</h2>
           <p class="text-slate-500 mt-1">Espacios deportivos: canchas, piscinas, pistas y más</p>
         </div>
-        <a routerLink="nueva" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'areas'], panel: ['maestros', 'areas', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <span aria-hidden="true">+</span> Nueva Área
         </a>
       </div>

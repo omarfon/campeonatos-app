@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@a
 import { RouterLink } from '@angular/router';
 import { EncuentroService } from '../../core/services/encuentro.service';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import {
   EstadoEncuentro,
   FaseEncuentro,
@@ -24,7 +24,7 @@ import {
             <h2 class="text-3xl font-bold tracking-tight">Programación de Encuentros</h2>
             <p class="text-indigo-100 mt-2">Gestión de fechas, fases, sedes y reprogramaciones</p>
           </div>
-          <a routerLink="nuevo" class="inline-flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/30 hover:scale-[1.02]">
+          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'encuentros'], panel: ['gestion', 'encuentros', 'nuevo'] } }]" class="inline-flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/30 hover:scale-[1.02]">
             <span aria-hidden="true">+</span> Nuevo Encuentro
           </a>
         </div>
@@ -81,12 +81,12 @@ import {
             </select>
             <select
               class="input-modern text-sm py-1.5"
-              [value]="filtroCampeonato()"
-              (change)="filtroCampeonato.set($any($event.target).value)"
-              aria-label="Filtrar por campeonato"
+              [value]="filtroCompetencia()"
+              (change)="filtroCompetencia.set($any($event.target).value)"
+              aria-label="Filtrar por competencia"
             >
-              <option value="todos">Todos los campeonatos</option>
-              @for (camp of campeonatos(); track camp.id) {
+              <option value="todos">Todos los competencias</option>
+              @for (camp of competencias(); track camp.id) {
                 <option [value]="camp.id">{{ camp.nombre }}</option>
               }
             </select>
@@ -172,7 +172,7 @@ import {
           <div class="text-5xl mb-4" aria-hidden="true">📋</div>
           <p class="text-slate-500 text-lg font-medium">No hay encuentros programados</p>
           <p class="text-slate-400 text-sm mt-1">Crea un nuevo encuentro para comenzar</p>
-          <a routerLink="nuevo" class="btn-primary mt-4 inline-flex">+ Nuevo Encuentro</a>
+          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'encuentros'], panel: ['gestion', 'encuentros', 'nuevo'] } }]" class="btn-primary mt-4 inline-flex">+ Nuevo Encuentro</a>
         </div>
       }
     </div>
@@ -181,12 +181,12 @@ import {
 export class EncuentroListComponent {
   private readonly encuentroService = inject(EncuentroService);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
 
   protected readonly filtroEstado = signal<EstadoEncuentro | 'todos'>('todos');
   protected readonly filtroFase = signal<FaseEncuentro | 'todas'>('todas');
-  protected readonly filtroCampeonato = signal<string>('todos');
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly filtroCompetencia = signal<string>('todos');
+  protected readonly competencias = this.competenciaService.items;
 
   protected readonly estados: { value: EstadoEncuentro; label: string }[] = [
     { value: 'programado', label: 'Programados' },
@@ -228,7 +228,7 @@ export class EncuentroListComponent {
   protected readonly fechasAgrupadas = computed(() => {
     const filtroEstado = this.filtroEstado();
     const filtroFase = this.filtroFase();
-    const filtroCamp = this.filtroCampeonato();
+    const filtroCamp = this.filtroCompetencia();
 
     let encuentros = this.encuentroService.encuentros();
     if (filtroEstado !== 'todos') {
@@ -238,7 +238,7 @@ export class EncuentroListComponent {
       encuentros = encuentros.filter((e) => e.fase === filtroFase);
     }
     if (filtroCamp !== 'todos') {
-      encuentros = encuentros.filter((e) => e.campeonatoId === filtroCamp);
+      encuentros = encuentros.filter((e) => e.competenciaId === filtroCamp);
     }
 
     const grouped = new Map<number, { numero: number; fecha: string; encuentros: typeof encuentros }>();

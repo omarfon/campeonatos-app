@@ -16,7 +16,7 @@ export interface Sancion {
   id: string;
   participanteId: string;
   equipoId?: string;
-  campeonatoId: string;
+  competenciaId: string;
   tipo: TipoSancion;
   estado: EstadoSancion;
   descripcion: string;

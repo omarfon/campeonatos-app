@@ -2,8 +2,9 @@ import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } 
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AcademiaService } from '../../core/services/academia.service';
 import {
-  Curso, CategoriaEdad, NivelHabilidad, Clase,
+  Curso, CategoriaEdad, NivelHabilidad, Clase, Programa,
   TIPO_NOMENCLATURA_LABELS, ESTADO_CURSO_LABELS, ESTADO_CLASE_LABELS, DIA_SEMANA_LABELS,
+  TIPO_HORARIO_CLASE_LABELS, TIPO_DURACION_CLASE_LABELS,
 } from '../../core/models/academia.model';
 
 @Component({
@@ -27,9 +28,13 @@ import {
             <p class="text-slate-500 mt-1">{{ breadcrumb() }}</p>
           </div>
           <div class="flex gap-2">
-            <a routerLink="/academia/clases/nueva" [queryParams]="{ cursoId: c.id }"
+            <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'matriculas', 'nueva'] } }]" [queryParams]="{ cursoId: c.id }"
               class="inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
-              + Nueva Clase
+              📝 Nueva Matrícula
+            </a>
+            <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'clases', 'nueva'] } }]" [queryParams]="{ cursoId: c.id }"
+              class="inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+              + Nueva Clase Consolidada
             </a>
             <a [routerLink]="['editar']"
               class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
@@ -73,7 +78,7 @@ import {
 
             <!-- Categorías por Edad -->
             <div class="bg-white rounded-xl shadow-sm p-6">
-              <h3 class="text-lg font-semibold text-slate-900 mb-4">Categorías por Edad</h3>
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">RF-04 · Categorías por Edad</h3>
               @if (categoriasEdad().length > 0) {
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   @for (ce of categoriasEdad(); track ce.id) {
@@ -95,7 +100,7 @@ import {
             @if (c.manejaLevels) {
               <div class="bg-white rounded-xl shadow-sm p-6">
                 <div class="flex items-center justify-between mb-4">
-                  <h3 class="text-lg font-semibold text-slate-900">Niveles de Habilidad</h3>
+                  <h3 class="text-lg font-semibold text-slate-900">RF-05 · Niveles de Habilidad</h3>
                   <span class="text-xs text-slate-400">{{ nomenclaturaLabel(c.tipoNomenclaturaNivel) }}</span>
                 </div>
                 @if (niveles().length > 0) {
@@ -120,6 +125,30 @@ import {
                 }
               </div>
             }
+
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <div class="flex items-center justify-between mb-4 gap-3">
+                <div>
+                  <h3 class="text-lg font-semibold text-slate-900">RF-08 / RF-09 · Programas Comerciales</h3>
+                  <p class="text-sm text-slate-500 mt-1">Programas donde este curso participa como disciplina hija.</p>
+                </div>
+                <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'programas', 'nuevo'] } }]" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Nuevo programa</a>
+              </div>
+
+              @if (programas().length > 0) {
+                <div class="space-y-3">
+                  @for (programa of programas(); track programa.id) {
+                    <a [routerLink]="['/academia/programas', programa.id]"
+                      class="block rounded-lg border border-slate-200 p-4 hover:border-indigo-300 hover:shadow-sm transition-all">
+                      <p class="font-medium text-slate-800">{{ programa.nombre }}</p>
+                      <p class="text-sm text-slate-500 mt-1">{{ programa.descripcion }}</p>
+                    </a>
+                  }
+                </div>
+              } @else {
+                <p class="text-slate-400 text-sm">Este curso aún no forma parte de un programa comercial.</p>
+              }
+            </div>
           </div>
 
           <!-- Sidebar: resumen rápido -->
@@ -142,6 +171,10 @@ import {
                   <span class="text-sm font-semibold">{{ clases().length }}</span>
                 </div>
                 <div class="flex justify-between">
+                  <span class="text-sm text-slate-500">Programas asociados</span>
+                  <span class="text-sm font-semibold">{{ programas().length }}</span>
+                </div>
+                <div class="flex justify-between">
                   <span class="text-sm text-slate-500">Total matriculados</span>
                   <span class="text-sm font-semibold">{{ totalMatriculados() }}</span>
                 </div>
@@ -159,8 +192,8 @@ import {
         <div class="bg-white rounded-xl shadow-sm p-6">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-slate-900">Clases</h3>
-            <a routerLink="/academia/clases/nueva" [queryParams]="{ cursoId: c.id }"
-              class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Nueva Clase</a>
+            <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'clases', 'nueva'] } }]" [queryParams]="{ cursoId: c.id }"
+              class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Nueva Clase Consolidada</a>
           </div>
           @if (clases().length > 0) {
             <div class="overflow-x-auto">
@@ -171,7 +204,9 @@ import {
                     <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Nivel</th>
                     <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Docente</th>
                     <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Ambiente</th>
-                    <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Horario</th>
+                    <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Modalidad</th>
+                    <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Duración</th>
+                    <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Bloques</th>
                     <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Vacantes</th>
                     <th class="px-4 py-2 text-xs font-semibold text-slate-500 uppercase">Estado</th>
                   </tr>
@@ -183,6 +218,18 @@ import {
                       <td class="px-4 py-3">{{ clase.nivelId ? nivelNombre(clase.nivelId) : '—' }}</td>
                       <td class="px-4 py-3">{{ docenteNombre(clase.docenteId) }}</td>
                       <td class="px-4 py-3">{{ ambienteNombre(clase.ambienteId) }}</td>
+                      <td class="px-4 py-3 text-xs text-slate-600">
+                        <span>{{ tipoHorarioLabel(clase.tipoHorario) }}</span>
+                        @if (clase.tipoHorario === 'abierto' && clase.frecuenciaSemanal) {
+                          <span class="block text-slate-500">{{ clase.frecuenciaSemanal }} veces/semana</span>
+                        }
+                      </td>
+                      <td class="px-4 py-3 text-xs text-slate-600">
+                        <span>{{ tipoDuracionLabel(clase.tipoDuracion) }}</span>
+                        @if (clase.tipoDuracion === 'finita' && clase.fechaInicio && clase.fechaFin) {
+                          <span class="block text-slate-500">{{ clase.fechaInicio }} a {{ clase.fechaFin }}</span>
+                        }
+                      </td>
                       <td class="px-4 py-3">
                         @for (h of clase.horarios; track $index) {
                           <span class="block text-xs">{{ diaLabel(h.dia) }} {{ h.horaInicio }}-{{ h.horaFin }}</span>
@@ -234,6 +281,11 @@ export class CursoDetailComponent implements OnInit {
   protected readonly clases = computed(() => {
     const c = this.curso();
     return c ? this.svc.getClasesByCurso(c.id) : [];
+  });
+
+  protected readonly programas = computed<Programa[]>(() => {
+    const c = this.curso();
+    return c ? this.svc.getProgramasByCurso(c.id) : [];
   });
 
   protected readonly totalMatriculados = computed(() =>
@@ -302,5 +354,13 @@ export class CursoDetailComponent implements OnInit {
       llena: 'bg-amber-100 text-amber-700',
     };
     return classes[estado] ?? 'bg-slate-100 text-slate-500';
+  }
+
+  protected tipoHorarioLabel(tipo: keyof typeof TIPO_HORARIO_CLASE_LABELS): string {
+    return TIPO_HORARIO_CLASE_LABELS[tipo] ?? tipo;
+  }
+
+  protected tipoDuracionLabel(tipo: keyof typeof TIPO_DURACION_CLASE_LABELS): string {
+    return TIPO_DURACION_CLASE_LABELS[tipo] ?? tipo;
   }
 }

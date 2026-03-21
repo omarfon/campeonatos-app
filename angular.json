@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "campeonatos-app": {
+    "competencias-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -84,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "campeonatos-app:build:production"
+              "buildTarget": "competencias-app:build:production"
             },
             "development": {
-              "buildTarget": "campeonatos-app:build:development"
+              "buildTarget": "competencias-app:build:development"
             }
           },
           "defaultConfiguration": "development"

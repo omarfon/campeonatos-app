@@ -14,7 +14,7 @@ const MOCK_SANCIONES: Sancion[] = [
     id: 's-1',
     participanteId: 'p-6',
     equipoId: 'eq-2',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     tipo: 'deportiva',
     estado: 'activa',
     descripcion: 'Suspensión por roja directa - agresión',
@@ -27,7 +27,7 @@ const MOCK_SANCIONES: Sancion[] = [
     id: 's-2',
     participanteId: 'p-124',
     equipoId: 'eq-3',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     tipo: 'deportiva',
     estado: 'activa',
     descripcion: 'Suspensión por doble amarilla',
@@ -66,8 +66,8 @@ export class SancionService {
     return this._sanciones().filter((s) => s.participanteId === participanteId);
   }
 
-  getSancionesByCampeonato(campeonatoId: string): Sancion[] {
-    return this._sanciones().filter((s) => s.campeonatoId === campeonatoId);
+  getSancionesByCompetencia(competenciaId: string): Sancion[] {
+    return this._sanciones().filter((s) => s.competenciaId === competenciaId);
   }
 
   addTarjeta(tarjeta: Omit<Tarjeta, 'id'>): void {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { EncuentroService } from '../../core/services/encuentro.service';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import {
   Encuentro,
@@ -31,7 +31,7 @@ import {
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h2 class="text-2xl font-bold text-slate-900">Detalle del Encuentro</h2>
-              <p class="text-slate-500 mt-1">{{ getCampeonatoNombre(enc.campeonatoId) }} · {{ getDisciplinaNombre(enc.disciplinaId) }}</p>
+              <p class="text-slate-500 mt-1">{{ getCompetenciaNombre(enc.competenciaId) }} · {{ getDisciplinaNombre(enc.disciplinaId) }}</p>
             </div>
             <div class="flex flex-wrap gap-2">
               @if (puedeControlPrePartido()) {
@@ -170,7 +170,7 @@ import {
           <div class="space-y-3">
             @for (h of enc.historialEstados; track h.fecha) {
               <div class="flex items-start gap-3">
-                <div class="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0" [class]="estadoDot[h.estado] ?? 'bg-slate-300'"></div>
+                <div class="w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0" [class]="estadoDot[h.estado]"></div>
                 <div>
                   <p class="text-sm font-medium text-slate-700">{{ estadoLabels[h.estado] }}</p>
                   <p class="text-xs text-slate-400">{{ h.fecha.split('T')[0] }} {{ h.fecha.split('T')[1]?.substring(0, 5) }}</p>
@@ -296,7 +296,7 @@ export class EncuentroDetailComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly encuentroService = inject(EncuentroService);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
   protected readonly encuentro = signal<Encuentro | undefined>(undefined);
@@ -386,8 +386,8 @@ export class EncuentroDetailComponent implements OnInit {
     return this.equipoService.getEquipoById(id)?.nombre ?? 'Desconocido';
   }
 
-  protected getCampeonatoNombre(id: string): string {
-    return this.campeonatoService.getById(id)?.nombre ?? 'Desconocido';
+  protected getCompetenciaNombre(id: string): string {
+    return this.competenciaService.getById(id)?.nombre ?? 'Desconocido';
   }
 
   protected getDisciplinaNombre(id: string): string {

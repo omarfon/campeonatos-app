@@ -23,8 +23,8 @@ export interface InhabilitacionJugador {
 
 export interface ReportePrePartido {
   encuentroId: string;
-  campeonatoId: string;
-  campeonatoNombre: string;
+  competenciaId: string;
+  competenciaNombre: string;
   disciplinaNombre: string;
   fase: string;
   numeroFecha: number;

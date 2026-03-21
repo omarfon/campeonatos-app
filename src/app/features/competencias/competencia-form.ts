@@ -1,28 +1,28 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import {
-  TipoCampeonato, ModalidadCampeonato, EstructuraCampeonato, Campeonato, ReglaGeneral,
+  TipoCompetencia, ModalidadCompetencia, EstructuraCompetencia, Competencia, ReglaGeneral,
   PARAMETROS_DEFAULT, DIAS_SEMANA_LABELS, TipoFechaBloqueada,
-} from '../../core/models/campeonato.model';
+} from '../../core/models/competencia.model';
 
 @Component({
-  selector: 'app-campeonato-form',
+  selector: 'app-competencia-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   template: `
     <div class="max-w-3xl mx-auto">
       <!-- Header -->
       <div class="mb-8">
-        <a routerLink="/gestion/campeonatos"
+        <a routerLink="/gestion/competencias"
           class="inline-flex items-center gap-1.5 text-slate-400 hover:text-indigo-600 text-sm font-medium transition-colors mb-3">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
           Volver al listado
         </a>
-        <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ isEdit() ? 'Editar' : 'Nuevo' }} Campeonato</h2>
-        <p class="text-slate-400 mt-1">Complete los pasos para configurar el campeonato</p>
+        <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ isEdit() ? 'Editar' : 'Nuevo' }} Competencia</h2>
+        <p class="text-slate-400 mt-1">Complete los pasos para configurar el competencia</p>
       </div>
 
       <!-- Modern Stepper -->
@@ -77,7 +77,7 @@ import {
           </div>
 
           <div>
-            <label for="nombre" class="block text-sm font-semibold text-slate-700 mb-1.5">Nombre del campeonato</label>
+            <label for="nombre" class="block text-sm font-semibold text-slate-700 mb-1.5">Nombre del competencia</label>
             <input id="nombre" formControlName="nombre" type="text" class="input-modern" placeholder="Ej: Copa Primavera 2025" />
             @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
               <p class="mt-1.5 text-sm text-red-500 font-medium">El nombre es requerido</p>
@@ -177,7 +177,7 @@ import {
           @if (selectedDisciplinas().size === 0) {
             <div class="flex items-center gap-2 mt-3 text-sm text-amber-600 bg-amber-50 rounded-xl px-4 py-3">
               <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
-              Seleccione al menos una disciplina. Sin disciplinas no se podrá iniciar el campeonato.
+              Seleccione al menos una disciplina. Sin disciplinas no se podrá iniciar el competencia.
             </div>
           }
         }
@@ -260,7 +260,7 @@ import {
           </fieldset>
 
           <fieldset class="space-y-4 rounded-xl bg-indigo-50/50 border border-indigo-100 p-5">
-            <legend class="text-sm font-bold text-indigo-700 px-2">Vigencia del campeonato</legend>
+            <legend class="text-sm font-bold text-indigo-700 px-2">Vigencia del competencia</legend>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="fechaInicio" class="block text-sm font-semibold text-slate-700 mb-1.5">Fecha inicio</label>
@@ -350,7 +350,7 @@ import {
               <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
             </span>
             <div>
-              <h3 class="text-lg font-bold text-slate-800">Parámetros del Campeonato</h3>
+              <h3 class="text-lg font-bold text-slate-800">Parámetros del Competencia</h3>
               <p class="text-sm text-slate-400">Configuración de límites y permisos</p>
             </div>
           </div>
@@ -364,7 +364,7 @@ import {
             <div>
               <label for="duracionMaximaDias" class="block text-sm font-semibold text-slate-700 mb-1.5">Duración máxima (días)</label>
               <input id="duracionMaximaDias" formControlName="duracionMaximaDias" type="number" class="input-modern" min="1" />
-              <p class="text-xs text-slate-400 mt-1">Máximo de días de duración del campeonato</p>
+              <p class="text-xs text-slate-400 mt-1">Máximo de días de duración del competencia</p>
             </div>
           </div>
 
@@ -383,7 +383,7 @@ import {
                 class="w-5 h-5 rounded-md text-teal-600 focus:ring-teal-500 focus:ring-offset-0" />
               <div>
                 <span class="text-sm font-semibold text-slate-700 group-hover:text-teal-700 transition-colors">Permitir reapertura</span>
-                <p class="text-xs text-slate-400">Permite reabrir el campeonato una vez suspendido</p>
+                <p class="text-xs text-slate-400">Permite reabrir el competencia una vez suspendido</p>
               </div>
             </label>
 
@@ -392,7 +392,7 @@ import {
                 class="w-5 h-5 rounded-md text-teal-600 focus:ring-teal-500 focus:ring-offset-0" />
               <div>
                 <span class="text-sm font-semibold text-slate-700 group-hover:text-teal-700 transition-colors">Permitir simultáneos</span>
-                <p class="text-xs text-slate-400">Permite que haya otros campeonatos activos en las mismas fechas</p>
+                <p class="text-xs text-slate-400">Permite que haya otros competencias activos en las mismas fechas</p>
               </div>
             </label>
           </div>
@@ -406,7 +406,7 @@ import {
             </span>
             <div>
               <h3 class="text-lg font-bold text-slate-800">Publicación</h3>
-              <p class="text-sm text-slate-400">Configure opciones de publicación del campeonato</p>
+              <p class="text-sm text-slate-400">Configure opciones de publicación del competencia</p>
             </div>
           </div>
 
@@ -431,7 +431,7 @@ import {
 
           <!-- Resumen -->
           <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 mt-4">
-            <h4 class="text-sm font-bold text-slate-700 mb-3">Resumen del campeonato</h4>
+            <h4 class="text-sm font-bold text-slate-700 mb-3">Resumen del competencia</h4>
             <dl class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <dt class="text-slate-400">Nombre</dt>
               <dd class="text-slate-800 font-medium">{{ form.get('nombre')?.value }}</dd>
@@ -476,7 +476,7 @@ import {
               <button type="submit" [disabled]="!formularioValido()"
                 class="btn-primary inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                {{ isEdit() ? 'Actualizar' : 'Crear Campeonato' }}
+                {{ isEdit() ? 'Actualizar' : 'Crear Competencia' }}
               </button>
             }
           </div>
@@ -485,11 +485,11 @@ import {
     </div>
   `,
 })
-export class CampeonatoFormComponent implements OnInit {
+export class CompetenciaFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
   protected readonly isEdit = signal(false);
@@ -525,9 +525,9 @@ export class CampeonatoFormComponent implements OnInit {
     nombre: ['', Validators.required],
     anio: [new Date().getFullYear(), Validators.required],
     periodo: [''],
-    tipo: ['interno' as TipoCampeonato],
-    modalidad: ['interno_cerrado' as ModalidadCampeonato],
-    estructura: ['unico' as EstructuraCampeonato],
+    tipo: ['interno' as TipoCompetencia],
+    modalidad: ['interno_cerrado' as ModalidadCompetencia],
+    estructura: ['unico' as EstructuraCompetencia],
     descripcion: [''],
     observaciones: [''],
     fechaInicio: ['', Validators.required],
@@ -552,7 +552,7 @@ export class CampeonatoFormComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      const camp = this.campeonatoService.getById(id);
+      const camp = this.competenciaService.getById(id);
       if (camp) {
         this.isEdit.set(true);
         this.editId = id;
@@ -715,18 +715,18 @@ export class CampeonatoFormComponent implements OnInit {
         duracionMaximaDias: value.duracionMaximaDias,
         permitirSimultaneos: value.permitirSimultaneos,
       },
-      calendario: [] as Campeonato['calendario'],
+      calendario: [] as Competencia['calendario'],
     };
 
     if (this.isEdit()) {
-      this.campeonatoService.update(this.editId, data);
+      this.competenciaService.update(this.editId, data);
     } else {
-      this.campeonatoService.create(data);
+      this.competenciaService.create(data);
     }
-    this.router.navigate(['/gestion/campeonatos']);
+    this.router.navigate(['/gestion/competencias']);
   }
 
   protected cancelar(): void {
-    this.router.navigate(['/gestion/campeonatos']);
+    this.router.navigate(['/gestion/competencias']);
   }
 }

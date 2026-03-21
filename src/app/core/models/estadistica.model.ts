@@ -1,5 +1,5 @@
 export interface TablaPosiciones {
-  campeonatoId: string;
+  competenciaId: string;
   disciplinaId: string;
   posiciones: PosicionEquipo[];
 }
@@ -43,8 +43,8 @@ export interface EstadisticaAmonestado {
 }
 
 export interface RankingHistorico {
-  campeonatoId: string;
-  campeonatoNombre: string;
+  competenciaId: string;
+  competenciaNombre: string;
   temporada: string;
   equipoCampeonId: string;
   equipoCampeonNombre: string;

@@ -15,6 +15,9 @@ import { ESTADO_PROGRAMA_LABELS } from '../../core/models/academia.model';
           <h2 class="text-2xl font-bold text-slate-900 mt-1">Programas</h2>
           <p class="text-slate-500 mt-1">Paquetes comerciales que agrupan cursos y clases</p>
         </div>
+        <a [routerLink]="['/', { outlets: { primary: ['academia', 'programas'], panel: ['academia', 'programas', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+          <span aria-hidden="true">+</span> Nuevo Programa
+        </a>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -33,10 +36,14 @@ import { ESTADO_PROGRAMA_LABELS } from '../../core/models/academia.model';
               </span>
             </div>
 
-            <div class="mt-4 grid grid-cols-3 gap-3 text-sm">
+            <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
               <div>
                 <p class="text-slate-400">Tipo</p>
                 <p class="font-medium capitalize">{{ prog.tipo }}</p>
+              </div>
+              <div>
+                <p class="text-slate-400">Cursos hijos</p>
+                <p class="font-medium">{{ prog.cursoIds.length }}</p>
               </div>
               <div>
                 <p class="text-slate-400">Fechas</p>

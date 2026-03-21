@@ -1,25 +1,25 @@
 import { Injectable, signal, computed } from '@angular/core';
 import {
-  Campeonato,
+  Competencia,
   CalendarioEvento,
-  EstadoCampeonato,
+  EstadoCompetencia,
   HistorialEstado,
   TRANSICIONES_ESTADO,
   PARAMETROS_DEFAULT,
   FechaBloqueada,
-} from '../models/campeonato.model';
+} from '../models/competencia.model';
 
-const MOCK_CAMPEONATOS: Campeonato[] = [
+const MOCK_COMPETENCIAS: Competencia[] = [
   {
     id: 'camp-1',
-    nombre: 'Campeonato Interno 2026',
+    nombre: 'Competencia Interno 2026',
     tipo: 'interno',
     modalidad: 'interno_cerrado',
     estructura: 'apertura_clausura',
     estado: 'en_ejecucion',
     anio: 2026,
     periodo: '1er semestre',
-    observaciones: 'Campeonato interno anual para socios del club',
+    observaciones: 'Competencia interno anual para socios del club',
     disciplinaIds: ['disc-futbol', 'disc-voley'],
     reglasGenerales: [
       { id: 'r1', nombre: 'Puntos por victoria', descripcion: 'Cantidad de puntos otorgados al equipo ganador', valor: '3' },
@@ -34,14 +34,14 @@ const MOCK_CAMPEONATOS: Campeonato[] = [
       { id: 'fb-1', fecha: '2026-04-02', motivo: 'Feriado nacional', tipo: 'evento' },
     ],
     calendario: [
-      { id: 'cal-1', campeonatoId: 'camp-1', titulo: 'Inicio Apertura', fecha: '2026-03-01', tipo: 'inicio_fase' },
-      { id: 'cal-2', campeonatoId: 'camp-1', titulo: 'Fin Apertura', fecha: '2026-06-30', tipo: 'fin_fase' },
+      { id: 'cal-1', competenciaId: 'camp-1', titulo: 'Inicio Apertura', fecha: '2026-03-01', tipo: 'inicio_fase' },
+      { id: 'cal-2', competenciaId: 'camp-1', titulo: 'Fin Apertura', fecha: '2026-06-30', tipo: 'fin_fase' },
     ],
     parametros: { ...PARAMETROS_DEFAULT, maxDisciplinas: 5, permitirInvitados: false },
     publicado: true,
     fechaPublicacion: '2026-01-10',
     publicacionAutomatica: false,
-    descripcion: 'Campeonato interno anual para socios del club',
+    descripcion: 'Competencia interno anual para socios del club',
     historialEstados: [
       { estado: 'borrador', fecha: '2026-01-01' },
       { estado: 'programado', fecha: '2026-01-15' },
@@ -207,7 +207,7 @@ const MOCK_CAMPEONATOS: Campeonato[] = [
   },
   {
     id: 'camp-7',
-    nombre: 'Campeonato de Atletismo 2026',
+    nombre: 'Competencia de Atletismo 2026',
     tipo: 'abierto',
     modalidad: 'abierto',
     estructura: 'unico',
@@ -225,7 +225,7 @@ const MOCK_CAMPEONATOS: Campeonato[] = [
     publicado: false,
     publicacionAutomatica: true,
     fechaProgramadaPublicacion: '2026-06-01',
-    descripcion: 'Campeonato abierto de atletismo con pruebas de pista y campo',
+    descripcion: 'Competencia abierto de atletismo con pruebas de pista y campo',
     historialEstados: [
       { estado: 'borrador', fecha: '2026-03-01' },
       { estado: 'programado', fecha: '2026-03-15' },
@@ -387,8 +387,8 @@ const MOCK_CAMPEONATOS: Campeonato[] = [
 ];
 
 @Injectable({ providedIn: 'root' })
-export class CampeonatoService {
-  private readonly _items = signal<Campeonato[]>(MOCK_CAMPEONATOS);
+export class CompetenciaService {
+  private readonly _items = signal<Competencia[]>(MOCK_COMPETENCIAS);
   readonly items = this._items.asReadonly();
 
   // ──── Selectores por estado ────
@@ -402,31 +402,31 @@ export class CampeonatoService {
 
   // ──── Reportes ────
 
-  porAnio(anio: number): Campeonato[] {
+  porAnio(anio: number): Competencia[] {
     return this._items().filter((c) => c.anio === anio);
   }
 
-  activos(): Campeonato[] {
+  activos(): Competencia[] {
     return this._items().filter((c) => c.estado === 'en_ejecucion' || c.estado === 'programado');
   }
 
-  historialPorDisciplina(disciplinaId: string): Campeonato[] {
+  historialPorDisciplina(disciplinaId: string): Competencia[] {
     return this._items().filter((c) => c.disciplinaIds.includes(disciplinaId));
   }
 
-  suspendidosYAnulados(): Campeonato[] {
+  suspendidosYAnulados(): Competencia[] {
     return this._items().filter((c) => c.estado === 'suspendido' || c.estado === 'anulado');
   }
 
   // ──── CRUD ────
 
-  getById(id: string): Campeonato | undefined {
+  getById(id: string): Competencia | undefined {
     return this._items().find((c) => c.id === id);
   }
 
-  create(item: Omit<Campeonato, 'id' | 'estado' | 'publicado' | 'historialEstados' | 'creadoEn' | 'actualizadoEn'>): void {
+  create(item: Omit<Competencia, 'id' | 'estado' | 'publicado' | 'historialEstados' | 'creadoEn' | 'actualizadoEn'>): void {
     const now = new Date().toISOString();
-    const newItem: Campeonato = {
+    const newItem: Competencia = {
       ...item,
       id: crypto.randomUUID(),
       estado: 'borrador',
@@ -438,7 +438,7 @@ export class CampeonatoService {
     this._items.update((items) => [...items, newItem]);
   }
 
-  update(id: string, changes: Partial<Campeonato>): void {
+  update(id: string, changes: Partial<Competencia>): void {
     this._items.update((items) =>
       items.map((i) =>
         i.id === id ? { ...i, ...changes, actualizadoEn: new Date().toISOString() } : i
@@ -452,31 +452,31 @@ export class CampeonatoService {
 
   // ──── Máquina de estados ────
 
-  puedeTransicionar(campeonatoId: string, nuevoEstado: EstadoCampeonato): boolean {
-    const camp = this.getById(campeonatoId);
+  puedeTransicionar(competenciaId: string, nuevoEstado: EstadoCompetencia): boolean {
+    const camp = this.getById(competenciaId);
     if (!camp) return false;
     return TRANSICIONES_ESTADO[camp.estado].includes(nuevoEstado);
   }
 
-  transicionesDisponibles(campeonatoId: string): EstadoCampeonato[] {
-    const camp = this.getById(campeonatoId);
+  transicionesDisponibles(competenciaId: string): EstadoCompetencia[] {
+    const camp = this.getById(competenciaId);
     if (!camp) return [];
     return TRANSICIONES_ESTADO[camp.estado];
   }
 
   /** Regla de negocio: no iniciar sin disciplinas */
-  private validarIniciar(camp: Campeonato): string | null {
+  private validarIniciar(camp: Competencia): string | null {
     if (camp.disciplinaIds.length === 0) {
-      return 'No se puede iniciar un campeonato sin disciplinas asociadas.';
+      return 'No se puede iniciar un competencia sin disciplinas asociadas.';
     }
     return null;
   }
 
-  cambiarEstado(campeonatoId: string, nuevoEstado: EstadoCampeonato, motivo?: string): string | true {
-    if (!this.puedeTransicionar(campeonatoId, nuevoEstado)) {
+  cambiarEstado(competenciaId: string, nuevoEstado: EstadoCompetencia, motivo?: string): string | true {
+    if (!this.puedeTransicionar(competenciaId, nuevoEstado)) {
       return 'Transición de estado no permitida.';
     }
-    const camp = this.getById(campeonatoId)!;
+    const camp = this.getById(competenciaId)!;
 
     // Regla: no se puede iniciar sin disciplinas
     if (nuevoEstado === 'en_ejecucion') {
@@ -486,7 +486,7 @@ export class CampeonatoService {
 
     // Regla: finalizado no puede reabrirse
     if (camp.estado === 'finalizado') {
-      return 'Un campeonato finalizado no puede reabrirse.';
+      return 'Un competencia finalizado no puede reabrirse.';
     }
 
     const now = new Date().toISOString();
@@ -494,8 +494,8 @@ export class CampeonatoService {
 
     this._items.update((items) =>
       items.map((c) => {
-        if (c.id !== campeonatoId) return c;
-        const updates: Partial<Campeonato> = {
+        if (c.id !== competenciaId) return c;
+        const updates: Partial<Competencia> = {
           estado: nuevoEstado,
           historialEstados: [...c.historialEstados, nuevoHistorial],
           actualizadoEn: now,
@@ -514,20 +514,20 @@ export class CampeonatoService {
 
   // ──── Publicación ────
 
-  publicar(campeonatoId: string): boolean {
-    const camp = this.getById(campeonatoId);
+  publicar(competenciaId: string): boolean {
+    const camp = this.getById(competenciaId);
     if (!camp || camp.publicado) return false;
-    this.update(campeonatoId, {
+    this.update(competenciaId, {
       publicado: true,
       fechaPublicacion: new Date().toISOString(),
     });
     return true;
   }
 
-  despublicar(campeonatoId: string): boolean {
-    const camp = this.getById(campeonatoId);
+  despublicar(competenciaId: string): boolean {
+    const camp = this.getById(competenciaId);
     if (!camp || !camp.publicado) return false;
-    this.update(campeonatoId, {
+    this.update(competenciaId, {
       publicado: false,
       fechaPublicacion: undefined,
     });
@@ -536,36 +536,36 @@ export class CampeonatoService {
 
   // ──── Cierre y Anulación ────
 
-  cerrar(campeonatoId: string, motivo?: string): string | true {
-    return this.cambiarEstado(campeonatoId, 'finalizado', motivo);
+  cerrar(competenciaId: string, motivo?: string): string | true {
+    return this.cambiarEstado(competenciaId, 'finalizado', motivo);
   }
 
-  anular(campeonatoId: string, motivo?: string): string | true {
-    return this.cambiarEstado(campeonatoId, 'anulado', motivo);
+  anular(competenciaId: string, motivo?: string): string | true {
+    return this.cambiarEstado(competenciaId, 'anulado', motivo);
   }
 
   // ──── Calendario ────
 
   addCalendarioEvento(
-    campeonatoId: string,
-    evento: Omit<CalendarioEvento, 'id' | 'campeonatoId'>
+    competenciaId: string,
+    evento: Omit<CalendarioEvento, 'id' | 'competenciaId'>
   ): void {
     const newEvento: CalendarioEvento = {
       ...evento,
       id: crypto.randomUUID(),
-      campeonatoId,
+      competenciaId,
     };
     this._items.update((items) =>
       items.map((c) =>
-        c.id === campeonatoId ? { ...c, calendario: [...c.calendario, newEvento] } : c
+        c.id === competenciaId ? { ...c, calendario: [...c.calendario, newEvento] } : c
       )
     );
   }
 
-  removeCalendarioEvento(campeonatoId: string, eventoId: string): void {
+  removeCalendarioEvento(competenciaId: string, eventoId: string): void {
     this._items.update((items) =>
       items.map((c) =>
-        c.id === campeonatoId
+        c.id === competenciaId
           ? { ...c, calendario: c.calendario.filter((e) => e.id !== eventoId) }
           : c
       )
@@ -574,19 +574,19 @@ export class CampeonatoService {
 
   // ──── Fechas bloqueadas ────
 
-  addFechaBloqueada(campeonatoId: string, fb: Omit<FechaBloqueada, 'id'>): void {
+  addFechaBloqueada(competenciaId: string, fb: Omit<FechaBloqueada, 'id'>): void {
     const nueva: FechaBloqueada = { ...fb, id: crypto.randomUUID() };
     this._items.update((items) =>
       items.map((c) =>
-        c.id === campeonatoId ? { ...c, fechasBloqueadas: [...c.fechasBloqueadas, nueva] } : c
+        c.id === competenciaId ? { ...c, fechasBloqueadas: [...c.fechasBloqueadas, nueva] } : c
       )
     );
   }
 
-  removeFechaBloqueada(campeonatoId: string, fbId: string): void {
+  removeFechaBloqueada(competenciaId: string, fbId: string): void {
     this._items.update((items) =>
       items.map((c) =>
-        c.id === campeonatoId
+        c.id === competenciaId
           ? { ...c, fechasBloqueadas: c.fechasBloqueadas.filter((f) => f.id !== fbId) }
           : c
       )
@@ -599,7 +599,7 @@ export class CampeonatoService {
     fechaInicio: string,
     fechaFin: string,
     excluirId?: string
-  ): Campeonato[] {
+  ): Competencia[] {
     return this._items().filter((c) => {
       if (excluirId && c.id === excluirId) return false;
       if (c.estado === 'anulado' || c.estado === 'finalizado') return false;

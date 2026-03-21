@@ -10,6 +10,11 @@ export const AREA_ROUTES: Routes = [
     loadComponent: () => import('./area-form').then((m) => m.AreaFormComponent),
   },
   {
+    path: 'nueva',
+    outlet: 'panel',
+    loadComponent: () => import('./area-form').then((m) => m.AreaFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./area-detail').then((m) => m.AreaDetailComponent),
   },

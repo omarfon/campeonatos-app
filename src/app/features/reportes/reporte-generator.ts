@@ -1,7 +1,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ReporteService } from '../../core/services/reporte.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 import { EstadisticaService } from '../../core/services/estadistica.service';
 import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.model';
@@ -32,7 +32,7 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
               <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo de reporte</label>
               <select id="tipo" formControlName="tipo"
                 class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                <option value="campeonato">Campeonato</option>
+                <option value="competencia">Competencia</option>
                 <option value="disciplina">Disciplina</option>
                 <option value="jugador">Jugador</option>
                 <option value="equipo">Equipo</option>
@@ -40,11 +40,11 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
             </div>
 
             <div>
-              <label for="campeonato" class="block text-sm font-medium text-slate-700 mb-1">Campeonato</label>
-              <select id="campeonato" formControlName="campeonatoId"
+              <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
+              <select id="competencia" formControlName="competenciaId"
                 class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">Todos</option>
-                @for (camp of campeonatos(); track camp.id) {
+                @for (camp of competencias(); track camp.id) {
                   <option [value]="camp.id">{{ camp.nombre }}</option>
                 }
               </select>
@@ -123,19 +123,19 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
 export class ReporteGeneratorComponent {
   private readonly fb = inject(FormBuilder);
   private readonly reporteService = inject(ReporteService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
   private readonly estadisticaService = inject(EstadisticaService);
 
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly competencias = this.competenciaService.items;
   protected readonly disciplinas = this.disciplinaService.items;
   protected readonly reportes = this.reporteService.reportes;
   protected readonly selectedReport = signal<Reporte | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     titulo: [''],
-    tipo: ['campeonato' as TipoReporte],
-    campeonatoId: [''],
+    tipo: ['competencia' as TipoReporte],
+    competenciaId: [''],
     disciplinaId: [''],
   });
 
@@ -144,18 +144,18 @@ export class ReporteGeneratorComponent {
     const titulo = value.titulo || `Reporte de ${value.tipo}`;
     const filtros: FiltroReporte = {
       tipo: value.tipo,
-      campeonatoId: value.campeonatoId || undefined,
+      competenciaId: value.competenciaId || undefined,
       disciplinaId: value.disciplinaId || undefined,
     };
 
     let datos: unknown;
-    if (value.tipo === 'campeonato' && value.campeonatoId && value.disciplinaId) {
+    if (value.tipo === 'competencia' && value.competenciaId && value.disciplinaId) {
       datos = {
-        posiciones: this.estadisticaService.calcularTablaPosiciones(value.campeonatoId, value.disciplinaId).posiciones,
-        goleadores: this.estadisticaService.calcularGoleadores(value.campeonatoId, value.disciplinaId),
+        posiciones: this.estadisticaService.calcularTablaPosiciones(value.competenciaId, value.disciplinaId).posiciones,
+        goleadores: this.estadisticaService.calcularGoleadores(value.competenciaId, value.disciplinaId),
       };
-    } else if (value.tipo === 'campeonato' && value.campeonatoId) {
-      datos = { amonestados: this.estadisticaService.calcularAmonestados(value.campeonatoId) };
+    } else if (value.tipo === 'competencia' && value.competenciaId) {
+      datos = { amonestados: this.estadisticaService.calcularAmonestados(value.competenciaId) };
     } else {
       datos = { mensaje: 'Reporte generado exitosamente', fecha: new Date().toISOString() };
     }

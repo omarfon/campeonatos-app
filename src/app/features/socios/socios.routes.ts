@@ -10,6 +10,11 @@ export const SOCIO_ROUTES: Routes = [
     loadComponent: () => import('./socio-form').then((m) => m.SocioFormComponent),
   },
   {
+    path: 'nuevo',
+    outlet: 'panel',
+    loadComponent: () => import('./socio-form').then((m) => m.SocioFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./socio-detail').then((m) => m.SocioDetailComponent),
   },

@@ -13,7 +13,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
           <h2 class="text-2xl font-bold text-slate-900">Disciplinas Deportivas</h2>
           <p class="text-slate-500 mt-1">Configuración de deportes y sus reglas</p>
         </div>
-        <a routerLink="nueva" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'disciplinas'], panel: ['maestros', 'disciplinas', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <span aria-hidden="true">+</span> Nueva Disciplina
         </a>
       </div>

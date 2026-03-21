@@ -10,6 +10,11 @@ export const SEDE_ROUTES: Routes = [
     loadComponent: () => import('./sede-form').then((m) => m.SedeFormComponent),
   },
   {
+    path: 'nueva',
+    outlet: 'panel',
+    loadComponent: () => import('./sede-form').then((m) => m.SedeFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./sede-detail').then((m) => m.SedeDetailComponent),
   },

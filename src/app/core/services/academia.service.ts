@@ -10,6 +10,10 @@ import {
   Ambiente,
   Clase,
   Programa,
+  BloqueoInstitucional,
+  ValidacionProgramacionClaseResultado,
+  HorarioClase,
+  SesionProgramadaClase,
 } from '../models/academia.model';
 
 // ──── Mock: Rubros (Nivel 1) ────
@@ -214,13 +218,14 @@ const MOCK_DOCENTES: Docente[] = [
 // ──── Mock: Ambientes ────
 
 const MOCK_AMBIENTES: Ambiente[] = [
-  { id: 'amb-piscina', nombre: 'Piscina Olímpica', tipo: 'Piscina', capacidad: 30 },
-  { id: 'amb-dojo', nombre: 'Dojo Principal', tipo: 'Gimnasio', capacidad: 25 },
-  { id: 'amb-cancha1', nombre: 'Cancha de Fútbol 1', tipo: 'Cancha', capacidad: 30 },
-  { id: 'amb-salon1', nombre: 'Salón de Música A', tipo: 'Aula', capacidad: 15 },
-  { id: 'amb-ballet', nombre: 'Salón de Danza', tipo: 'Salón', capacidad: 20 },
-  { id: 'amb-aula1', nombre: 'Aula 101', tipo: 'Aula', capacidad: 25 },
-  { id: 'amb-taller', nombre: 'Taller de Artes', tipo: 'Taller', capacidad: 15 },
+  { id: 'amb-piscina', nombre: 'Piscina Olímpica', zona: 'Zona Acuática', tipo: 'Piscina', aforoFisico: 30, aforoPedagogico: 24, aforoComodin: 4, capacidad: 30 },
+  { id: 'amb-dojo', nombre: 'Dojo Principal', zona: 'Zona Marcial', tipo: 'Dojo', aforoFisico: 25, aforoPedagogico: 18, aforoComodin: 2, capacidad: 25 },
+  { id: 'amb-coliseo', nombre: 'Coliseo Cubierto', zona: 'Zona Polideportiva', tipo: 'Coliseo', aforoFisico: 120, aforoPedagogico: 80, aforoComodin: 10, capacidad: 120 },
+  { id: 'amb-cancha1', nombre: 'Cancha de Fútbol 1', zona: 'Zona Campo', tipo: 'Cancha', aforoFisico: 30, aforoPedagogico: 22, aforoComodin: 3, capacidad: 30 },
+  { id: 'amb-salon1', nombre: 'Salón de Música A', zona: 'Zona Cultural', tipo: 'Aula', aforoFisico: 15, aforoPedagogico: 12, aforoComodin: 2, capacidad: 15 },
+  { id: 'amb-ballet', nombre: 'Salón de Danza', zona: 'Zona Cultural', tipo: 'Salón', aforoFisico: 20, aforoPedagogico: 14, aforoComodin: 2, capacidad: 20 },
+  { id: 'amb-aula1', nombre: 'Aula 101', zona: 'Zona Académica', tipo: 'Aula', aforoFisico: 25, aforoPedagogico: 20, aforoComodin: 3, capacidad: 25 },
+  { id: 'amb-taller', nombre: 'Taller de Artes', zona: 'Zona Creativa', tipo: 'Taller', aforoFisico: 15, aforoPedagogico: 10, aforoComodin: 1, capacidad: 15 },
 ];
 
 // ──── Mock: Clases ────
@@ -229,80 +234,99 @@ const MOCK_CLASES: Clase[] = [
   {
     id: 'cls-nat-ninos-prin', cursoId: 'cur-natacion', categoriaEdadId: 'ce-nat-ninos',
     nivelId: 'niv-nat-1', ambienteId: 'amb-piscina', docenteId: 'doc-1',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'lunes', horaInicio: '08:00', horaFin: '09:30' },
       { dia: 'miercoles', horaInicio: '08:00', horaFin: '09:30' },
       { dia: 'viernes', horaInicio: '08:00', horaFin: '09:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 20, matriculados: 16, tarifaMensual: 180, tarifaMatricula: 50,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-nat-adult-inter', cursoId: 'cur-natacion', categoriaEdadId: 'ce-nat-adult',
     nivelId: 'niv-nat-2', ambienteId: 'amb-piscina', docenteId: 'doc-1',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'martes', horaInicio: '19:00', horaFin: '20:30' },
       { dia: 'jueves', horaInicio: '19:00', horaFin: '20:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 15, matriculados: 15, tarifaMensual: 200, tarifaMatricula: 50,
     estado: 'llena', periodo: '2026-I',
   },
   {
     id: 'cls-kar-ninos-blanc', cursoId: 'cur-karate', categoriaEdadId: 'ce-kar-ninos',
     nivelId: 'niv-kar-1', ambienteId: 'amb-dojo', docenteId: 'doc-2',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'martes', horaInicio: '16:00', horaFin: '17:30' },
       { dia: 'jueves', horaInicio: '16:00', horaFin: '17:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 20, matriculados: 14, tarifaMensual: 160, tarifaMatricula: 40,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-kar-adult-verde', cursoId: 'cur-karate', categoriaEdadId: 'ce-kar-adult',
     nivelId: 'niv-kar-4', ambienteId: 'amb-dojo', docenteId: 'doc-2',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'lunes', horaInicio: '20:00', horaFin: '21:30' },
       { dia: 'miercoles', horaInicio: '20:00', horaFin: '21:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 15, matriculados: 8, tarifaMensual: 200, tarifaMatricula: 50,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-fut-7a10-princ', cursoId: 'cur-futbol', categoriaEdadId: 'ce-fut-7a10',
     nivelId: 'niv-fut-1', ambienteId: 'amb-cancha1', docenteId: 'doc-5',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'sabado', horaInicio: '09:00', horaFin: '10:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 25, matriculados: 22, tarifaMensual: 150, tarifaMatricula: 40,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-gui-adult-bas1', cursoId: 'cur-guitarra', categoriaEdadId: 'ce-gui-adult',
     nivelId: 'niv-gui-1', ambienteId: 'amb-salon1', docenteId: 'doc-4',
+    tipoHorario: 'abierto',
     horarios: [
       { dia: 'miercoles', horaInicio: '18:00', horaFin: '19:30' },
       { dia: 'viernes', horaInicio: '18:00', horaFin: '19:30' },
     ],
+    frecuenciaSemanal: 3,
+    tipoDuracion: 'continua',
     vacantes: 12, matriculados: 10, tarifaMensual: 170, tarifaMatricula: 40,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-bal-inf-princ', cursoId: 'cur-ballet', categoriaEdadId: 'ce-bal-inf',
     nivelId: 'niv-bal-1', ambienteId: 'amb-ballet', docenteId: 'doc-3',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'martes', horaInicio: '15:00', horaFin: '16:00' },
       { dia: 'jueves', horaInicio: '15:00', horaFin: '16:00' },
     ],
+    tipoDuracion: 'finita',
+    fechaInicio: '2026-03-01',
+    fechaFin: '2026-07-31',
     vacantes: 15, matriculados: 12, tarifaMensual: 150, tarifaMatricula: 35,
     estado: 'abierta', periodo: '2026-I',
   },
   {
     id: 'cls-ing-adult-bas1', cursoId: 'cur-ingles', categoriaEdadId: 'ce-ing-adult',
     nivelId: 'niv-ing-1', ambienteId: 'amb-aula1', docenteId: 'doc-6',
+    tipoHorario: 'cerrado',
     horarios: [
       { dia: 'lunes', horaInicio: '19:00', horaFin: '20:30' },
       { dia: 'miercoles', horaInicio: '19:00', horaFin: '20:30' },
     ],
+    tipoDuracion: 'continua',
     vacantes: 20, matriculados: 18, tarifaMensual: 190, tarifaMatricula: 50,
     estado: 'abierta', periodo: '2026-I',
   },
@@ -314,14 +338,32 @@ const MOCK_PROGRAMAS: Programa[] = [
   {
     id: 'prog-verano', nombre: 'Programa Vacacional de Verano 2026', descripcion: 'Programa integral de actividades deportivas y culturales durante las vacaciones de verano. Incluye natación, fútbol, artes marciales y talleres artísticos.',
     tipo: 'vacacional', fechaInicio: '2026-01-05', fechaFin: '2026-02-28',
+    cursoIds: ['cur-natacion', 'cur-futbol', 'cur-karate', 'cur-ballet'],
     claseIds: ['cls-nat-ninos-prin', 'cls-fut-7a10-princ', 'cls-kar-ninos-blanc', 'cls-bal-inf-princ'],
     estado: 'finalizado',
   },
   {
     id: 'prog-sem1', nombre: 'Programa Regular 1er Semestre 2026', descripcion: 'Oferta académica regular del primer semestre con cursos deportivos, musicales y culturales.',
     tipo: 'regular', fechaInicio: '2026-03-01', fechaFin: '2026-07-31',
+    cursoIds: ['cur-natacion', 'cur-karate', 'cur-futbol', 'cur-guitarra', 'cur-ballet', 'cur-ingles'],
     claseIds: ['cls-nat-ninos-prin', 'cls-nat-adult-inter', 'cls-kar-ninos-blanc', 'cls-kar-adult-verde', 'cls-fut-7a10-princ', 'cls-gui-adult-bas1', 'cls-bal-inf-princ', 'cls-ing-adult-bas1'],
     estado: 'activo',
+  },
+];
+
+const MOCK_BLOQUEOS_INSTITUCIONALES: BloqueoInstitucional[] = [
+  {
+    id: 'bloq-1',
+    fecha: '2026-07-28',
+    tipo: 'feriado',
+    motivo: 'Fiestas Patrias',
+  },
+  {
+    id: 'bloq-2',
+    fecha: '2026-08-12',
+    tipo: 'evento_interno',
+    motivo: 'Mantenimiento general de infraestructura',
+    zona: 'Zona Acuática',
   },
 ];
 
@@ -339,6 +381,7 @@ export class AcademiaService {
   private readonly _ambientes = signal<Ambiente[]>(MOCK_AMBIENTES);
   private readonly _clases = signal<Clase[]>(MOCK_CLASES);
   private readonly _programas = signal<Programa[]>(MOCK_PROGRAMAS);
+  private readonly _bloqueosInstitucionales = signal<BloqueoInstitucional[]>(MOCK_BLOQUEOS_INSTITUCIONALES);
 
   // ── Lectores ──
 
@@ -352,6 +395,7 @@ export class AcademiaService {
   readonly ambientes = this._ambientes.asReadonly();
   readonly clases = this._clases.asReadonly();
   readonly programas = this._programas.asReadonly();
+  readonly bloqueosInstitucionales = this._bloqueosInstitucionales.asReadonly();
 
   // ── Computados ──
 
@@ -427,6 +471,13 @@ export class AcademiaService {
     return this._ambientes().find(a => a.id === id);
   }
 
+  getAforoRegularDisponibleAmbiente(ambienteId: string): number {
+    const ambiente = this.getAmbienteById(ambienteId);
+    if (!ambiente) return 0;
+    const limiteBase = Math.min(ambiente.aforoFisico, ambiente.aforoPedagogico);
+    return Math.max(limiteBase - ambiente.aforoComodin, 0);
+  }
+
   getCategoriaEdadById(id: string): CategoriaEdad | undefined {
     return this._categoriasEdad().find(c => c.id === id);
   }
@@ -442,7 +493,29 @@ export class AcademiaService {
   getClasesByPrograma(programaId: string): Clase[] {
     const programa = this.getProgramaById(programaId);
     if (!programa) return [];
-    return programa.claseIds.map(id => this.getClaseById(id)).filter((c): c is Clase => !!c);
+    const claseIds = new Set([
+      ...programa.claseIds,
+      ...this._clases()
+        .filter(clase => programa.cursoIds.includes(clase.cursoId))
+        .map(clase => clase.id),
+    ]);
+
+    return Array.from(claseIds)
+      .map(id => this.getClaseById(id))
+      .filter((c): c is Clase => !!c);
+  }
+
+  getCursosByPrograma(programaId: string): Curso[] {
+    const programa = this.getProgramaById(programaId);
+    if (!programa) return [];
+
+    return programa.cursoIds
+      .map(id => this.getCursoById(id))
+      .filter((curso): curso is Curso => !!curso);
+  }
+
+  getProgramasByCurso(cursoId: string): Programa[] {
+    return this._programas().filter(programa => programa.cursoIds.includes(cursoId));
   }
 
   getCategoriasByRubro(rubroId: string): CategoriaAcademica[] {
@@ -501,6 +574,175 @@ export class AcademiaService {
     this._clases.update(items => items.filter(c => c.id !== id));
   }
 
+  validateProgramacionClase(input: {
+    ambienteId: string;
+    horarios: HorarioClase[];
+    periodo: string;
+    tipoDuracion: 'finita' | 'continua';
+    fechaInicio?: string;
+    fechaFin?: string;
+    claseIdExcluir?: string;
+  }): ValidacionProgramacionClaseResultado {
+    const mensajes: string[] = [];
+    const ambiente = this.getAmbienteById(input.ambienteId);
+
+    if (!ambiente) {
+      return {
+        permitido: false,
+        mensajes: ['Seleccione un ambiente válido para programar la clase.'],
+        sesionesReplica: 0,
+      };
+    }
+
+    if (input.horarios.length === 0) {
+      mensajes.push('Debe registrar al menos un bloque horario.');
+    }
+
+    if (input.tipoDuracion === 'finita') {
+      if (!input.fechaInicio || !input.fechaFin) {
+        mensajes.push('Para duración finita debe indicar fecha de inicio y fin.');
+      } else if (input.fechaInicio > input.fechaFin) {
+        mensajes.push('La fecha de inicio no puede ser mayor a la fecha de fin.');
+      }
+    }
+
+    const clasesMismaZona = this._clases().filter(clase => {
+      if (input.claseIdExcluir && clase.id === input.claseIdExcluir) return false;
+      if (clase.periodo !== input.periodo) return false;
+      const ambienteClase = this.getAmbienteById(clase.ambienteId);
+      if (!ambienteClase) return false;
+      return ambienteClase.id === ambiente.id || ambienteClase.zona === ambiente.zona;
+    });
+
+    for (const claseExistente of clasesMismaZona) {
+      const ambienteExistente = this.getAmbienteById(claseExistente.ambienteId);
+      if (!ambienteExistente) continue;
+
+      const conflictoHorario = input.horarios.some(nuevo =>
+        claseExistente.horarios.some(existente =>
+          nuevo.dia === existente.dia &&
+          this.horariosSeCruzan(nuevo.horaInicio, nuevo.horaFin, existente.horaInicio, existente.horaFin)
+        )
+      );
+
+      if (!conflictoHorario) continue;
+
+      const conflictoFechas = this.rangosSeCruzan(
+        input.tipoDuracion,
+        input.fechaInicio,
+        input.fechaFin,
+        claseExistente.tipoDuracion,
+        claseExistente.fechaInicio,
+        claseExistente.fechaFin
+      );
+
+      if (!conflictoFechas) continue;
+
+      mensajes.push(
+        `Cruce detectado con la clase ${claseExistente.id} en ${ambienteExistente.nombre} (${ambienteExistente.zona}).`
+      );
+    }
+
+    const sesionesReplica = this.generarReplicaSemanal(input.horarios, input.fechaInicio, input.fechaFin).length;
+
+    if (input.tipoDuracion === 'finita' && input.fechaInicio && input.fechaFin) {
+      const { fechaInicio, fechaFin } = input;
+      const sesiones = this.generarReplicaSemanal(input.horarios, fechaInicio, fechaFin);
+      const bloqueos = this._bloqueosInstitucionales().filter(b => {
+        if (b.fecha < fechaInicio || b.fecha > fechaFin) return false;
+        if (!b.zona) return true;
+        return b.zona === ambiente.zona;
+      });
+
+      if (bloqueos.length > 0) {
+        for (const bloqueo of bloqueos) {
+          const afecta = sesiones.some(sesion => sesion.fecha === bloqueo.fecha);
+          if (afecta) {
+            mensajes.push(`Bloqueo institucional ${bloqueo.fecha}: ${bloqueo.motivo}.`);
+          }
+        }
+      }
+    }
+
+    if (mensajes.length === 0) {
+      mensajes.push('Programación válida: sin cruces de zona y sin bloqueos institucionales.');
+    }
+
+    return {
+      permitido: mensajes.length === 1 && mensajes[0].startsWith('Programación válida'),
+      mensajes,
+      sesionesReplica,
+    };
+  }
+
+  // ── CRUD Ambientes ──
+
+  createAmbiente(ambiente: Omit<Ambiente, 'id' | 'capacidad'>): void {
+    this._ambientes.update(items => [
+      ...items,
+      {
+        ...ambiente,
+        capacidad: ambiente.aforoFisico,
+        id: crypto.randomUUID(),
+      },
+    ]);
+  }
+
+  updateAmbiente(id: string, changes: Partial<Ambiente>): void {
+    this._ambientes.update(items =>
+      items.map(ambiente => {
+        if (ambiente.id !== id) return ambiente;
+        const next = { ...ambiente, ...changes };
+        return { ...next, capacidad: next.aforoFisico };
+      })
+    );
+  }
+
+  deleteAmbiente(id: string): void {
+    this._ambientes.update(items => items.filter(ambiente => ambiente.id !== id));
+  }
+
+  createBloqueoInstitucional(bloqueo: Omit<BloqueoInstitucional, 'id'>): void {
+    this._bloqueosInstitucionales.update(items => [
+      ...items,
+      {
+        ...bloqueo,
+        id: crypto.randomUUID(),
+      },
+    ]);
+  }
+
+  deleteBloqueoInstitucional(id: string): void {
+    this._bloqueosInstitucionales.update(items => items.filter(bloqueo => bloqueo.id !== id));
+  }
+
+  generarReplicaSemanal(horarios: HorarioClase[], fechaInicio?: string, fechaFin?: string): SesionProgramadaClase[] {
+    if (!fechaInicio || !fechaFin || horarios.length === 0 || fechaInicio > fechaFin) {
+      return [];
+    }
+
+    const sesiones: SesionProgramadaClase[] = [];
+    let fecha = new Date(`${fechaInicio}T00:00:00`);
+    const fin = new Date(`${fechaFin}T00:00:00`);
+
+    while (fecha <= fin) {
+      const diaActual = this.dateToDiaSemana(fecha);
+      for (const horario of horarios) {
+        if (horario.dia === diaActual) {
+          sesiones.push({
+            fecha: fecha.toISOString().split('T')[0] ?? '',
+            dia: horario.dia,
+            horaInicio: horario.horaInicio,
+            horaFin: horario.horaFin,
+          });
+        }
+      }
+      fecha = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
+    }
+
+    return sesiones;
+  }
+
   // ── CRUD Programas ──
 
   createPrograma(programa: Omit<Programa, 'id'>): void {
@@ -527,5 +769,42 @@ export class AcademiaService {
 
   createSubcategoria(sub: Omit<SubcategoriaAcademica, 'id'>): void {
     this._subcategorias.update(items => [...items, { ...sub, id: crypto.randomUUID() }]);
+  }
+
+  private horariosSeCruzan(inicioA: string, finA: string, inicioB: string, finB: string): boolean {
+    const iniA = this.horaToMinutos(inicioA);
+    const endA = this.horaToMinutos(finA);
+    const iniB = this.horaToMinutos(inicioB);
+    const endB = this.horaToMinutos(finB);
+    return iniA < endB && iniB < endA;
+  }
+
+  private horaToMinutos(hora: string): number {
+    const [h, m] = hora.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  private rangosSeCruzan(
+    tipoA: 'finita' | 'continua',
+    inicioA?: string,
+    finA?: string,
+    tipoB?: 'finita' | 'continua',
+    inicioB?: string,
+    finB?: string
+  ): boolean {
+    if (tipoA !== 'finita' || tipoB !== 'finita') {
+      return true;
+    }
+
+    if (!inicioA || !finA || !inicioB || !finB) {
+      return true;
+    }
+
+    return !(finA < inicioB || finB < inicioA);
+  }
+
+  private dateToDiaSemana(fecha: Date): HorarioClase['dia'] {
+    const map: HorarioClase['dia'][] = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+    return map[fecha.getDay()] ?? 'lunes';
   }
 }

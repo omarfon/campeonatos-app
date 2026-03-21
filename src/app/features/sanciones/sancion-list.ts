@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { SancionService } from '../../core/services/sancion.service';
 import { EquipoService } from '../../core/services/equipo.service';
 import { EncuentroService } from '../../core/services/encuentro.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 
 @Component({
   selector: 'app-sancion-list',

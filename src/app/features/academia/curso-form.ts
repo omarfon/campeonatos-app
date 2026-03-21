@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@ang
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
 import { AcademiaService } from '../../core/services/academia.service';
-import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, TIPO_RUBRO_LABELS } from '../../core/models/academia.model';
+import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabilidad } from '../../core/models/academia.model';
 
 @Component({
   selector: 'app-curso-form',
@@ -141,6 +141,50 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, TIPO_RUBR
           </div>
         </div>
 
+        @if (form.value.manejaLevels) {
+          <div class="bg-white rounded-xl shadow-sm p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900">RF-05 · Niveles de Habilidad</h3>
+                <p class="text-sm text-slate-500 mt-1">Defina niveles como básico, intermedio, avanzado o cinturones.</p>
+              </div>
+              <button type="button" (click)="addNivel()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Agregar</button>
+            </div>
+
+            <div formArrayName="niveles" class="space-y-3">
+              @for (nivel of nivelesArray.controls; track $index) {
+                <div [formGroupName]="$index" class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-6 gap-3 items-end">
+                    <div class="sm:col-span-2">
+                      <label class="block text-xs text-slate-500 mb-1">Nombre</label>
+                      <input formControlName="nombre" type="text"
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-slate-500 mb-1">Orden</label>
+                      <input formControlName="orden" type="number" min="1"
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label class="block text-xs text-slate-500 mb-1">Descripción</label>
+                      <input formControlName="descripcion" type="text"
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    </div>
+                    <div class="flex items-center justify-between gap-2">
+                      <label class="inline-flex items-center gap-1 text-xs text-slate-600">
+                        <input type="checkbox" formControlName="requiereCertificado" class="rounded text-indigo-600 focus:ring-indigo-500" />
+                        Certifica
+                      </label>
+                      <button type="button" (click)="removeNivel($index)"
+                        class="text-red-500 hover:text-red-700 text-sm px-2" aria-label="Eliminar nivel">✕</button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         <!-- Categorías por Edad -->
         <div class="bg-white rounded-xl shadow-sm p-6 space-y-4">
           <div class="flex items-center justify-between">
@@ -223,8 +267,13 @@ export class CursoFormComponent implements OnInit {
     manejaLevels: [true],
     tipoNomenclaturaNivel: ['general' as TipoNomenclaturaNivel],
     estado: ['activo' as EstadoCurso],
+    niveles: this.fb.array<FormGroup>([]),
     categoriasEdad: this.fb.array<FormGroup>([]),
   });
+
+  get nivelesArray(): FormArray<FormGroup> {
+    return this.form.controls.niveles;
+  }
 
   get categoriasEdadArray(): FormArray<FormGroup> {
     return this.form.controls.categoriasEdad;
@@ -253,9 +302,15 @@ export class CursoFormComponent implements OnInit {
             esUnica: [ce.esUnica],
           }));
         });
+
+        const niveles = this.svc.getNivelesByCurso(id);
+        niveles.forEach(nivel => {
+          this.nivelesArray.push(this.createNivelGroup(nivel));
+        });
       }
     } else {
       this.updateFilteredCategorias();
+      this.addNivel();
     }
   }
 
@@ -294,9 +349,17 @@ export class CursoFormComponent implements OnInit {
     this.categoriasEdadArray.removeAt(index);
   }
 
+  protected addNivel(): void {
+    this.nivelesArray.push(this.createNivelGroup());
+  }
+
+  protected removeNivel(index: number): void {
+    this.nivelesArray.removeAt(index);
+  }
+
   protected guardar(): void {
     if (this.form.invalid) return;
-    const { categoriasEdad, subcategoriaId, ...val } = this.form.getRawValue();
+    const { categoriasEdad, niveles, subcategoriaId, ...val } = this.form.getRawValue();
     const cursoData = {
       ...val,
       subcategoriaId: subcategoriaId || undefined,
@@ -324,6 +387,20 @@ export class CursoFormComponent implements OnInit {
           esUnica: ce['esUnica'],
         });
       });
+
+      const nivelesExistentes = this.svc.getNivelesByCurso(cursoId);
+      nivelesExistentes.forEach(nivel => this.svc.removeNivel(nivel.id));
+      if (cursoData.manejaLevels) {
+        niveles.forEach((nivel, index) => {
+          this.svc.addNivel({
+            cursoId,
+            nombre: nivel['nombre'],
+            orden: Number(nivel['orden']) || index + 1,
+            requiereCertificado: !!nivel['requiereCertificado'],
+            descripcion: nivel['descripcion'] || undefined,
+          });
+        });
+      }
     }
 
     this.router.navigate(['/academia/cursos']);
@@ -331,5 +408,14 @@ export class CursoFormComponent implements OnInit {
 
   protected cancelar(): void {
     this.router.navigate(['/academia/cursos']);
+  }
+
+  private createNivelGroup(nivel?: Partial<NivelHabilidad>): FormGroup {
+    return this.fb.group({
+      nombre: [nivel?.nombre ?? '', Validators.required],
+      orden: [nivel?.orden ?? this.nivelesArray.length + 1, [Validators.required, Validators.min(1)]],
+      requiereCertificado: [nivel?.requiereCertificado ?? false],
+      descripcion: [nivel?.descripcion ?? ''],
+    });
   }
 }

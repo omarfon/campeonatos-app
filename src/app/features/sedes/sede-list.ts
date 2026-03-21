@@ -14,7 +14,7 @@ import { ESTADO_SEDE_LABELS, EstadoSede } from '../../core/models/sede.model';
           <h2 class="text-2xl font-bold text-slate-900">Sedes</h2>
           <p class="text-slate-500 mt-1">Gestión de sedes y campos deportivos</p>
         </div>
-        <a routerLink="nueva" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'sedes'], panel: ['maestros', 'sedes', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <span aria-hidden="true">+</span> Nueva Sede
         </a>
       </div>

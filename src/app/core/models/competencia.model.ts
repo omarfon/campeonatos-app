@@ -1,12 +1,12 @@
 // ──── Tipos base ────
 
-export type TipoCampeonato = 'interno' | 'abierto';
+export type TipoCompetencia = 'interno' | 'abierto';
 
-export type ModalidadCampeonato = 'interno_cerrado' | 'interno_invitados' | 'abierto';
+export type ModalidadCompetencia = 'interno_cerrado' | 'interno_invitados' | 'abierto';
 
-export type EstructuraCampeonato = 'unico' | 'apertura_clausura' | 'fases_especiales';
+export type EstructuraCompetencia = 'unico' | 'apertura_clausura' | 'fases_especiales';
 
-export type EstadoCampeonato =
+export type EstadoCompetencia =
   | 'borrador'
   | 'programado'
   | 'en_ejecucion'
@@ -26,7 +26,7 @@ export interface ReglaGeneral {
 }
 
 export interface HistorialEstado {
-  estado: EstadoCampeonato;
+  estado: EstadoCompetencia;
   fecha: string;
   motivo?: string;
 }
@@ -38,7 +38,7 @@ export interface FechaBloqueada {
   tipo: TipoFechaBloqueada;
 }
 
-export interface ParametrosCampeonato {
+export interface ParametrosCompetencia {
   maxDisciplinas: number;
   permitirInvitados: boolean;
   permitirReapertura: boolean;
@@ -48,7 +48,7 @@ export interface ParametrosCampeonato {
 
 export interface CalendarioEvento {
   id: string;
-  campeonatoId: string;
+  competenciaId: string;
   titulo: string;
   fecha: string;
   tipo: 'inicio_fase' | 'fin_fase' | 'fecha_limite' | 'evento';
@@ -56,13 +56,13 @@ export interface CalendarioEvento {
 
 // ──── Entidad principal ────
 
-export interface Campeonato {
+export interface Competencia {
   id: string;
   nombre: string;
-  tipo: TipoCampeonato;
-  modalidad: ModalidadCampeonato;
-  estructura: EstructuraCampeonato;
-  estado: EstadoCampeonato;
+  tipo: TipoCompetencia;
+  modalidad: ModalidadCompetencia;
+  estructura: EstructuraCompetencia;
+  estado: EstadoCompetencia;
   anio: number;
   periodo?: string;
   observaciones?: string;
@@ -80,7 +80,7 @@ export interface Campeonato {
   calendario: CalendarioEvento[];
 
   // Parámetros
-  parametros: ParametrosCampeonato;
+  parametros: ParametrosCompetencia;
 
   // Publicación
   publicado: boolean;
@@ -107,7 +107,7 @@ export interface Campeonato {
 
 // ──── Constantes ────
 
-export const PARAMETROS_DEFAULT: ParametrosCampeonato = {
+export const PARAMETROS_DEFAULT: ParametrosCompetencia = {
   maxDisciplinas: 10,
   permitirInvitados: false,
   permitirReapertura: false,
@@ -116,7 +116,7 @@ export const PARAMETROS_DEFAULT: ParametrosCampeonato = {
 };
 
 /** Transiciones válidas de estado */
-export const TRANSICIONES_ESTADO: Record<EstadoCampeonato, EstadoCampeonato[]> = {
+export const TRANSICIONES_ESTADO: Record<EstadoCompetencia, EstadoCompetencia[]> = {
   borrador: ['programado', 'anulado'],
   programado: ['en_ejecucion', 'suspendido', 'anulado'],
   en_ejecucion: ['finalizado', 'suspendido'],
@@ -126,7 +126,7 @@ export const TRANSICIONES_ESTADO: Record<EstadoCampeonato, EstadoCampeonato[]> =
 };
 
 /** Labels legibles para cada estado */
-export const ESTADO_LABELS: Record<EstadoCampeonato, string> = {
+export const ESTADO_LABELS: Record<EstadoCompetencia, string> = {
   borrador: 'Borrador',
   programado: 'Programado',
   en_ejecucion: 'En ejecución',
@@ -135,18 +135,18 @@ export const ESTADO_LABELS: Record<EstadoCampeonato, string> = {
   anulado: 'Anulado',
 };
 
-export const TIPO_LABELS: Record<TipoCampeonato, string> = {
+export const TIPO_LABELS: Record<TipoCompetencia, string> = {
   interno: 'Interno',
   abierto: 'Abierto',
 };
 
-export const MODALIDAD_LABELS: Record<ModalidadCampeonato, string> = {
+export const MODALIDAD_LABELS: Record<ModalidadCompetencia, string> = {
   interno_cerrado: 'Interno cerrado',
   interno_invitados: 'Interno con invitados',
   abierto: 'Abierto',
 };
 
-export const ESTRUCTURA_LABELS: Record<EstructuraCampeonato, string> = {
+export const ESTRUCTURA_LABELS: Record<EstructuraCompetencia, string> = {
   unico: 'Torneo único',
   apertura_clausura: 'Apertura / Clausura',
   fases_especiales: 'Fases especiales',

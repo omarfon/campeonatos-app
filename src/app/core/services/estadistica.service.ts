@@ -12,12 +12,12 @@ export class EstadisticaService {
   private readonly equipoService = inject(EquipoService);
   private readonly sancionService = inject(SancionService);
 
-  calcularTablaPosiciones(campeonatoId: string, disciplinaId: string): TablaPosiciones {
+  calcularTablaPosiciones(competenciaId: string, disciplinaId: string): TablaPosiciones {
     const equipos = this.equipoService.equipos().filter(
-      (e) => e.campeonatoId === campeonatoId && e.disciplinaId === disciplinaId
+      (e) => e.competenciaId === competenciaId && e.disciplinaId === disciplinaId
     );
     const encuentros = this.encuentroService.encuentros().filter(
-      (e) => e.campeonatoId === campeonatoId && e.disciplinaId === disciplinaId && e.estado === 'finalizado'
+      (e) => e.competenciaId === competenciaId && e.disciplinaId === disciplinaId && e.estado === 'finalizado'
     );
 
     const posiciones: PosicionEquipo[] = equipos.map((equipo) => {
@@ -71,13 +71,13 @@ export class EstadisticaService {
 
     posiciones.forEach((p, i) => (p.posicion = i + 1));
 
-    return { campeonatoId, disciplinaId, posiciones };
+    return { competenciaId, disciplinaId, posiciones };
   }
 
-  calcularGoleadores(campeonatoId: string, disciplinaId: string): Goleador[] {
+  calcularGoleadores(competenciaId: string, disciplinaId: string): Goleador[] {
     const goles = this.resultadoService.goles();
     const encuentros = this.encuentroService.encuentros().filter(
-      (e) => e.campeonatoId === campeonatoId && e.disciplinaId === disciplinaId
+      (e) => e.competenciaId === competenciaId && e.disciplinaId === disciplinaId
     );
     const encuentroIds = new Set(encuentros.map((e) => e.id));
 
@@ -115,9 +115,9 @@ export class EstadisticaService {
     return Array.from(goleadorMap.values()).sort((a, b) => b.goles - a.goles);
   }
 
-  calcularAmonestados(campeonatoId: string): EstadisticaAmonestado[] {
+  calcularAmonestados(competenciaId: string): EstadisticaAmonestado[] {
     const participantes = this.equipoService.getAllParticipantes();
-    const equiposCamp = this.equipoService.getEquiposByCampeonato(campeonatoId);
+    const equiposCamp = this.equipoService.getEquiposByCompetencia(competenciaId);
     const participanteIds = new Set(equiposCamp.flatMap((e) => e.participantes.map((p) => p.id)));
 
     return participantes
@@ -150,8 +150,8 @@ export class EstadisticaService {
   getRankingHistorico(): RankingHistorico[] {
     return [
       {
-        campeonatoId: 'camp-2025',
-        campeonatoNombre: 'Campeonato Interno 2025',
+        competenciaId: 'camp-2025',
+        competenciaNombre: 'Competencia Interno 2025',
         temporada: '2025',
         equipoCampeonId: 'eq-1',
         equipoCampeonNombre: 'Los Tigres',

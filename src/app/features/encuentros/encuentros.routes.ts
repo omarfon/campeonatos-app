@@ -10,6 +10,11 @@ export const ENCUENTRO_ROUTES: Routes = [
     loadComponent: () => import('./encuentro-form').then((m) => m.EncuentroFormComponent),
   },
   {
+    path: 'nuevo',
+    outlet: 'panel',
+    loadComponent: () => import('./encuentro-form').then((m) => m.EncuentroFormComponent),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./encuentro-detail').then((m) => m.EncuentroDetailComponent),
   },

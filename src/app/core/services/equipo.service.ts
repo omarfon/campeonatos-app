@@ -5,7 +5,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-1',
     nombre: 'Los Tigres',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-1',
     participantes: [
@@ -25,7 +25,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-2',
     nombre: 'Las Águilas',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-4',
     participantes: [
@@ -44,7 +44,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-3',
     nombre: 'Los Delfines',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     participantes: [
       { id: 'p-7', nombre: 'Luis', apellido: 'Sánchez', dni: '36789012', tipo: 'socio', equipoId: 'eq-3', elegibilidad: 'elegible', fechaRegistro: '2026-02-15', numeroCamiseta: 8, posicion: 'Mediocampista' },
@@ -61,7 +61,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-4',
     nombre: 'Los Halcones',
-    campeonatoId: 'camp-1',
+    competenciaId: 'camp-1',
     disciplinaId: 'disc-futbol',
     participantes: [
       { id: 'p-9', nombre: 'Fernando', apellido: 'Díaz', dni: '38901234', tipo: 'socio', equipoId: 'eq-4', elegibilidad: 'elegible', fechaRegistro: '2026-02-15', numeroCamiseta: 6, posicion: 'Mediocampista', deudaPendiente: true },
@@ -80,7 +80,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-5',
     nombre: 'Los Leones',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-11',
     participantes: [
@@ -98,7 +98,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-6',
     nombre: 'Los Pumas',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-13',
     participantes: [
@@ -116,7 +116,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-7',
     nombre: 'Los Cóndores',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     participantes: [
       { id: 'p-15', nombre: 'Gabriel', apellido: 'Castro', dni: '44567890', tipo: 'socio', equipoId: 'eq-7', elegibilidad: 'elegible', fechaRegistro: '2025-06-02', numeroCamiseta: 1, posicion: 'Portero' },
@@ -132,7 +132,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-8',
     nombre: 'Las Panteras',
-    campeonatoId: 'camp-3',
+    competenciaId: 'camp-3',
     disciplinaId: 'disc-futbol',
     participantes: [
       { id: 'p-17', nombre: 'Nicolás', apellido: 'Medina', dni: '46789012', tipo: 'socio', equipoId: 'eq-8', elegibilidad: 'elegible', fechaRegistro: '2025-06-02', numeroCamiseta: 8, posicion: 'Mediocampista' },
@@ -150,7 +150,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-9',
     nombre: 'Los Cometas',
-    campeonatoId: 'camp-6',
+    competenciaId: 'camp-6',
     disciplinaId: 'disc-basquet',
     delegadoId: 'p-19',
     participantes: [
@@ -167,7 +167,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-10',
     nombre: 'Las Estrellas',
-    campeonatoId: 'camp-6',
+    competenciaId: 'camp-6',
     disciplinaId: 'disc-basquet',
     delegadoId: 'p-21',
     participantes: [
@@ -185,7 +185,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-11',
     nombre: 'Los Rayos',
-    campeonatoId: 'camp-12',
+    competenciaId: 'camp-12',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-23',
     participantes: [
@@ -203,7 +203,7 @@ const MOCK_EQUIPOS: Equipo[] = [
   {
     id: 'eq-12',
     nombre: 'Los Truenos',
-    campeonatoId: 'camp-12',
+    competenciaId: 'camp-12',
     disciplinaId: 'disc-futbol',
     delegadoId: 'p-25',
     participantes: [
@@ -223,8 +223,8 @@ const MOCK_EQUIPOS: Equipo[] = [
 const MOCK_TRANSFERENCIAS: Transferencia[] = [];
 
 const MOCK_HISTORIAL: HistorialParticipante[] = [
-  { id: 'h-1', participanteId: 'p-2', campeonatoId: 'camp-1', equipoId: 'eq-1', temporada: '2025', goles: 12, tarjetasAmarillas: 3, tarjetasRojas: 0, partidosJugados: 18 },
-  { id: 'h-2', participanteId: 'p-4', campeonatoId: 'camp-1', equipoId: 'eq-2', temporada: '2025', goles: 8, tarjetasAmarillas: 1, tarjetasRojas: 1, partidosJugados: 16 },
+  { id: 'h-1', participanteId: 'p-2', competenciaId: 'camp-1', equipoId: 'eq-1', temporada: '2025', goles: 12, tarjetasAmarillas: 3, tarjetasRojas: 0, partidosJugados: 18 },
+  { id: 'h-2', participanteId: 'p-4', competenciaId: 'camp-1', equipoId: 'eq-2', temporada: '2025', goles: 8, tarjetasAmarillas: 1, tarjetasRojas: 1, partidosJugados: 16 },
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -241,8 +241,8 @@ export class EquipoService {
     return this._equipos().find((e) => e.id === id);
   }
 
-  getEquiposByCampeonato(campeonatoId: string): Equipo[] {
-    return this._equipos().filter((e) => e.campeonatoId === campeonatoId);
+  getEquiposByCompetencia(competenciaId: string): Equipo[] {
+    return this._equipos().filter((e) => e.competenciaId === competenciaId);
   }
 
   getEquiposByDisciplina(disciplinaId: string): Equipo[] {

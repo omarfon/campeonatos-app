@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { SancionService } from '../../core/services/sancion.service';
 import { EquipoService } from '../../core/services/equipo.service';
-import { CampeonatoService } from '../../core/services/campeonato.service';
+import { CompetenciaService } from '../../core/services/competencia.service';
 import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
 
 @Component({
@@ -29,10 +29,10 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
             </select>
           </div>
           <div>
-            <label for="campeonato" class="block text-sm font-medium text-slate-700 mb-1">Campeonato</label>
-            <select id="campeonato" formControlName="campeonatoId"
+            <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
+            <select id="competencia" formControlName="competenciaId"
               class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-              @for (camp of campeonatos(); track camp.id) {
+              @for (camp of competencias(); track camp.id) {
                 <option [value]="camp.id">{{ camp.nombre }}</option>
               }
             </select>
@@ -103,14 +103,14 @@ export class SancionFormComponent {
   private readonly router = inject(Router);
   private readonly sancionService = inject(SancionService);
   private readonly equipoService = inject(EquipoService);
-  private readonly campeonatoService = inject(CampeonatoService);
+  private readonly competenciaService = inject(CompetenciaService);
 
   protected readonly participantes = this.equipoService.getAllParticipantes();
-  protected readonly campeonatos = this.campeonatoService.items;
+  protected readonly competencias = this.competenciaService.items;
 
   readonly form = this.fb.nonNullable.group({
     participanteId: ['', Validators.required],
-    campeonatoId: ['', Validators.required],
+    competenciaId: ['', Validators.required],
     tipo: ['deportiva' as TipoSancion],
     estado: ['activa' as EstadoSancion],
     descripcion: ['', Validators.required],

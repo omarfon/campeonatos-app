@@ -4,7 +4,7 @@ export type EstadoElegibilidad = 'elegible' | 'no_elegible' | 'suspendido' | 'tr
 export interface Equipo {
   id: string;
   nombre: string;
-  campeonatoId: string;
+  competenciaId: string;
   disciplinaId: string;
   participantes: Participante[];
   delegadoId?: string;
@@ -38,7 +38,7 @@ export interface Transferencia {
 export interface HistorialParticipante {
   id: string;
   participanteId: string;
-  campeonatoId: string;
+  competenciaId: string;
   equipoId: string;
   temporada: string;
   goles: number;
