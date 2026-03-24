@@ -24,31 +24,64 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div>
               <label for="codigo" class="block text-sm font-medium text-slate-700 mb-1">Código</label>
               <input id="codigo" formControlName="codigo" type="text" placeholder="DEP-001"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
             <div class="sm:col-span-2">
               <label for="nombre" class="block text-sm font-medium text-slate-700 mb-1">Nombre del Curso</label>
               <input id="nombre" formControlName="nombre" type="text"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
           </div>
 
           <div>
             <label for="descripcion" class="block text-sm font-medium text-slate-700 mb-1">Descripción Comercial</label>
             <textarea id="descripcion" formControlName="descripcion" rows="3"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
           </div>
 
           <div>
             <label for="objetivos" class="block text-sm font-medium text-slate-700 mb-1">Objetivos Formativos</label>
             <textarea id="objetivos" formControlName="objetivos" rows="3"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
           </div>
 
           <div>
             <label for="publicoObjetivo" class="block text-sm font-medium text-slate-700 mb-1">Público Objetivo</label>
             <input id="publicoObjetivo" formControlName="publicoObjetivo" type="text"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label for="docenteId" class="block text-sm font-medium text-slate-700 mb-1">Docente</label>
+              <select id="docenteId" formControlName="docenteId"
+                class="w-full max-w-2xl rounded-lg border-slate-300 border px-3 !py-4 !text-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <option value="">Seleccionar docente</option>
+                @for (doc of docentes(); track doc.id) {
+                  <option [value]="doc.id">{{ doc.apellido }}, {{ doc.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label for="ambienteId" class="block text-sm font-medium text-slate-700 mb-1">Ambiente</label>
+              <select id="ambienteId" formControlName="ambienteId"
+                class="w-full max-w-2xl rounded-lg border-slate-300 border px-3 !py-4 !text-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <option value="">Seleccionar ambiente</option>
+                @for (amb of ambientes(); track amb.id) {
+                  <option [value]="amb.id">{{ amb.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label for="capacidad" class="block text-sm font-medium text-slate-700 mb-1">Capacidad</label>
+              <input id="capacidad" formControlName="capacidad" type="number" min="1" placeholder="Ej: 30"
+                class="w-full max-w-2xl rounded-lg border-slate-300 border px-3 !py-4 !text-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+            </div>
+            <div>
+              <label for="precio" class="block text-sm font-medium text-slate-700 mb-1">Precio (S/.)</label>
+              <input id="precio" formControlName="precio" type="number" min="0" step="0.01" placeholder="0.00"
+                class="w-full max-w-2xl rounded-lg border-slate-300 border px-3 !py-4 !text-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+            </div>
           </div>
         </div>
 
@@ -60,7 +93,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div>
               <label for="rubroId" class="block text-sm font-medium text-slate-700 mb-1">Rubro</label>
               <select id="rubroId" formControlName="rubroId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 (change)="onRubroChange()">
                 <option value="">Seleccionar rubro</option>
                 @for (rubro of rubros(); track rubro.id) {
@@ -71,7 +104,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div>
               <label for="categoriaId" class="block text-sm font-medium text-slate-700 mb-1">Categoría</label>
               <select id="categoriaId" formControlName="categoriaId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 (change)="onCategoriaChange()">
                 <option value="">Seleccionar categoría</option>
                 @for (cat of filteredCategorias(); track cat.id) {
@@ -82,7 +115,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div>
               <label for="subcategoriaId" class="block text-sm font-medium text-slate-700 mb-1">Subcategoría <span class="text-slate-400">(opcional)</span></label>
               <select id="subcategoriaId" formControlName="subcategoriaId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Sin subcategoría</option>
                 @for (sub of filteredSubcategorias(); track sub.id) {
                   <option [value]="sub.id">{{ sub.nombre }}</option>
@@ -98,15 +131,15 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
 
           <div class="flex flex-wrap gap-6">
             <label class="inline-flex items-center gap-2">
-              <input type="checkbox" formControlName="requiereCertificadoMedico" class="rounded text-indigo-600 focus:ring-indigo-500" />
+              <input type="checkbox" formControlName="requiereCertificadoMedico" class="rounded text-green-600 focus:ring-green-500" />
               <span class="text-sm text-slate-700">Requiere certificado médico</span>
             </label>
             <label class="inline-flex items-center gap-2">
-              <input type="checkbox" formControlName="requiereDeclaracionJurada" class="rounded text-indigo-600 focus:ring-indigo-500" />
+              <input type="checkbox" formControlName="requiereDeclaracionJurada" class="rounded text-green-600 focus:ring-green-500" />
               <span class="text-sm text-slate-700">Requiere declaración jurada</span>
             </label>
             <label class="inline-flex items-center gap-2">
-              <input type="checkbox" formControlName="manejaLevels" class="rounded text-indigo-600 focus:ring-indigo-500" />
+              <input type="checkbox" formControlName="manejaLevels" class="rounded text-green-600 focus:ring-green-500" />
               <span class="text-sm text-slate-700">Maneja niveles de habilidad</span>
             </label>
           </div>
@@ -115,7 +148,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div class="max-w-xs">
               <label for="edadCertificadoMedico" class="block text-sm font-medium text-slate-700 mb-1">Edad mínima para el certificado</label>
               <input id="edadCertificadoMedico" formControlName="edadCertificadoMedico" type="number" min="0"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
           }
 
@@ -123,7 +156,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
             <div class="max-w-sm">
               <label for="tipoNomenclaturaNivel" class="block text-sm font-medium text-slate-700 mb-1">Tipo de Nomenclatura</label>
               <select id="tipoNomenclaturaNivel" formControlName="tipoNomenclaturaNivel"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 @for (nom of nomenclaturas; track nom.key) {
                   <option [value]="nom.key">{{ nom.label }}</option>
                 }
@@ -134,7 +167,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
           <div class="max-w-xs">
             <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
             <select id="estado" formControlName="estado"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
             </select>
@@ -148,7 +181,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
                 <h3 class="text-lg font-semibold text-slate-900">RF-05 · Niveles de Habilidad</h3>
                 <p class="text-sm text-slate-500 mt-1">Defina niveles como básico, intermedio, avanzado o cinturones.</p>
               </div>
-              <button type="button" (click)="addNivel()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Agregar</button>
+              <button type="button" (click)="addNivel()" class="text-green-600 hover:text-green-800 text-sm font-medium">+ Agregar</button>
             </div>
 
             <div formArrayName="niveles" class="space-y-3">
@@ -158,21 +191,21 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
                     <div class="sm:col-span-2">
                       <label class="block text-xs text-slate-500 mb-1">Nombre</label>
                       <input formControlName="nombre" type="text"
-                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
                       <label class="block text-xs text-slate-500 mb-1">Orden</label>
                       <input formControlName="orden" type="number" min="1"
-                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div class="sm:col-span-2">
                       <label class="block text-xs text-slate-500 mb-1">Descripción</label>
                       <input formControlName="descripcion" type="text"
-                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                        class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-green-500 focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div class="flex items-center justify-between gap-2">
                       <label class="inline-flex items-center gap-1 text-xs text-slate-600">
-                        <input type="checkbox" formControlName="requiereCertificado" class="rounded text-indigo-600 focus:ring-indigo-500" />
+                        <input type="checkbox" formControlName="requiereCertificado" class="rounded text-green-600 focus:ring-green-500" />
                         Certifica
                       </label>
                       <button type="button" (click)="removeNivel($index)"
@@ -189,7 +222,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
         <div class="bg-white rounded-xl shadow-sm p-6 space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-slate-900">Categorías por Edad</h3>
-            <button type="button" (click)="addCategoriaEdad()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Agregar</button>
+            <button type="button" (click)="addCategoriaEdad()" class="text-green-600 hover:text-green-800 text-sm font-medium">+ Agregar</button>
           </div>
           <div formArrayName="categoriasEdad" class="space-y-3">
             @for (ce of categoriasEdadArray.controls; track $index) {
@@ -198,21 +231,21 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
                   <div class="sm:col-span-2">
                     <label class="block text-xs text-slate-500 mb-1">Nombre</label>
                     <input formControlName="nombre" placeholder="Ej: Niños"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500" />
                   </div>
                   <div>
                     <label class="block text-xs text-slate-500 mb-1">Edad mín.</label>
                     <input formControlName="edadMinima" type="number" min="0"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500" />
                   </div>
                   <div>
                     <label class="block text-xs text-slate-500 mb-1">Edad máx.</label>
                     <input formControlName="edadMaxima" type="number" min="0"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500" />
                   </div>
                   <div class="flex items-center gap-3">
                     <label class="inline-flex items-center gap-1 text-xs text-slate-600">
-                      <input type="checkbox" formControlName="esUnica" class="rounded text-indigo-600 focus:ring-indigo-500" />
+                      <input type="checkbox" formControlName="esUnica" class="rounded text-green-600 focus:ring-green-500" />
                       Única
                     </label>
                     <button type="button" (click)="removeCategoriaEdad($index)"
@@ -227,7 +260,7 @@ import { TipoNomenclaturaNivel, EstadoCurso, TIPO_NOMENCLATURA_LABELS, NivelHabi
         <!-- Acciones -->
         <div class="flex gap-3">
           <button type="submit" [disabled]="form.invalid"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             {{ isEdit() ? 'Actualizar' : 'Crear' }} Curso
           </button>
           <button type="button" (click)="cancelar()"
@@ -249,6 +282,8 @@ export class CursoFormComponent implements OnInit {
   private editId = '';
 
   protected readonly rubros = this.svc.rubros;
+  protected readonly docentes = this.svc.docentes;
+  protected readonly ambientes = this.svc.ambientes;
 
   protected readonly nomenclaturas = Object.entries(TIPO_NOMENCLATURA_LABELS).map(([key, label]) => ({ key, label }));
 
@@ -261,6 +296,10 @@ export class CursoFormComponent implements OnInit {
     categoriaId: ['', Validators.required],
     subcategoriaId: [''],
     publicoObjetivo: [''],
+    docenteId: ['', Validators.required],
+    ambienteId: ['', Validators.required],
+    capacidad: [null as number | null, [Validators.required, Validators.min(1)]],
+    precio: [null as number | null, [Validators.required, Validators.min(0)]],
     requiereCertificadoMedico: [false],
     edadCertificadoMedico: [45],
     requiereDeclaracionJurada: [false],
@@ -288,52 +327,29 @@ export class CursoFormComponent implements OnInit {
       const curso = this.svc.getCursoById(id);
       if (curso) {
         this.isEdit.set(true);
-        this.editId = id;
-        this.form.patchValue(curso);
-        this.updateFilteredCategorias();
-        this.updateFilteredSubcategorias();
-
-        const categoriasEdad = this.svc.getCategoriasEdadByCurso(id);
-        categoriasEdad.forEach(ce => {
-          this.categoriasEdadArray.push(this.fb.group({
-            nombre: [ce.nombre, Validators.required],
-            edadMinima: [ce.edadMinima, [Validators.required, Validators.min(0)]],
-            edadMaxima: [ce.edadMaxima, [Validators.required, Validators.min(0)]],
-            esUnica: [ce.esUnica],
-          }));
-        });
-
-        const niveles = this.svc.getNivelesByCurso(id);
-        niveles.forEach(nivel => {
-          this.nivelesArray.push(this.createNivelGroup(nivel));
-        });
       }
-    } else {
-      this.updateFilteredCategorias();
-      this.addNivel();
     }
   }
 
   protected onRubroChange(): void {
+    // Lógica para filtrar categorías según el rubro seleccionado
+    const rubroId = this.form.controls.rubroId.value;
+    this.filteredCategorias.set(
+      this.svc.categorias().filter(cat => cat.rubroId === rubroId)
+    );
+    // Limpiar categoría y subcategoría al cambiar rubro
     this.form.controls.categoriaId.setValue('');
     this.form.controls.subcategoriaId.setValue('');
-    this.updateFilteredCategorias();
     this.filteredSubcategorias.set([]);
   }
 
   protected onCategoriaChange(): void {
+    // Lógica para filtrar subcategorías según la categoría seleccionada
+    const categoriaId = this.form.controls.categoriaId.value;
+    this.filteredSubcategorias.set(
+      this.svc.subcategorias().filter(sub => sub.categoriaId === categoriaId)
+    );
     this.form.controls.subcategoriaId.setValue('');
-    this.updateFilteredSubcategorias();
-  }
-
-  private updateFilteredCategorias(): void {
-    const rubroId = this.form.value.rubroId;
-    this.filteredCategorias.set(rubroId ? this.svc.getCategoriasByRubro(rubroId) : []);
-  }
-
-  private updateFilteredSubcategorias(): void {
-    const catId = this.form.value.categoriaId;
-    this.filteredSubcategorias.set(catId ? this.svc.getSubcategoriasByCategoria(catId) : []);
   }
 
   protected addCategoriaEdad(): void {
@@ -359,10 +375,12 @@ export class CursoFormComponent implements OnInit {
 
   protected guardar(): void {
     if (this.form.invalid) return;
-    const { categoriasEdad, niveles, subcategoriaId, ...val } = this.form.getRawValue();
+    const { categoriasEdad, niveles, subcategoriaId, capacidad, precio, ...val } = this.form.getRawValue();
     const cursoData = {
       ...val,
       subcategoriaId: subcategoriaId || undefined,
+      capacidad: capacidad!,
+      precio: precio!,
     };
 
     if (this.isEdit()) {

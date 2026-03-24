@@ -20,7 +20,7 @@ import { EstadoResultado } from '../../core/models/resultado.model';
         <div>
           <label for="encuentro" class="block text-sm font-medium text-slate-700 mb-1">Encuentro</label>
           <select id="encuentro" formControlName="encuentroId"
-            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
             <option value="">Seleccionar...</option>
             @for (enc of encuentros(); track enc.id) {
               <option [value]="enc.id">
@@ -34,17 +34,17 @@ import { EstadoResultado } from '../../core/models/resultado.model';
           <div class="text-center">
             <label for="golesLocal" class="block text-sm font-medium text-slate-700 mb-1">Goles Local</label>
             <input id="golesLocal" formControlName="golesLocal" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center text-2xl font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center text-2xl font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div class="text-center">
             <label for="golesVisitante" class="block text-sm font-medium text-slate-700 mb-1">Goles Visitante</label>
             <input id="golesVisitante" formControlName="golesVisitante" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center text-2xl font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center text-2xl font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
         </div>
 
         <label class="inline-flex items-center gap-2">
-          <input type="checkbox" formControlName="tiempoExtra" class="rounded text-indigo-600 focus:ring-indigo-500" />
+          <input type="checkbox" formControlName="tiempoExtra" class="rounded text-green-600 focus:ring-green-500" />
           <span class="text-sm text-slate-700">Hubo tiempo extra</span>
         </label>
 
@@ -52,19 +52,19 @@ import { EstadoResultado } from '../../core/models/resultado.model';
           <div class="text-center">
             <label for="penalesLocal" class="block text-sm font-medium text-slate-700 mb-1">Penales Local</label>
             <input id="penalesLocal" formControlName="penalesLocal" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div class="text-center">
             <label for="penalesVisitante" class="block text-sm font-medium text-slate-700 mb-1">Penales Visitante</label>
             <input id="penalesVisitante" formControlName="penalesVisitante" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 text-center font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
         </div>
 
         <div>
           <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
           <select id="estado" formControlName="estado"
-            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
             <option value="parcial">Parcial</option>
             <option value="oficial">Oficial</option>
             <option value="cerrado">Cerrado</option>
@@ -74,12 +74,12 @@ import { EstadoResultado } from '../../core/models/resultado.model';
         <div>
           <label for="observaciones" class="block text-sm font-medium text-slate-700 mb-1">Observaciones</label>
           <textarea id="observaciones" formControlName="observaciones" rows="3"
-            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
         </div>
 
         <div class="flex gap-3 pt-4">
           <button type="submit" [disabled]="form.invalid"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             {{ isEdit() ? 'Actualizar' : 'Registrar' }}
           </button>
           <button type="button" (click)="cancelar()"

@@ -43,7 +43,7 @@ import {
               <p class="text-xs text-slate-400">Local</p>
             </div>
             <div class="text-center px-4">
-              <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-semibold">VS</span>
+              <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold">VS</span>
             </div>
             <div class="text-center sm:text-left flex-1">
               <p class="text-lg font-bold text-slate-900">{{ r.equipoVisitanteNombre }}</p>
@@ -98,7 +98,7 @@ import {
         <!-- Disqualified players - Local -->
         <div class="border-b border-slate-200 p-6 print:p-4">
           <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
             {{ r.equipoLocalNombre }} — Jugadores Inhabilitados
           </h3>
           @if (r.inhabilitadosLocal.length > 0) {

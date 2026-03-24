@@ -30,7 +30,7 @@ import {
           <div>
             <label for="cursoId" class="block text-sm font-medium text-slate-700 mb-1">Curso</label>
             <select id="cursoId" formControlName="cursoId"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
               (change)="onCursoChange()">
               <option value="">Seleccionar curso</option>
               @for (curso of cursosActivos(); track curso.id) {
@@ -43,7 +43,7 @@ import {
             <div>
               <label for="categoriaEdadId" class="block text-sm font-medium text-slate-700 mb-1">Categoría de Edad</label>
               <select id="categoriaEdadId" formControlName="categoriaEdadId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Seleccionar categoría</option>
                 @for (ce of filteredCategoriasEdad(); track ce.id) {
                   <option [value]="ce.id">{{ ce.nombre }} ({{ ce.edadMinima }}-{{ ce.edadMaxima }})</option>
@@ -54,7 +54,7 @@ import {
               <label for="nivelId" class="block text-sm font-medium text-slate-700 mb-1">Nivel <span class="text-slate-400">(si aplica)</span></label>
               <select id="nivelId" formControlName="nivelId"
                 [disabled]="filteredNiveles().length === 0"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-slate-100 disabled:text-slate-400">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-slate-100 disabled:text-slate-400">
                 <option value="">{{ filteredNiveles().length === 0 ? 'Curso sin niveles configurados' : 'Sin nivel' }}</option>
                 @for (niv of filteredNiveles(); track niv.id) {
                   <option [value]="niv.id">{{ niv.nombre }}</option>
@@ -72,7 +72,7 @@ import {
             <div>
               <label for="docenteId" class="block text-sm font-medium text-slate-700 mb-1">Docente</label>
               <select id="docenteId" formControlName="docenteId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Seleccionar docente</option>
                 @for (doc of docentes(); track doc.id) {
                   <option [value]="doc.id">{{ doc.nombre }} {{ doc.apellido }}</option>
@@ -83,7 +83,7 @@ import {
               <label for="ambienteId" class="block text-sm font-medium text-slate-700 mb-1">Ambiente</label>
               <select id="ambienteId" formControlName="ambienteId"
                 (change)="onAmbienteChange()"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Seleccionar ambiente</option>
                 @for (amb of ambientes(); track amb.id) {
                   <option [value]="amb.id">{{ amb.nombre }} · {{ amb.zona }} (físico: {{ amb.aforoFisico }}, pedagógico: {{ amb.aforoPedagogico }})</option>
@@ -93,14 +93,14 @@ import {
           </div>
 
           @if (ambienteSeleccionado(); as ambiente) {
-            <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-4">
-              <p class="text-sm font-semibold text-indigo-800">Aforo del ambiente</p>
+            <div class="rounded-xl border border-green-100 bg-green-50 p-4">
+              <p class="text-sm font-semibold text-green-800">Aforo del ambiente</p>
               <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                <p class="text-indigo-700">Físico: <span class="font-semibold">{{ ambiente.aforoFisico }}</span></p>
-                <p class="text-indigo-700">Pedagógico: <span class="font-semibold">{{ ambiente.aforoPedagogico }}</span></p>
-                <p class="text-indigo-700">Comodín reservado: <span class="font-semibold">{{ ambiente.aforoComodin }}</span></p>
+                <p class="text-green-700">Físico: <span class="font-semibold">{{ ambiente.aforoFisico }}</span></p>
+                <p class="text-green-700">Pedagógico: <span class="font-semibold">{{ ambiente.aforoPedagogico }}</span></p>
+                <p class="text-green-700">Comodín reservado: <span class="font-semibold">{{ ambiente.aforoComodin }}</span></p>
               </div>
-              <p class="text-xs text-indigo-700 mt-2">Cupo regular máximo para matrícula pública: {{ aforoRegularMaximo() }} alumno(s).</p>
+              <p class="text-xs text-green-700 mt-2">Cupo regular máximo para matrícula pública: {{ aforoRegularMaximo() }} alumno(s).</p>
             </div>
           }
         </div>
@@ -114,7 +114,7 @@ import {
               <label for="tipoHorario" class="block text-sm font-medium text-slate-700 mb-1">Modalidad de horario</label>
               <select id="tipoHorario" formControlName="tipoHorario"
                 (change)="onTipoHorarioChange()"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 @for (item of tiposHorario; track item.key) {
                   <option [value]="item.key">{{ item.label }}</option>
                 }
@@ -124,7 +124,7 @@ import {
               <label for="frecuenciaSemanal" class="block text-sm font-medium text-slate-700 mb-1">Frecuencia semanal <span class="text-slate-400">(horario abierto)</span></label>
               <input id="frecuenciaSemanal" formControlName="frecuenciaSemanal" type="number" min="1" max="7"
                 [disabled]="form.controls.tipoHorario.value !== 'abierto'"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-slate-100 disabled:text-slate-400" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-slate-100 disabled:text-slate-400" />
             </div>
           </div>
 
@@ -133,7 +133,7 @@ import {
               <label for="tipoDuracion" class="block text-sm font-medium text-slate-700 mb-1">Duración del curso</label>
               <select id="tipoDuracion" formControlName="tipoDuracion"
                 (change)="onTipoDuracionChange()"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 @for (item of tiposDuracion; track item.key) {
                   <option [value]="item.key">{{ item.label }}</option>
                 }
@@ -142,19 +142,19 @@ import {
             <div>
               <label for="fechaInicio" class="block text-sm font-medium text-slate-700 mb-1">Fecha inicio</label>
               <input id="fechaInicio" formControlName="fechaInicio" type="date"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
             <div>
               <label for="fechaFin" class="block text-sm font-medium text-slate-700 mb-1">Fecha fin</label>
               <input id="fechaFin" formControlName="fechaFin" type="date"
                 [disabled]="form.controls.tipoDuracion.value !== 'finita'"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-slate-100 disabled:text-slate-400" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-slate-100 disabled:text-slate-400" />
             </div>
           </div>
 
           <div class="flex items-center justify-between">
             <h4 class="text-base font-semibold text-slate-900">Bloques horarios</h4>
-            <button type="button" (click)="addHorario()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Agregar</button>
+            <button type="button" (click)="addHorario()" class="text-green-600 hover:text-green-800 text-sm font-medium">+ Agregar</button>
           </div>
           @if (form.controls.tipoHorario.value === 'abierto') {
             <p class="text-sm text-slate-500">En horario abierto, estos bloques definen ventanas de asistencia disponibles.</p>
@@ -166,7 +166,7 @@ import {
                   <div>
                     <label class="block text-xs text-slate-500 mb-1">Día</label>
                     <select formControlName="dia"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500">
                       @for (d of dias; track d.key) {
                         <option [value]="d.key">{{ d.label }}</option>
                       }
@@ -175,12 +175,12 @@ import {
                   <div>
                     <label class="block text-xs text-slate-500 mb-1">Hora inicio</label>
                     <input formControlName="horaInicio" type="time"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500" />
                   </div>
                   <div>
                     <label class="block text-xs text-slate-500 mb-1">Hora fin</label>
                     <input formControlName="horaFin" type="time"
-                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                      class="w-full rounded border-slate-300 border px-2 py-1.5 text-sm focus:ring-2 focus:ring-green-500" />
                   </div>
                   <div class="flex items-end">
                     <button type="button" (click)="removeHorario($index)"
@@ -223,7 +223,7 @@ import {
               <label for="vacantes" class="block text-sm font-medium text-slate-700 mb-1">Vacantes</label>
               <input id="vacantes" formControlName="vacantes" type="number" min="1"
                 [attr.max]="aforoRegularMaximo()"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
               @if (aforoRegularMaximo() !== null) {
                 <p class="text-xs text-slate-500 mt-1">Máximo de matrícula regular permitido: {{ aforoRegularMaximo() }}</p>
               }
@@ -231,12 +231,12 @@ import {
             <div>
               <label for="tarifaMensual" class="block text-sm font-medium text-slate-700 mb-1">Tarifa Mensual</label>
               <input id="tarifaMensual" formControlName="tarifaMensual" type="number" min="0"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
             <div>
               <label for="tarifaMatricula" class="block text-sm font-medium text-slate-700 mb-1">Tarifa Matrícula</label>
               <input id="tarifaMatricula" formControlName="tarifaMatricula" type="number" min="0"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
           </div>
 
@@ -244,12 +244,12 @@ import {
             <div>
               <label for="periodo" class="block text-sm font-medium text-slate-700 mb-1">Periodo</label>
               <input id="periodo" formControlName="periodo" type="text" placeholder="2026-I"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
             <div>
               <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
               <select id="estado" formControlName="estado"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="abierta">Abierta</option>
                 <option value="cerrada">Cerrada</option>
                 <option value="llena">Llena</option>
@@ -261,7 +261,7 @@ import {
         <!-- Acciones -->
         <div class="flex gap-3">
           <button type="submit" [disabled]="form.invalid || !puedeGuardarProgramacion()"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             Crear Clase Consolidada
           </button>
           <button type="button" (click)="cancelar()"

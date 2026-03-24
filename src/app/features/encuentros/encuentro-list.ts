@@ -17,80 +17,87 @@ import {
   template: `
     <div class="space-y-6">
       <!-- Hero header -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 p-8 text-white">
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand-700 to-brand-900 p-4 text-white shadow-xl shadow-brand-200">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%2010h10V0%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.05)%22%2F%3E%3C%2Fsvg%3E')] opacity-50"></div>
-        <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h2 class="text-3xl font-bold tracking-tight">Programación de Encuentros</h2>
-            <p class="text-indigo-100 mt-2">Gestión de fechas, fases, sedes y reprogramaciones</p>
+            <h2 class="text-xl font-extrabold tracking-tight">Programación de Encuentros</h2>
+            <p class="text-slate-300 text-xs mt-0.5">Gestión de fechas, fases, sedes y reprogramaciones</p>
           </div>
-          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'encuentros'], panel: ['gestion', 'encuentros', 'nuevo'] } }]" class="inline-flex items-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/30 hover:scale-[1.02]">
-            <span aria-hidden="true">+</span> Nuevo Encuentro
+          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'encuentros'], panel: ['gestion', 'encuentros', 'nuevo'] } }]" class="btn-primary !from-white !to-green-50 !text-green-700 !shadow-xl !shadow-green-900/20 shrink-0 !text-xs !px-3 !py-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            Nuevo Encuentro
           </a>
         </div>
 
         <!-- Stats -->
-        <div class="relative mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div class="rounded-xl bg-white/10 backdrop-blur-sm p-3 text-center">
-            <p class="text-2xl font-bold">{{ stats().total }}</p>
-            <p class="text-xs text-indigo-200">Total</p>
+        <div class="relative mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
+            <p class="text-lg font-bold">{{ stats().total }}</p>
+            <p class="text-[10px] text-green-200">Total</p>
           </div>
-          <div class="rounded-xl bg-white/10 backdrop-blur-sm p-3 text-center">
-            <p class="text-2xl font-bold">{{ stats().programados }}</p>
-            <p class="text-xs text-indigo-200">Programados</p>
+          <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
+            <p class="text-lg font-bold">{{ stats().programados }}</p>
+            <p class="text-[10px] text-green-200">Programados</p>
           </div>
-          <div class="rounded-xl bg-white/10 backdrop-blur-sm p-3 text-center">
-            <p class="text-2xl font-bold">{{ stats().finalizados }}</p>
-            <p class="text-xs text-indigo-200">Finalizados</p>
+          <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
+            <p class="text-lg font-bold">{{ stats().finalizados }}</p>
+            <p class="text-[10px] text-green-200">Finalizados</p>
           </div>
-          <div class="rounded-xl bg-white/10 backdrop-blur-sm p-3 text-center">
-            <p class="text-2xl font-bold">{{ stats().reprogramados }}</p>
-            <p class="text-xs text-indigo-200">Reprogramados</p>
+          <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
+            <p class="text-lg font-bold">{{ stats().reprogramados }}</p>
+            <p class="text-[10px] text-green-200">Reprogramados</p>
           </div>
         </div>
       </div>
 
-      <!-- Filtros -->
-      <div class="section-card">
-        <div class="flex flex-col sm:flex-row gap-4">
-          <div class="flex flex-wrap gap-2 flex-1">
-            <button
-              class="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
-              [class]="filtroEstado() === 'todos' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-              (click)="filtroEstado.set('todos')"
-            >Todos</button>
+      <!-- Buscador y filtros -->
+      <div class="section-card space-y-3">
+        <div class="relative">
+          <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input
+            type="text"
+            class="input-modern !pl-10 w-full"
+            placeholder="Buscar por equipo local o visitante..."
+            [value]="busqueda()"
+            (input)="busqueda.set($any($event.target).value)"
+            aria-label="Buscar encuentros"
+          />
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <select
+            class="input-modern !py-1.5 !text-sm flex-1"
+            [value]="filtroEstado()"
+            (change)="filtroEstado.set($any($event.target).value)"
+            aria-label="Filtrar por estado"
+          >
+            <option value="todos">Todos los estados</option>
             @for (estado of estados; track estado.value) {
-              <button
-                class="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
-                [class]="filtroEstado() === estado.value ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                (click)="filtroEstado.set(estado.value)"
-              >{{ estado.label }}</button>
+              <option [value]="estado.value">{{ estado.label }}</option>
             }
-          </div>
-          <div class="flex gap-2">
-            <select
-              class="input-modern text-sm py-1.5"
-              [value]="filtroFase()"
-              (change)="filtroFase.set($any($event.target).value)"
-              aria-label="Filtrar por fase"
-            >
-              <option value="todas">Todas las fases</option>
-              @for (f of fasesDisponibles; track f.value) {
-                <option [value]="f.value">{{ f.label }}</option>
-              }
-            </select>
-            <select
-              class="input-modern text-sm py-1.5"
-              [value]="filtroCompetencia()"
-              (change)="filtroCompetencia.set($any($event.target).value)"
-              aria-label="Filtrar por competencia"
-            >
-              <option value="todos">Todos los competencias</option>
-              @for (camp of competencias(); track camp.id) {
-                <option [value]="camp.id">{{ camp.nombre }}</option>
-              }
-            </select>
-          </div>
+          </select>
+          <select
+            class="input-modern !py-1.5 !text-sm flex-1"
+            [value]="filtroFase()"
+            (change)="filtroFase.set($any($event.target).value)"
+            aria-label="Filtrar por fase"
+          >
+            <option value="todas">Todas las fases</option>
+            @for (f of fasesDisponibles; track f.value) {
+              <option [value]="f.value">{{ f.label }}</option>
+            }
+          </select>
+          <select
+            class="input-modern !py-1.5 !text-sm flex-1"
+            [value]="filtroCompetencia()"
+            (change)="filtroCompetencia.set($any($event.target).value)"
+            aria-label="Filtrar por competencia"
+          >
+            <option value="todas">Todas las competencias</option>
+            @for (camp of competencias(); track camp.id) {
+              <option [value]="camp.id">{{ camp.nombre }}</option>
+            }
+          </select>
         </div>
       </div>
 
@@ -100,7 +107,7 @@ import {
           <div class="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-100">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
+                <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center font-bold text-lg">
                   {{ fecha.numero }}
                 </div>
                 <div>
@@ -119,7 +126,7 @@ import {
                       <p class="font-semibold text-slate-900 truncate">{{ getEquipoNombre(enc.equipoLocalId) }}</p>
                       <p class="text-xs text-slate-400">Local</p>
                     </div>
-                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 px-3 py-1.5 rounded-lg text-xs font-bold text-indigo-600 min-w-[40px] text-center">
+                    <div class="bg-gradient-to-br from-green-50 to-green-50 border border-green-100 px-3 py-1.5 rounded-lg text-xs font-bold text-green-600 min-w-[40px] text-center">
                       VS
                     </div>
                     <div class="w-28 sm:w-36 truncate">
@@ -138,7 +145,7 @@ import {
                       {{ estadoLabels[enc.estado] }}
                     </span>
                     @if (enc.fase !== 'fase_grupos') {
-                      <span class="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-medium">{{ faseLabels[enc.fase] }}</span>
+                      <span class="text-xs px-2 py-0.5 rounded bg-green-50 text-green-700 font-medium">{{ faseLabels[enc.fase] }}</span>
                     }
                   </div>
                   <div class="flex gap-1 flex-shrink-0">
@@ -185,7 +192,8 @@ export class EncuentroListComponent {
 
   protected readonly filtroEstado = signal<EstadoEncuentro | 'todos'>('todos');
   protected readonly filtroFase = signal<FaseEncuentro | 'todas'>('todas');
-  protected readonly filtroCompetencia = signal<string>('todos');
+  protected readonly filtroCompetencia = signal<string>('todas');
+  protected readonly busqueda = signal('');
   protected readonly competencias = this.competenciaService.items;
 
   protected readonly estados: { value: EstadoEncuentro; label: string }[] = [
@@ -203,7 +211,7 @@ export class EncuentroListComponent {
 
   protected readonly estadoClasses: Record<EstadoEncuentro, string> = {
     borrador: 'bg-slate-100 text-slate-700',
-    programado: 'bg-blue-100 text-blue-800',
+    programado: 'bg-green-100 text-green-800',
     en_curso: 'bg-emerald-100 text-emerald-800',
     finalizado: 'bg-slate-100 text-slate-700',
     suspendido: 'bg-red-100 text-red-800',
@@ -229,6 +237,7 @@ export class EncuentroListComponent {
     const filtroEstado = this.filtroEstado();
     const filtroFase = this.filtroFase();
     const filtroCamp = this.filtroCompetencia();
+    const termino = this.busqueda().toLowerCase().trim();
 
     let encuentros = this.encuentroService.encuentros();
     if (filtroEstado !== 'todos') {
@@ -237,8 +246,15 @@ export class EncuentroListComponent {
     if (filtroFase !== 'todas') {
       encuentros = encuentros.filter((e) => e.fase === filtroFase);
     }
-    if (filtroCamp !== 'todos') {
+    if (filtroCamp !== 'todas') {
       encuentros = encuentros.filter((e) => e.competenciaId === filtroCamp);
+    }
+    if (termino) {
+      encuentros = encuentros.filter((e) => {
+        const local = this.getEquipoNombre(e.equipoLocalId).toLowerCase();
+        const visitante = this.getEquipoNombre(e.equipoVisitanteId).toLowerCase();
+        return local.includes(termino) || visitante.includes(termino);
+      });
     }
 
     const grouped = new Map<number, { numero: number; fecha: string; encuentros: typeof encuentros }>();

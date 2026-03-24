@@ -12,11 +12,11 @@ import { Disciplina } from '../../core/models/disciplina.model';
       <div class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <a routerLink="/maestros/disciplinas" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver</a>
+            <a routerLink="/maestros/disciplinas" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver</a>
             <h2 class="text-2xl font-bold text-slate-900 mt-1">{{ disc.nombre }}</h2>
             <p class="text-slate-500">{{ disc.descripcion }}</p>
           </div>
-          <a [routerLink]="['editar']" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+          <a [routerLink]="['editar']" class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors">
             Editar
           </a>
         </div>
@@ -60,7 +60,7 @@ import { Disciplina } from '../../core/models/disciplina.model';
                       <td class="px-4 py-3 font-medium">{{ regla.nombre }}</td>
                       <td class="px-4 py-3 text-slate-600">{{ regla.descripcion }}</td>
                       <td class="px-4 py-3">
-                        <span class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded text-sm font-medium">{{ regla.valor }}</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-sm font-medium">{{ regla.valor }}</span>
                       </td>
                     </tr>
                   }
@@ -75,7 +75,7 @@ import { Disciplina } from '../../core/models/disciplina.model';
     } @else {
       <div class="text-center py-12">
         <p class="text-slate-400 text-lg">Disciplina no encontrada</p>
-        <a routerLink="/maestros/disciplinas" class="text-indigo-600 hover:text-indigo-800 mt-2 inline-block">Volver al listado</a>
+        <a routerLink="/maestros/disciplinas" class="text-green-600 hover:text-green-800 mt-2 inline-block">Volver al listado</a>
       </div>
     }
   `,

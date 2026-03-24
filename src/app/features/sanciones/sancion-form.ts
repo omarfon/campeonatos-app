@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { SancionService } from '../../core/services/sancion.service';
 import { EquipoService } from '../../core/services/equipo.service';
@@ -21,7 +21,7 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
           <div>
             <label for="participante" class="block text-sm font-medium text-slate-700 mb-1">Jugador</label>
             <select id="participante" formControlName="participanteId"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="">Seleccionar...</option>
               @for (p of participantes; track p.id) {
                 <option [value]="p.id">{{ p.apellido }}, {{ p.nombre }}</option>
@@ -31,7 +31,7 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
           <div>
             <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
             <select id="competencia" formControlName="competenciaId"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               @for (camp of competencias(); track camp.id) {
                 <option [value]="camp.id">{{ camp.nombre }}</option>
               }
@@ -43,7 +43,7 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
           <div>
             <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
             <select id="tipo" formControlName="tipo"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="deportiva">Deportiva</option>
               <option value="economica">Económica</option>
             </select>
@@ -51,7 +51,7 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
           <div>
             <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
             <select id="estado" formControlName="estado"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="activa">Activa</option>
               <option value="cumplida">Cumplida</option>
               <option value="apelada">Apelada</option>
@@ -63,30 +63,30 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
         <div>
           <label for="descripcion" class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
           <textarea id="descripcion" formControlName="descripcion" rows="3"
-            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label for="fechas" class="block text-sm font-medium text-slate-700 mb-1">Fechas inhabilitación</label>
             <input id="fechas" formControlName="fechasInhabilitacion" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div>
             <label for="fechaInicio" class="block text-sm font-medium text-slate-700 mb-1">Fecha inicio</label>
             <input id="fechaInicio" formControlName="fechaInicio" type="date"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div>
             <label for="montoEconomico" class="block text-sm font-medium text-slate-700 mb-1">Monto ($)</label>
             <input id="montoEconomico" formControlName="montoEconomico" type="number" min="0"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
         </div>
 
         <div class="flex gap-3 pt-4">
           <button type="submit" [disabled]="form.invalid"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             Crear Sanción
           </button>
           <button type="button" (click)="cancelar()"
@@ -101,6 +101,7 @@ import { TipoSancion, EstadoSancion } from '../../core/models/sancion.model';
 export class SancionFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly sancionService = inject(SancionService);
   private readonly equipoService = inject(EquipoService);
   private readonly competenciaService = inject(CompetenciaService);
@@ -126,10 +127,20 @@ export class SancionFormComponent {
       ...value,
       tarjetaIds: [],
     });
-    this.router.navigate(['/gestion/sanciones']);
+    this.cerrar();
   }
 
   protected cancelar(): void {
-    this.router.navigate(['/gestion/sanciones']);
+    this.cerrar();
+  }
+
+  private cerrar(): void {
+    if (this.route.outlet === 'panel') {
+      const urlTree = this.router.parseUrl(this.router.url);
+      delete urlTree.root.children['panel'];
+      this.router.navigateByUrl(urlTree);
+    } else {
+      this.router.navigate(['/gestion/sanciones']);
+    }
   }
 }

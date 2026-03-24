@@ -11,7 +11,7 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
   template: `
     <div class="max-w-4xl mx-auto space-y-6">
       <div>
-        <a routerLink="/academia/programas" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver a programas</a>
+        <a routerLink="/academia/programas" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver a programas</a>
         <h2 class="text-2xl font-bold text-slate-900 mt-1">Nuevo Programa Comercial</h2>
         <p class="text-slate-500 mt-1">Configure paquetes tipo vacacional, regular o intensivo y asocie cursos hijos.</p>
       </div>
@@ -24,13 +24,13 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
             <div class="sm:col-span-2">
               <label for="nombre" class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
               <input id="nombre" formControlName="nombre" type="text"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
             </div>
 
             <div>
               <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
               <select id="tipo" formControlName="tipo"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500">
                 @for (tipo of tiposPrograma; track tipo.key) {
                   <option [value]="tipo.key">{{ tipo.label }}</option>
                 }
@@ -40,7 +40,7 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
             <div>
               <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
               <select id="estado" formControlName="estado"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500">
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
                 <option value="finalizado">Finalizado</option>
@@ -50,20 +50,20 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
             <div>
               <label for="fechaInicio" class="block text-sm font-medium text-slate-700 mb-1">Fecha inicio</label>
               <input id="fechaInicio" formControlName="fechaInicio" type="date"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
             </div>
 
             <div>
               <label for="fechaFin" class="block text-sm font-medium text-slate-700 mb-1">Fecha fin</label>
               <input id="fechaFin" formControlName="fechaFin" type="date"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
             </div>
           </div>
 
           <div>
             <label for="descripcion" class="block text-sm font-medium text-slate-700 mb-1">Descripción comercial</label>
             <textarea id="descripcion" formControlName="descripcion" rows="4"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"></textarea>
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500"></textarea>
           </div>
         </section>
 
@@ -73,16 +73,16 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
               <h3 class="text-lg font-semibold text-slate-900">RF-09 · Cursos hijos del programa</h3>
               <p class="text-sm text-slate-500 mt-1">Seleccione las disciplinas internas que conforman el paquete.</p>
             </div>
-            <span class="rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+            <span class="rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
               {{ selectedCursoIds().size }} curso(s)
             </span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             @for (curso of cursosActivos(); track curso.id) {
-              <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-4 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer">
+              <label class="flex items-start gap-3 rounded-xl border border-slate-200 p-4 hover:border-green-300 hover:bg-green-50/40 transition-colors cursor-pointer">
                 <input type="checkbox"
-                  class="mt-1 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  class="mt-1 rounded border-slate-300 text-green-600 focus:ring-green-500"
                   [checked]="selectedCursoIds().has(curso.id)"
                   (change)="toggleCurso(curso.id, $any($event.target).checked)" />
                 <span class="min-w-0">
@@ -104,7 +104,7 @@ import { TIPO_PROGRAMA_LABELS, TipoPrograma } from '../../core/models/academia.m
 
         <div class="flex gap-3">
           <button type="submit" [disabled]="form.invalid || selectedCursoIds().size === 0"
-            class="rounded-lg bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50">
+            class="rounded-lg bg-green-600 px-6 py-2 text-white hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50">
             Crear programa
           </button>
           <a routerLink="/academia/programas"

@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AreaService } from '../../core/services/area.service';
 import { SedeService } from '../../core/services/sede.service';
+import { confirmDialog } from '../../shared/confirm-dialog';
 import { ESTADO_AREA_LABELS, TIPO_AREA_LABELS, EstadoArea, TipoArea } from '../../core/models/area.model';
 
 @Component({
@@ -15,7 +16,7 @@ import { ESTADO_AREA_LABELS, TIPO_AREA_LABELS, EstadoArea, TipoArea } from '../.
           <h2 class="text-2xl font-bold text-slate-900">Áreas</h2>
           <p class="text-slate-500 mt-1">Espacios deportivos: canchas, piscinas, pistas y más</p>
         </div>
-        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'areas'], panel: ['maestros', 'areas', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'areas'], panel: ['maestros', 'areas', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors">
           <span aria-hidden="true">+</span> Nueva Área
         </a>
       </div>
@@ -23,13 +24,13 @@ import { ESTADO_AREA_LABELS, TIPO_AREA_LABELS, EstadoArea, TipoArea } from '../.
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @for (area of areas(); track area.id) {
           <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
+            <div class="bg-gradient-to-r from-brand to-brand-700 px-6 py-4">
               <a [routerLink]="[area.id]" class="text-lg font-bold text-white hover:underline">{{ area.nombre }}</a>
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-indigo-200 text-xs">{{ tipoLabels[area.tipo] }}</span>
+                <span class="text-slate-300 text-xs">{{ tipoLabels[area.tipo] }}</span>
                 @if (area.sedeId) {
-                  <span class="text-indigo-300 text-xs">·</span>
-                  <span class="text-indigo-200 text-xs">{{ getSedeNombre(area.sedeId) }}</span>
+                  <span class="text-slate-400 text-xs">·</span>
+                  <span class="text-slate-300 text-xs">{{ getSedeNombre(area.sedeId) }}</span>
                 }
               </div>
             </div>
@@ -74,7 +75,7 @@ import { ESTADO_AREA_LABELS, TIPO_AREA_LABELS, EstadoArea, TipoArea } from '../.
               </div>
 
               <div class="pt-3 border-t flex gap-3">
-                <a [routerLink]="[area.id, 'editar']" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Editar</a>
+                <a [routerLink]="[area.id, 'editar']" class="text-green-600 hover:text-green-800 text-sm font-medium">Editar</a>
                 <button (click)="eliminar(area.id)" class="text-red-600 hover:text-red-800 text-sm font-medium">Eliminar</button>
               </div>
             </div>
@@ -97,7 +98,7 @@ export class AreaListComponent {
   protected readonly tipoLabels = TIPO_AREA_LABELS;
   protected readonly estadoClasses: Record<EstadoArea, string> = {
     disponible: 'bg-green-100 text-green-700',
-    ocupada: 'bg-blue-100 text-blue-700',
+    ocupada: 'bg-green-100 text-green-700',
     en_mantenimiento: 'bg-yellow-100 text-yellow-700',
     fuera_de_servicio: 'bg-red-100 text-red-700',
   };
@@ -106,8 +107,9 @@ export class AreaListComponent {
     return this.sedeService.getById(id)?.nombre ?? id;
   }
 
-  protected eliminar(id: string): void {
-    if (confirm('¿Está seguro de eliminar esta área?')) {
+  protected async eliminar(id: string): Promise<void> {
+    const ok = await confirmDialog({ title: 'Eliminar área', text: '¿Está seguro de eliminar esta área? Esta acción no se puede deshacer.' });
+    if (ok) {
       this.areaService.delete(id);
     }
   }

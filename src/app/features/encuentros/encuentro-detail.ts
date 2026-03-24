@@ -59,7 +59,7 @@ import {
               <p class="text-sm text-slate-400 mt-1">Local</p>
             </div>
             <div class="flex flex-col items-center gap-1">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center">
                 <span class="text-white font-bold text-lg">VS</span>
               </div>
               <span class="text-xs px-3 py-1 rounded-full font-semibold mt-1" [class]="estadoClasses[enc.estado]">
@@ -311,7 +311,7 @@ export class EncuentroDetailComponent implements OnInit {
 
   protected readonly estadoClasses: Record<EstadoEncuentro, string> = {
     borrador: 'bg-slate-100 text-slate-700',
-    programado: 'bg-blue-100 text-blue-800',
+    programado: 'bg-green-100 text-green-800',
     en_curso: 'bg-emerald-100 text-emerald-800',
     finalizado: 'bg-slate-100 text-slate-700',
     suspendido: 'bg-red-100 text-red-800',
@@ -322,7 +322,7 @@ export class EncuentroDetailComponent implements OnInit {
 
   protected readonly estadoDot: Record<EstadoEncuentro, string> = {
     borrador: 'bg-slate-400',
-    programado: 'bg-blue-500',
+    programado: 'bg-green-500',
     en_curso: 'bg-emerald-500',
     finalizado: 'bg-slate-500',
     suspendido: 'bg-red-500',

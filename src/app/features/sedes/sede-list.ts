@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SedeService } from '../../core/services/sede.service';
 import { ESTADO_SEDE_LABELS, EstadoSede } from '../../core/models/sede.model';
+import { confirmDialog } from '../../shared/confirm-dialog';
 
 @Component({
   selector: 'app-sede-list',
@@ -14,7 +15,7 @@ import { ESTADO_SEDE_LABELS, EstadoSede } from '../../core/models/sede.model';
           <h2 class="text-2xl font-bold text-slate-900">Sedes</h2>
           <p class="text-slate-500 mt-1">Gestión de sedes y campos deportivos</p>
         </div>
-        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'sedes'], panel: ['maestros', 'sedes', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'sedes'], panel: ['maestros', 'sedes', 'nueva'] } }]" class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors">
           <span aria-hidden="true">+</span> Nueva Sede
         </a>
       </div>
@@ -22,9 +23,9 @@ import { ESTADO_SEDE_LABELS, EstadoSede } from '../../core/models/sede.model';
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @for (sede of sedes(); track sede.id) {
           <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
+            <div class="bg-gradient-to-r from-brand to-brand-700 px-6 py-4">
               <a [routerLink]="[sede.id]" class="text-lg font-bold text-white hover:underline">{{ sede.nombre }}</a>
-              <p class="text-indigo-200 text-sm mt-1">{{ sede.direccion }}</p>
+              <p class="text-slate-300 text-sm mt-1">{{ sede.direccion }}</p>
             </div>
             <div class="p-4 space-y-3">
               <div class="flex items-center justify-between">
@@ -58,7 +59,7 @@ import { ESTADO_SEDE_LABELS, EstadoSede } from '../../core/models/sede.model';
               }
 
               <div class="pt-3 border-t flex gap-3">
-                <a [routerLink]="[sede.id, 'editar']" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Editar</a>
+                <a [routerLink]="[sede.id, 'editar']" class="text-green-600 hover:text-green-800 text-sm font-medium">Editar</a>
                 <button (click)="eliminar(sede.id)" class="text-red-600 hover:text-red-800 text-sm font-medium">Eliminar</button>
               </div>
             </div>
@@ -83,8 +84,9 @@ export class SedeListComponent {
     en_mantenimiento: 'bg-yellow-100 text-yellow-700',
   };
 
-  protected eliminar(id: string): void {
-    if (confirm('¿Está seguro de eliminar esta sede?')) {
+  protected async eliminar(id: string): Promise<void> {
+    const ok = await confirmDialog({ title: 'Eliminar sede', text: '¿Está seguro de eliminar esta sede? Esta acción no se puede deshacer.' });
+    if (ok) {
       this.sedeService.delete(id);
     }
   }

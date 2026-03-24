@@ -17,7 +17,7 @@ import {
       <!-- Header -->
       <div class="mb-8">
         <a routerLink="/gestion/competencias"
-          class="inline-flex items-center gap-1.5 text-slate-400 hover:text-indigo-600 text-sm font-medium transition-colors mb-3">
+          class="inline-flex items-center gap-1.5 text-slate-400 hover:text-green-600 text-sm font-medium transition-colors mb-3">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
           Volver al listado
         </a>
@@ -36,7 +36,7 @@ import {
                   [attr.aria-current]="paso() === step.index ? 'step' : null">
                   <span class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300 shrink-0"
                     [class]="paso() === step.index
-                      ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-200 scale-110'
+                      ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-brand-200 scale-110'
                       : paso() > step.index
                         ? 'bg-gradient-to-br from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-200'
                         : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'">
@@ -47,7 +47,7 @@ import {
                     }
                   </span>
                   <span class="hidden sm:block text-sm font-semibold transition-colors"
-                    [class]="paso() === step.index ? 'text-indigo-600' : paso() > step.index ? 'text-emerald-600' : 'text-slate-400'">
+                    [class]="paso() === step.index ? 'text-green-600' : paso() > step.index ? 'text-emerald-600' : 'text-slate-400'">
                     {{ step.label }}
                   </span>
                 </button>
@@ -67,7 +67,7 @@ import {
         <!-- PASO 1: Info General + Clasificación -->
         @if (paso() === 1) {
           <div class="flex items-center gap-3 mb-6">
-            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-200">
+            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center shadow-lg shadow-brand-200">
               <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
             </span>
             <div>
@@ -149,12 +149,12 @@ import {
               <label
                 class="relative flex items-start gap-3 rounded-xl p-4 cursor-pointer transition-all duration-200 border-2"
                 [class]="selectedDisciplinas().has(disc.id)
-                  ? 'border-indigo-500 bg-indigo-50/50 shadow-md shadow-indigo-100'
+                  ? 'border-green-500 bg-green-50/50 shadow-md shadow-green-100'
                   : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'">
                 <input type="checkbox"
                   [checked]="selectedDisciplinas().has(disc.id)"
                   (change)="toggleDisciplina(disc.id)"
-                  class="mt-0.5 rounded-md text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0" />
+                  class="mt-0.5 rounded-md text-green-600 focus:ring-green-500 focus:ring-offset-0" />
                 <div>
                   <span class="font-semibold text-slate-800">{{ disc.nombre }}</span>
                   @if (disc.descripcion) {
@@ -166,7 +166,7 @@ import {
                   </p>
                 </div>
                 @if (selectedDisciplinas().has(disc.id)) {
-                  <span class="absolute top-3 right-3 w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center">
+                  <span class="absolute top-3 right-3 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
                     <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                   </span>
                 }
@@ -227,7 +227,7 @@ import {
           </div>
 
           <button type="button" (click)="addRegla()"
-            class="mt-2 inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 font-semibold px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
+            class="mt-2 inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-800 font-semibold px-4 py-2.5 rounded-xl hover:bg-green-50 transition-colors">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             Agregar regla
           </button>
@@ -236,7 +236,7 @@ import {
         <!-- PASO 4: Calendario y Fechas -->
         @if (paso() === 4) {
           <div class="flex items-center gap-3 mb-6">
-            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-200">
+            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-green-600 flex items-center justify-center shadow-lg shadow-sky-200">
               <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
             </span>
             <div>
@@ -245,8 +245,8 @@ import {
             </div>
           </div>
 
-          <fieldset class="space-y-4 rounded-xl bg-blue-50/50 border border-blue-100 p-5">
-            <legend class="text-sm font-bold text-blue-700 px-2">Período de inscripción</legend>
+          <fieldset class="space-y-4 rounded-xl bg-green-50/50 border border-green-100 p-5">
+            <legend class="text-sm font-bold text-green-700 px-2">Período de inscripción</legend>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="fechaInicioInscripcion" class="block text-sm font-semibold text-slate-700 mb-1.5">Inicio inscripción</label>
@@ -259,8 +259,8 @@ import {
             </div>
           </fieldset>
 
-          <fieldset class="space-y-4 rounded-xl bg-indigo-50/50 border border-indigo-100 p-5">
-            <legend class="text-sm font-bold text-indigo-700 px-2">Vigencia del competencia</legend>
+          <fieldset class="space-y-4 rounded-xl bg-green-50/50 border border-green-100 p-5">
+            <legend class="text-sm font-bold text-green-700 px-2">Vigencia del competencia</legend>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="fechaInicio" class="block text-sm font-semibold text-slate-700 mb-1.5">Fecha inicio</label>
@@ -401,7 +401,7 @@ import {
         <!-- PASO 6: Publicación -->
         @if (paso() === 6) {
           <div class="flex items-center gap-3 mb-6">
-            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-200">
+            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center shadow-lg shadow-brand-200">
               <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6V7.5Z"/></svg>
             </span>
             <div>
@@ -410,13 +410,13 @@ import {
             </div>
           </div>
 
-          <fieldset class="space-y-4 rounded-xl bg-indigo-50/50 border border-indigo-100 p-5">
-            <legend class="text-sm font-bold text-indigo-700 px-2">Opciones de publicación</legend>
+          <fieldset class="space-y-4 rounded-xl bg-green-50/50 border border-green-100 p-5">
+            <legend class="text-sm font-bold text-green-700 px-2">Opciones de publicación</legend>
 
             <label class="inline-flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" formControlName="publicacionAutomatica"
-                class="w-5 h-5 rounded-md text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0" />
-              <span class="text-sm text-slate-700 font-medium group-hover:text-indigo-600 transition-colors">Publicación automática programada</span>
+                class="w-5 h-5 rounded-md text-green-600 focus:ring-green-500 focus:ring-offset-0" />
+              <span class="text-sm text-slate-700 font-medium group-hover:text-green-600 transition-colors">Publicación automática programada</span>
             </label>
 
             @if (form.get('publicacionAutomatica')?.value) {

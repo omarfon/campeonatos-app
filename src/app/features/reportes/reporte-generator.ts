@@ -25,13 +25,13 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
             <div>
               <label for="titulo" class="block text-sm font-medium text-slate-700 mb-1">Título</label>
               <input id="titulo" formControlName="titulo" type="text"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
             </div>
 
             <div>
               <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo de reporte</label>
               <select id="tipo" formControlName="tipo"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="competencia">Competencia</option>
                 <option value="disciplina">Disciplina</option>
                 <option value="jugador">Jugador</option>
@@ -42,7 +42,7 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
             <div>
               <label for="competencia" class="block text-sm font-medium text-slate-700 mb-1">Competencia</label>
               <select id="competencia" formControlName="competenciaId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Todos</option>
                 @for (camp of competencias(); track camp.id) {
                   <option [value]="camp.id">{{ camp.nombre }}</option>
@@ -53,7 +53,7 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
             <div>
               <label for="disciplina" class="block text-sm font-medium text-slate-700 mb-1">Disciplina</label>
               <select id="disciplina" formControlName="disciplinaId"
-                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 <option value="">Todas</option>
                 @for (disc of disciplinas(); track disc.id) {
                   <option [value]="disc.id">{{ disc.nombre }}</option>
@@ -62,7 +62,7 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
             </div>
 
             <button type="submit"
-              class="w-full bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+              class="w-full bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 transition-colors">
               Generar Reporte
             </button>
           </form>
@@ -104,7 +104,7 @@ import { TipoReporte, FiltroReporte, Reporte } from '../../core/models/reporte.m
                     <p class="text-sm text-slate-500">{{ r.tipo }} · {{ r.fechaGeneracion }}</p>
                   </div>
                   <div class="flex items-center gap-3">
-                    <button (click)="selectReport(r)" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver</button>
+                    <button (click)="selectReport(r)" class="text-green-600 hover:text-green-800 text-sm font-medium">Ver</button>
                     <button (click)="eliminar(r.id)" class="text-red-600 hover:text-red-800 text-sm font-medium">Eliminar</button>
                   </div>
                 </div>

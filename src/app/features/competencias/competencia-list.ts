@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@a
 import { RouterLink } from '@angular/router';
 import { CompetenciaService } from '../../core/services/competencia.service';
 import { DisciplinaService } from '../../core/services/disciplina.service';
+import { confirmDialog } from '../../shared/confirm-dialog';
 import {
   EstadoCompetencia,
   TipoCompetencia,
@@ -17,14 +18,14 @@ import {
     <div class="space-y-8">
 
       <!-- Hero Header -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 p-4 text-white shadow-xl shadow-indigo-200">
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand-700 to-brand-900 p-4 text-white shadow-xl shadow-brand-200">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%200h60v60H0z%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z%22%20fill%3D%22rgba(255%2C255%2C255%2C0.06)%22%2F%3E%3C%2Fsvg%3E')] opacity-50"></div>
         <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 class="text-xl font-extrabold tracking-tight">Competencias</h2>
-            <p class="text-indigo-200 text-xs mt-0.5">Administra competencias, controla estados y gestiona eventos deportivos.</p>
+            <p class="text-slate-300 text-xs mt-0.5">Administra competencias, controla estados y gestiona eventos deportivos.</p>
           </div>
-          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'competencias'], panel: ['gestion', 'competencias', 'nuevo'] } }]" class="btn-primary !from-white !to-indigo-50 !text-indigo-700 !shadow-xl !shadow-indigo-900/20 shrink-0 !text-xs !px-3 !py-1.5">
+          <a [routerLink]="['/', { outlets: { primary: ['gestion', 'competencias'], panel: ['gestion', 'competencias', 'nuevo'] } }]" class="btn-primary !from-white !to-green-50 !text-green-700 !shadow-xl !shadow-green-900/20 shrink-0 !text-xs !px-3 !py-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
             Nuevo Competencia
           </a>
@@ -34,43 +35,37 @@ import {
         <div class="relative mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
             <p class="text-lg font-bold">{{ contarPorEstado('todos') }}</p>
-            <p class="text-[10px] text-indigo-200">Total</p>
+            <p class="text-[10px] text-green-200">Total</p>
           </div>
           <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
             <p class="text-lg font-bold">{{ contarPorEstado('en_ejecucion') }}</p>
-            <p class="text-[10px] text-indigo-200">En ejecución</p>
+            <p class="text-[10px] text-green-200">En ejecución</p>
           </div>
           <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
             <p class="text-lg font-bold">{{ contarPorEstado('programado') }}</p>
-            <p class="text-[10px] text-indigo-200">Programados</p>
+            <p class="text-[10px] text-green-200">Programados</p>
           </div>
           <div class="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 text-center">
             <p class="text-lg font-bold">{{ contarPorEstado('borrador') }}</p>
-            <p class="text-[10px] text-indigo-200">Borradores</p>
+            <p class="text-[10px] text-green-200">Borradores</p>
           </div>
         </div>
       </div>
 
-      <!-- Buscador y filtros -->
+      <!-- Filtros -->
       <div class="section-card">
         <div class="flex flex-col gap-4">
-          <!-- Barra de búsqueda -->
-          <div class="relative">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-            </svg>
-            <input
-              type="search"
-              class="input-modern !pl-10"
-              placeholder="Buscar por nombre, descripción..."
-              [value]="busqueda()"
-              (input)="busqueda.set($any($event.target).value)"
-              aria-label="Buscar competencias"
-            />
-          </div>
-
-          <!-- Filtros en fila -->
           <div class="flex flex-col sm:flex-row gap-3">
+            <div class="flex-1">
+              <label for="filtro-estado" class="block text-xs font-semibold text-slate-500 mb-1">Estado</label>
+              <select id="filtro-estado" class="input-modern !py-1.5 !text-sm"
+                [value]="filtroEstado()"
+                (change)="filtroEstado.set($any($event.target).value)">
+                @for (estado of estados; track estado.value) {
+                  <option [value]="estado.value">{{ estado.label }}</option>
+                }
+              </select>
+            </div>
             <div class="flex-1">
               <label for="filtro-tipo" class="block text-xs font-semibold text-slate-500 mb-1">Tipo</label>
               <select id="filtro-tipo" class="input-modern !py-1.5 !text-sm"
@@ -115,31 +110,13 @@ import {
             </div>
           </div>
 
-          <!-- Filtros de estado (pills) -->
-          <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar por estado">
-            @for (estado of estados; track estado.value) {
-              <button
-                class="group relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200"
-                [class]="filtroEstado() === estado.value
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 shadow-sm'"
-                (click)="filtroEstado.set(estado.value)">
-                {{ estado.label }}
-                <span class="ml-1.5 inline-flex items-center justify-center min-w-[20px] h-5 rounded-full text-[11px] font-bold px-1.5"
-                  [class]="filtroEstado() === estado.value ? 'bg-white/20' : 'bg-slate-100 text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-600'">
-                  {{ contarPorEstado(estado.value) }}
-                </span>
-              </button>
-            }
-          </div>
-
           <!-- Resumen de resultados -->
-          @if (busqueda() || filtroTipo() !== 'todos' || filtroModalidad() !== 'todos' || filtroAnio() !== null || filtroDisciplina() !== 'todos' || filtroEstado() !== 'todos') {
+          @if (filtroTipo() !== 'todos' || filtroModalidad() !== 'todos' || filtroAnio() !== null || filtroDisciplina() !== 'todos' || filtroEstado() !== 'todos') {
             <div class="flex items-center justify-between pt-2 border-t border-slate-100">
               <p class="text-sm text-slate-500">
-                {{ filteredItems().length }} competencia(s) encontrado(s)
+                {{ filteredItems().length }} competencia(s) encontrada(s)
               </p>
-              <button class="text-xs text-indigo-600 font-medium hover:text-indigo-800 transition-colors" (click)="limpiarFiltros()">
+              <button class="text-xs text-green-600 font-medium hover:text-green-800 transition-colors" (click)="limpiarFiltros()">
                 Limpiar filtros
               </button>
             </div>
@@ -155,7 +132,7 @@ import {
             <div class="flex items-start justify-between gap-3 mb-4">
               <div class="flex-1 min-w-0">
                 <a [routerLink]="[camp.id]"
-                  class="text-lg font-bold text-slate-900 hover:text-indigo-600 transition-colors truncate block">
+                  class="text-lg font-bold text-slate-900 hover:text-green-600 transition-colors truncate block">
                   {{ camp.nombre }}
                 </a>
                 <div class="flex items-center gap-2 mt-1.5 flex-wrap">
@@ -167,7 +144,7 @@ import {
                   <span class="text-xs text-slate-400">·</span>
                   <span class="text-xs text-slate-500 font-medium">{{ estructuraLabelsMap[camp.estructura] }}</span>
                   <span class="text-xs text-slate-400">·</span>
-                  <span class="text-xs text-indigo-600 font-semibold">{{ camp.anio }}</span>
+                  <span class="text-xs text-green-600 font-semibold">{{ camp.anio }}</span>
                 </div>
               </div>
               <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold shrink-0"
@@ -201,7 +178,7 @@ import {
             <!-- Disciplines chips -->
             <div class="flex flex-wrap gap-1.5 mb-5">
               @for (dId of camp.disciplinaIds; track dId) {
-                <span class="inline-flex items-center bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 rounded-lg px-2.5 py-1 text-xs font-medium border border-indigo-100">
+                <span class="inline-flex items-center bg-gradient-to-r from-green-50 to-green-50 text-green-700 rounded-lg px-2.5 py-1 text-xs font-medium border border-green-100">
                   {{ getDisciplinaNombre(dId) }}
                 </span>
               }
@@ -215,9 +192,9 @@ import {
               </a>
 
               @if (camp.estado === 'borrador') {
-                <a [routerLink]="[camp.id, 'editar']" class="btn-ghost !px-3 !py-1.5 !text-xs !text-indigo-600 hover:!bg-indigo-50">Editar</a>
+                <a [routerLink]="[camp.id, 'editar']" class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Editar</a>
                 <button (click)="cambiarEstado(camp.id, 'programado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-blue-600 hover:!bg-blue-50">
+                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">
                   Programar
                 </button>
                 @if (!camp.publicado) {
@@ -248,7 +225,7 @@ import {
 
               @if (camp.estado === 'suspendido') {
                 <button (click)="cambiarEstado(camp.id, 'programado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-blue-600 hover:!bg-blue-50">Reprogramar</button>
+                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Reprogramar</button>
                 <button (click)="cambiarEstado(camp.id, 'en_ejecucion')"
                   class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Reanudar</button>
                 <button (click)="cambiarEstado(camp.id, 'anulado')"
@@ -258,7 +235,7 @@ import {
           </div>
         } @empty {
           <div class="col-span-full flex flex-col items-center justify-center py-16 section-card">
-            <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-3xl mb-4">🏆</div>
+            <div class="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center text-3xl mb-4">🏆</div>
             <p class="text-slate-500 font-medium">No se encontraron competencias</p>
             <p class="text-sm text-slate-400 mt-1">Crea tu primer competencia para comenzar</p>
             <a [routerLink]="['/', { outlets: { primary: ['gestion', 'competencias'], panel: ['gestion', 'competencias', 'nuevo'] } }]" class="btn-primary mt-4">
@@ -280,7 +257,6 @@ export class CompetenciaListComponent {
   protected readonly filtroTipo = signal<TipoCompetencia | 'todos'>('todos');
   protected readonly filtroModalidad = signal<ModalidadCompetencia | 'todos'>('todos');
   protected readonly filtroDisciplina = signal<string>('todos');
-  protected readonly busqueda = signal('');
 
   protected readonly aniosDisponibles = computed(() => {
     const anios = new Set(this.competenciaService.items().map((c) => c.anio));
@@ -298,7 +274,6 @@ export class CompetenciaListComponent {
     const tipo = this.filtroTipo();
     const modalidad = this.filtroModalidad();
     const disciplina = this.filtroDisciplina();
-    const texto = this.busqueda().toLowerCase().trim();
 
     let items = this.competenciaService.items();
     if (estado !== 'todos') items = items.filter((c) => c.estado === estado);
@@ -306,14 +281,6 @@ export class CompetenciaListComponent {
     if (tipo !== 'todos') items = items.filter((c) => c.tipo === tipo);
     if (modalidad !== 'todos') items = items.filter((c) => c.modalidad === modalidad);
     if (disciplina !== 'todos') items = items.filter((c) => c.disciplinaIds.includes(disciplina));
-    if (texto) {
-      items = items.filter((c) =>
-        c.nombre.toLowerCase().includes(texto)
-        || (c.descripcion?.toLowerCase().includes(texto) ?? false)
-        || (c.observaciones?.toLowerCase().includes(texto) ?? false)
-        || (c.periodo?.toLowerCase().includes(texto) ?? false)
-      );
-    }
     return items;
   });
 
@@ -323,7 +290,6 @@ export class CompetenciaListComponent {
     this.filtroTipo.set('todos');
     this.filtroModalidad.set('todos');
     this.filtroDisciplina.set('todos');
-    this.busqueda.set('');
   }
 
   protected readonly estados: { value: EstadoCompetencia | 'todos'; label: string }[] = [
@@ -338,7 +304,7 @@ export class CompetenciaListComponent {
 
   protected readonly estadoClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-50 text-slate-600 border border-slate-200',
-    programado: 'bg-blue-50 text-blue-700 border border-blue-200',
+    programado: 'bg-green-50 text-green-700 border border-green-200',
     en_ejecucion: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
     finalizado: 'bg-amber-50 text-amber-700 border border-amber-200',
     suspendido: 'bg-orange-50 text-orange-700 border border-orange-200',
@@ -347,7 +313,7 @@ export class CompetenciaListComponent {
 
   protected readonly estadoDotClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-400',
-    programado: 'bg-blue-500',
+    programado: 'bg-green-500',
     en_ejecucion: 'bg-emerald-500',
     finalizado: 'bg-amber-500',
     suspendido: 'bg-orange-500',
@@ -384,8 +350,9 @@ export class CompetenciaListComponent {
     this.competenciaService.publicar(id);
   }
 
-  protected eliminar(id: string): void {
-    if (confirm('¿Está seguro de eliminar este competencia?')) {
+  protected async eliminar(id: string): Promise<void> {
+    const ok = await confirmDialog({ title: 'Eliminar competencia', text: '¿Está seguro de eliminar esta competencia? Esta acción no se puede deshacer.' });
+    if (ok) {
       this.competenciaService.delete(id);
     }
   }

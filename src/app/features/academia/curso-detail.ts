@@ -17,7 +17,7 @@ import {
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <a routerLink="/academia/cursos" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver al árbol</a>
+            <a routerLink="/academia/cursos" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver al árbol</a>
             <div class="flex items-center gap-3 mt-1">
               <h2 class="text-2xl font-bold text-slate-900">{{ c.nombre }}</h2>
               <span class="text-xs px-2 py-0.5 rounded-full font-medium"
@@ -37,7 +37,7 @@ import {
               + Nueva Clase Consolidada
             </a>
             <a [routerLink]="['editar']"
-              class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+              class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors text-sm font-medium">
               Editar Curso
             </a>
           </div>
@@ -54,7 +54,7 @@ import {
                   <span class="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">🏥 Certificado médico {{ c.edadCertificadoMedico ? '(+' + c.edadCertificadoMedico + ' años)' : '' }}</span>
                 }
                 @if (c.requiereDeclaracionJurada) {
-                  <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">📝 Declaración jurada</span>
+                  <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">📝 Declaración jurada</span>
                 }
               </div>
 
@@ -86,7 +86,7 @@ import {
                       <p class="font-medium text-slate-700">{{ ce.nombre }}</p>
                       <p class="text-sm text-slate-500">{{ ce.edadMinima }} - {{ ce.edadMaxima }} años</p>
                       @if (ce.esUnica) {
-                        <span class="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full mt-1 inline-block">Categoría única</span>
+                        <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full mt-1 inline-block">Categoría única</span>
                       }
                     </div>
                   }
@@ -107,7 +107,7 @@ import {
                   <div class="space-y-2">
                     @for (nivel of niveles(); track nivel.id) {
                       <div class="flex items-center gap-3 border border-slate-200 rounded-lg p-3">
-                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold">{{ nivel.orden }}</span>
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600 text-sm font-bold">{{ nivel.orden }}</span>
                         <div class="flex-1 min-w-0">
                           <p class="font-medium text-slate-700">{{ nivel.nombre }}</p>
                           @if (nivel.descripcion) {
@@ -132,14 +132,14 @@ import {
                   <h3 class="text-lg font-semibold text-slate-900">RF-08 / RF-09 · Programas Comerciales</h3>
                   <p class="text-sm text-slate-500 mt-1">Programas donde este curso participa como disciplina hija.</p>
                 </div>
-                <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'programas', 'nuevo'] } }]" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Nuevo programa</a>
+                <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'programas', 'nuevo'] } }]" class="text-green-600 hover:text-green-800 text-sm font-medium">+ Nuevo programa</a>
               </div>
 
               @if (programas().length > 0) {
                 <div class="space-y-3">
                   @for (programa of programas(); track programa.id) {
                     <a [routerLink]="['/academia/programas', programa.id]"
-                      class="block rounded-lg border border-slate-200 p-4 hover:border-indigo-300 hover:shadow-sm transition-all">
+                      class="block rounded-lg border border-slate-200 p-4 hover:border-green-300 hover:shadow-sm transition-all">
                       <p class="font-medium text-slate-800">{{ programa.nombre }}</p>
                       <p class="text-sm text-slate-500 mt-1">{{ programa.descripcion }}</p>
                     </a>
@@ -181,7 +181,7 @@ import {
               </div>
             </div>
 
-            <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-5 text-white">
+            <div class="bg-gradient-to-br from-brand to-brand-700 rounded-xl p-5 text-white">
               <p class="text-sm font-medium opacity-90">Nomenclatura de niveles</p>
               <p class="text-lg font-bold mt-1">{{ nomenclaturaLabel(c.tipoNomenclaturaNivel) }}</p>
             </div>
@@ -193,7 +193,7 @@ import {
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-slate-900">Clases</h3>
             <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos', c.id], panel: ['academia', 'clases', 'nueva'] } }]" [queryParams]="{ cursoId: c.id }"
-              class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Nueva Clase Consolidada</a>
+              class="text-green-600 hover:text-green-800 text-sm font-medium">+ Nueva Clase Consolidada</a>
           </div>
           @if (clases().length > 0) {
             <div class="overflow-x-auto">
@@ -257,7 +257,7 @@ import {
     } @else {
       <div class="text-center py-12">
         <p class="text-slate-400 text-lg">Curso no encontrado</p>
-        <a routerLink="/academia/cursos" class="text-indigo-600 hover:text-indigo-800 mt-2 inline-block">Volver al listado</a>
+        <a routerLink="/academia/cursos" class="text-green-600 hover:text-green-800 mt-2 inline-block">Volver al listado</a>
       </div>
     }
   `,

@@ -31,7 +31,7 @@ import { TIPO_RUBRO_LABELS, ESTADO_CURSO_LABELS } from '../../core/models/academ
           <a routerLink="/academia/programas" class="inline-flex items-center gap-2 bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
             📦 Programas
           </a>
-          <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos'], panel: ['academia', 'cursos', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+          <a [routerLink]="['/', { outlets: { primary: ['academia', 'cursos'], panel: ['academia', 'cursos', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors text-sm font-medium">
             <span aria-hidden="true">+</span> Nuevo Curso
           </a>
         </div>
@@ -40,19 +40,19 @@ import { TIPO_RUBRO_LABELS, ESTADO_CURSO_LABELS } from '../../core/models/academ
       <!-- Stats -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div class="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p class="text-2xl font-bold text-indigo-600">{{ rubros().length }}</p>
+          <p class="text-2xl font-bold text-green-600">{{ rubros().length }}</p>
           <p class="text-xs text-slate-500 mt-1">Rubros</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p class="text-2xl font-bold text-indigo-600">{{ categorias().length }}</p>
+          <p class="text-2xl font-bold text-green-600">{{ categorias().length }}</p>
           <p class="text-xs text-slate-500 mt-1">Categorías</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p class="text-2xl font-bold text-indigo-600">{{ cursos().length }}</p>
+          <p class="text-2xl font-bold text-green-600">{{ cursos().length }}</p>
           <p class="text-xs text-slate-500 mt-1">Cursos</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p class="text-2xl font-bold text-indigo-600">{{ clases().length }}</p>
+          <p class="text-2xl font-bold text-green-600">{{ clases().length }}</p>
           <p class="text-xs text-slate-500 mt-1">Clases activas</p>
         </div>
       </div>
@@ -117,17 +117,17 @@ import { TIPO_RUBRO_LABELS, ESTADO_CURSO_LABELS } from '../../core/models/academ
                       @for (sub of cat.subcategorias; track sub.id) {
                         <div>
                           <h5 class="text-sm font-semibold text-slate-500 mb-2 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span>
+                            <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
                             {{ sub.nombre }}
                           </h5>
                           @if (sub.cursos.length > 0) {
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 ml-4">
                               @for (curso of sub.cursos; track curso.id) {
                                 <a [routerLink]="['/academia/cursos', curso.id]"
-                                  class="block bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-indigo-300 transition-all group">
+                                  class="block bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-green-300 transition-all group">
                                   <div class="flex items-start justify-between">
                                     <div class="min-w-0">
-                                      <p class="font-semibold text-indigo-600 group-hover:text-indigo-800 truncate">{{ curso.nombre }}</p>
+                                      <p class="font-semibold text-green-600 group-hover:text-green-800 truncate">{{ curso.nombre }}</p>
                                       <p class="text-xs text-slate-400 font-mono">{{ curso.codigo }}</p>
                                     </div>
                                     <span class="shrink-0 text-xs px-2 py-0.5 rounded-full font-medium"
@@ -163,10 +163,10 @@ import { TIPO_RUBRO_LABELS, ESTADO_CURSO_LABELS } from '../../core/models/academ
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                           @for (curso of cat.cursosDirectos; track curso.id) {
                             <a [routerLink]="['/academia/cursos', curso.id]"
-                              class="block bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-indigo-300 transition-all group">
+                              class="block bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-green-300 transition-all group">
                               <div class="flex items-start justify-between">
                                 <div class="min-w-0">
-                                  <p class="font-semibold text-indigo-600 group-hover:text-indigo-800 truncate">{{ curso.nombre }}</p>
+                                  <p class="font-semibold text-green-600 group-hover:text-green-800 truncate">{{ curso.nombre }}</p>
                                   <p class="text-xs text-slate-400 font-mono">{{ curso.codigo }}</p>
                                 </div>
                                 <span class="shrink-0 text-xs px-2 py-0.5 rounded-full font-medium"
@@ -259,7 +259,7 @@ export class AcademiaListComponent {
 
   protected rubroIconClass(tipo: string): string {
     const classes: Record<string, string> = {
-      deportivo: 'bg-blue-100 text-blue-600',
+      deportivo: 'bg-green-100 text-green-600',
       musica: 'bg-purple-100 text-purple-600',
       cultural: 'bg-amber-100 text-amber-600',
       tecnologia: 'bg-emerald-100 text-emerald-600',

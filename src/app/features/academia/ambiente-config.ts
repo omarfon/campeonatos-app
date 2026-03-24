@@ -12,7 +12,7 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
     <div class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <a routerLink="/academia/cursos" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver al árbol</a>
+          <a routerLink="/academia/cursos" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver al árbol</a>
           <h2 class="text-2xl font-bold text-slate-900 mt-1">Control de Ambientes y Zonas</h2>
           <p class="text-slate-500 mt-1">Configure locaciones con aforo físico, aforo pedagógico y cupo comodín.</p>
         </div>
@@ -38,19 +38,19 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
             <div>
               <label for="nombre" class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
               <input id="nombre" formControlName="nombre" type="text"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label for="zona" class="block text-sm font-medium text-slate-700 mb-1">Zona</label>
                 <input id="zona" formControlName="zona" type="text"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
               </div>
               <div>
                 <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
                 <input id="tipo" formControlName="tipo" type="text"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
               </div>
             </div>
 
@@ -58,22 +58,22 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
               <div>
                 <label for="aforoFisico" class="block text-sm font-medium text-slate-700 mb-1">Aforo físico</label>
                 <input id="aforoFisico" formControlName="aforoFisico" type="number" min="1"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
               </div>
               <div>
                 <label for="aforoPedagogico" class="block text-sm font-medium text-slate-700 mb-1">Aforo pedagógico</label>
                 <input id="aforoPedagogico" formControlName="aforoPedagogico" type="number" min="1"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
               </div>
               <div>
                 <label for="aforoComodin" class="block text-sm font-medium text-slate-700 mb-1">Cupo comodín</label>
                 <input id="aforoComodin" formControlName="aforoComodin" type="number" min="0"
-                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                  class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
               </div>
             </div>
 
             <button type="submit" [disabled]="form.invalid"
-              class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50">
+              class="w-full rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50">
               Guardar ambiente
             </button>
           </form>
@@ -108,7 +108,7 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
                     <td class="px-4 py-3 text-slate-700">{{ ambiente.aforoFisico }}</td>
                     <td class="px-4 py-3 text-slate-700">{{ ambiente.aforoPedagogico }}</td>
                     <td class="px-4 py-3 text-slate-700">{{ ambiente.aforoComodin }}</td>
-                    <td class="px-4 py-3 text-indigo-700 font-semibold">{{ aforoRegular(ambiente.id) }}</td>
+                    <td class="px-4 py-3 text-green-700 font-semibold">{{ aforoRegular(ambiente.id) }}</td>
                     <td class="px-4 py-3">
                       <button type="button" (click)="eliminar(ambiente.id)" class="text-sm font-medium text-red-600 hover:text-red-700">Eliminar</button>
                     </td>
@@ -137,12 +137,12 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
           <div>
             <label for="bloqFecha" class="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
             <input id="bloqFecha" formControlName="fecha" type="date"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
           </div>
           <div>
             <label for="bloqTipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
             <select id="bloqTipo" formControlName="tipo"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500">
               @for (item of tiposBloqueo; track item.key) {
                 <option [value]="item.key">{{ item.label }}</option>
               }
@@ -151,12 +151,12 @@ import { TIPO_BLOQUEO_INSTITUCIONAL_LABELS, TipoBloqueoInstitucional } from '../
           <div>
             <label for="bloqZona" class="block text-sm font-medium text-slate-700 mb-1">Zona <span class="text-slate-400">(opcional)</span></label>
             <input id="bloqZona" formControlName="zona" type="text" placeholder="Todas"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
           </div>
           <div class="lg:col-span-2">
             <label for="bloqMotivo" class="block text-sm font-medium text-slate-700 mb-1">Motivo</label>
             <input id="bloqMotivo" formControlName="motivo" type="text"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500" />
           </div>
           <div class="lg:col-span-5">
             <button type="submit" [disabled]="bloqueoForm.invalid"

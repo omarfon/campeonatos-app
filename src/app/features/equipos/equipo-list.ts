@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { EquipoService } from '../../core/services/equipo.service';
 import { CompetenciaService } from '../../core/services/competencia.service';
+import { confirmDialog } from '../../shared/confirm-dialog';
 import { DisciplinaService } from '../../core/services/disciplina.service';
 
 @Component({
@@ -10,42 +11,52 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, SlicePipe],
   template: `
-    <div class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">Equipos y Participantes</h2>
-          <p class="text-slate-500 mt-1">Gestión de equipos, jugadores y elegibilidad</p>
-        </div>
-        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'equipos'], panel: ['maestros', 'equipos', 'nuevo'] } }]" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
-          <span aria-hidden="true">+</span> Nuevo Equipo
-        </a>
-      </div>
 
-      <!-- Filtro competencia -->
-      <div class="flex flex-wrap gap-2">
-        <button
-          class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
-          [class]="filtroCompetencia() === 'todos' ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
-          (click)="filtroCompetencia.set('todos')"
-        >Todos</button>
-        @for (camp of competencias(); track camp.id) {
-          <button
-            class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
-            [class]="filtroCompetencia() === camp.id ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'"
-            (click)="filtroCompetencia.set(camp.id)"
-          >{{ camp.nombre }}</button>
-        }
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Equipos y Participantes</h2>
+        <p class="text-slate-500 mt-1">Gestión de equipos, jugadores y elegibilidad</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <input
+          type="text"
+          class="input-modern w-full max-w-xs h-8 text-sm px-2 py-1"
+          placeholder="Buscar equipo por nombre..."
+          [value]="busquedaEquipo()"
+          (input)="busquedaEquipo.set($any($event.target).value)"
+          aria-label="Buscar equipo"
+        />
+        <input
+          type="text"
+          class="input-modern w-full max-w-xs h-8 text-sm px-2 py-1"
+          placeholder="Buscar por jugador..."
+          [value]="busquedaJugador()"
+          (input)="busquedaJugador.set($any($event.target).value)"
+          aria-label="Buscar jugador"
+        />
+        <select class="input-modern h-8 text-sm px-2 py-1 max-w-xs" [value]="filtroCompetencia()" (change)="filtroCompetencia.set($any($event.target).value)">
+          <option value="">Todas las competencias</option>
+          @for (camp of competencias; track camp.id) {
+            <option [value]="camp.id">{{ camp.nombre }}</option>
+          }
+        </select>
+        <select class="input-modern h-8 text-sm px-2 py-1 max-w-xs" [value]="filtroAnio()" (change)="filtroAnio.set($any($event.target).value)">
+          <option value="">Todos los años</option>
+          @for (anio of aniosDisponibles(); track anio) {
+            <option [value]="anio">{{ anio }}</option>
+          }
+        </select>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @for (equipo of filteredEquipos(); track equipo.id) {
+        @for (equipo of equiposFiltrados(); track equipo.id) {
           <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4">
+            <div class="bg-gradient-to-r from-brand to-brand-700 px-6 py-4">
               <a [routerLink]="[equipo.id]" class="text-lg font-bold text-white hover:underline">{{ equipo.nombre }}</a>
               <div class="flex gap-2 mt-1">
-                <span class="text-indigo-200 text-xs">{{ getCompetenciaNombre(equipo.competenciaId) }}</span>
-                <span class="text-indigo-300 text-xs">·</span>
-                <span class="text-indigo-200 text-xs">{{ getDisciplinaNombre(equipo.disciplinaId) }}</span>
+                <span class="text-slate-300 text-xs">{{ getCompetenciaNombre(equipo.competenciaId) }}</span>
+                <span class="text-slate-400 text-xs">·</span>
+                <span class="text-slate-300 text-xs">{{ getDisciplinaNombre(equipo.disciplinaId) }}</span>
               </div>
             </div>
             <div class="p-4">
@@ -77,7 +88,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
                     </div>
                     <div class="flex items-center gap-2">
                       <span class="text-xs px-1.5 py-0.5 rounded"
-                        [class]="p.tipo === 'socio' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'">
+                        [class]="p.tipo === 'socio' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'">
                         {{ p.tipo }}
                       </span>
                       <span class="text-xs px-1.5 py-0.5 rounded"
@@ -89,10 +100,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
                 }
               </div>
 
-              <div class="mt-4 pt-3 border-t flex gap-3">
-                <a [routerLink]="[equipo.id, 'editar']" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Editar</a>
-                <button (click)="eliminar(equipo.id)" class="text-red-600 hover:text-red-800 text-sm font-medium">Eliminar</button>
-              </div>
+              <!-- Botones de acción eliminados -->
             </div>
           </div>
         } @empty {
@@ -105,12 +113,66 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
   `,
 })
 export class EquipoListComponent {
+    protected readonly busquedaEquipo = signal('');
+    protected readonly busquedaJugador = signal('');
+    protected readonly filtroCompetencia = signal('');
+    protected readonly filtroAnio = signal('');
+
+    // Eliminado duplicado: competencias
+
+    protected readonly aniosDisponibles = computed(() => {
+      // Extrae los años únicos de las competencias
+      const competencias = this.competenciaService.items();
+      const anios = new Set<string>();
+      for (const c of competencias) {
+        if (c.anio) anios.add(c.anio.toString());
+      }
+      return Array.from(anios).sort();
+    });
+
+    protected readonly equiposFiltrados = computed(() => {
+      const nombreEquipo = this.busquedaEquipo().toLowerCase().trim();
+      const jugador = this.busquedaJugador().toLowerCase().trim();
+      const competenciaId = this.filtroCompetencia();
+      const anio = this.filtroAnio();
+      let equipos = this.equipoService.equipos();
+      if (nombreEquipo) {
+        equipos = equipos.filter(e => e.nombre.toLowerCase().includes(nombreEquipo));
+      }
+      if (competenciaId) {
+        equipos = equipos.filter(e => e.competenciaId === competenciaId);
+      }
+      if (anio) {
+        // Buscar año en la competencia asociada
+        equipos = equipos.filter(e => {
+          const comp = this.competenciaService.getById(e.competenciaId);
+          return comp && comp.anio && comp.anio.toString() === anio;
+        });
+      }
+      if (jugador) {
+        equipos = equipos.filter(e =>
+          (e.participantes ?? []).some(p =>
+            (p.nombre + ' ' + p.apellido).toLowerCase().includes(jugador)
+          )
+        );
+      }
+      return equipos;
+    });
+
+    // Helper para tipar participantes correctamente en el template
+    protected participantesTyped(equipo: any): import('../../core/models/equipo.model').Participante[] {
+      return (equipo.participantes ?? []) as import('../../core/models/equipo.model').Participante[];
+    }
   private readonly equipoService = inject(EquipoService);
   private readonly competenciaService = inject(CompetenciaService);
   private readonly disciplinaService = inject(DisciplinaService);
 
-  protected readonly competencias = this.competenciaService.items;
-  protected readonly filtroCompetencia = signal<string>('todos');
+  // Getter para competencias para evitar inicialización temprana
+  protected get competencias() {
+    return this.competenciaService.items();
+  }
+
+  // Eliminado duplicado: competencias y filtroCompetencia
 
   protected readonly filteredEquipos = computed(() => {
     const filtro = this.filtroCompetencia();
@@ -133,8 +195,9 @@ export class EquipoListComponent {
     return this.disciplinaService.getById(id)?.nombre ?? id;
   }
 
-  protected eliminar(id: string): void {
-    if (confirm('¿Está seguro de eliminar este equipo?')) {
+  protected async eliminar(id: string): Promise<void> {
+    const ok = await confirmDialog({ title: 'Eliminar equipo', text: '¿Está seguro de eliminar este equipo? Esta acción no se puede deshacer.' });
+    if (ok) {
       this.equipoService.deleteEquipo(id);
     }
   }

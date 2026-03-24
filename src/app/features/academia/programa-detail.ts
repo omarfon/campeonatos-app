@@ -20,7 +20,7 @@ import {
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <a routerLink="/academia/programas" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver a Programas</a>
+            <a routerLink="/academia/programas" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver a Programas</a>
             <div class="flex items-center gap-3 mt-1">
               <h2 class="text-2xl font-bold text-slate-900">{{ prog.nombre }}</h2>
               <span class="text-xs px-2 py-0.5 rounded-full font-medium"
@@ -55,13 +55,13 @@ import {
         <div class="bg-white rounded-xl shadow-sm p-6">
           <div class="flex items-center justify-between gap-3 mb-4">
             <h3 class="text-lg font-semibold text-slate-900">Cursos hijos del programa</h3>
-            <span class="text-xs rounded-full bg-indigo-50 px-3 py-1 font-medium text-indigo-700">{{ cursosDelPrograma().length }} curso(s)</span>
+            <span class="text-xs rounded-full bg-green-50 px-3 py-1 font-medium text-green-700">{{ cursosDelPrograma().length }} curso(s)</span>
           </div>
 
           @if (cursosDelPrograma().length > 0) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               @for (curso of cursosDelPrograma(); track curso.id) {
-                <a [routerLink]="['/academia/cursos', curso.id]" class="rounded-lg border border-slate-200 p-4 hover:border-indigo-300 hover:shadow-sm transition-all">
+                <a [routerLink]="['/academia/cursos', curso.id]" class="rounded-lg border border-slate-200 p-4 hover:border-green-300 hover:shadow-sm transition-all">
                   <p class="font-medium text-slate-800">{{ curso.nombre }}</p>
                   <p class="text-xs font-mono text-slate-400 mt-1">{{ curso.codigo }}</p>
                   <p class="text-sm text-slate-500 mt-2">{{ curso.descripcion }}</p>
@@ -96,7 +96,7 @@ import {
                   @for (clase of clasesDelPrograma(); track clase.id) {
                     <tr class="hover:bg-slate-50">
                       <td class="px-4 py-3">
-                        <a [routerLink]="['/academia/cursos', clase.cursoId]" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                        <a [routerLink]="['/academia/cursos', clase.cursoId]" class="text-green-600 hover:text-green-800 font-medium">
                           {{ cursoNombre(clase.cursoId) }}
                         </a>
                       </td>
@@ -142,7 +142,7 @@ import {
     } @else {
       <div class="text-center py-12">
         <p class="text-slate-400 text-lg">Programa no encontrado</p>
-        <a routerLink="/academia/programas" class="text-indigo-600 hover:text-indigo-800 mt-2 inline-block">Volver al listado</a>
+        <a routerLink="/academia/programas" class="text-green-600 hover:text-green-800 mt-2 inline-block">Volver al listado</a>
       </div>
     }
   `,
@@ -178,7 +178,7 @@ export class ProgramaDetailComponent implements OnInit {
     const classes: Record<string, string> = {
       activo: 'bg-emerald-100 text-emerald-700',
       inactivo: 'bg-slate-100 text-slate-500',
-      finalizado: 'bg-blue-100 text-blue-600',
+      finalizado: 'bg-green-100 text-green-600',
     };
     return classes[estado] ?? 'bg-slate-100 text-slate-500';
   }

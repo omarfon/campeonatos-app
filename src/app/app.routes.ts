@@ -63,8 +63,56 @@ export const routes: Routes = [
         loadChildren: () => import('./features/academia/academia.routes').then((m) => m.ACADEMIA_ROUTES),
       },
       {
+        path: 'matricula',
+        loadChildren: () => import('./features/matricula/matricula.routes').then((m) => m.MATRICULA_ROUTES),
+      },
+      {
         path: 'reportes',
         loadChildren: () => import('./features/reportes/reportes.routes').then((m) => m.REPORTE_ROUTES),
+      },
+      {
+        path: 'comercial',
+        children: [
+          { path: '', redirectTo: 'tarifas', pathMatch: 'full' },
+          {
+            path: 'tarifas',
+            loadChildren: () => import('./features/precios/precios.routes').then((m) => m.PRECIOS_ROUTES),
+          },
+          {
+            path: 'convenios',
+            loadChildren: () => import('./features/convenios/convenios.routes').then((m) => m.CONVENIO_ROUTES),
+          },
+        ],
+      },
+      {
+        path: 'tramites',
+        loadChildren: () => import('./features/tramites/tramites.routes').then((m) => m.TRAMITES_ROUTES),
+      },
+      {
+        path: 'asistencia',
+        loadChildren: () => import('./features/asistencia/asistencia.routes').then((m) => m.ASISTENCIA_ROUTES),
+      },
+      {
+        path: 'acceso',
+        loadChildren: () => import('./features/acceso/acceso.routes').then((m) => m.ACCESO_ROUTES),
+      },
+      {
+        path: 'operaciones',
+        children: [
+          { path: '', redirectTo: 'recuperaciones', pathMatch: 'full' },
+          {
+            path: 'recuperaciones',
+            loadChildren: () => import('./features/recuperaciones/recuperaciones.routes').then((m) => m.RECUPERACION_ROUTES),
+          },
+          {
+            path: 'retiros',
+            loadChildren: () => import('./features/retiros/retiros.routes').then((m) => m.RETIRO_ROUTES),
+          },
+          {
+            path: 'notas-credito',
+            loadChildren: () => import('./features/notas-credito/notas-credito.routes').then((m) => m.NOTAS_CREDITO_ROUTES),
+          },
+        ],
       },
       {
         path: 'gestion/competencias/nuevo',
@@ -102,6 +150,26 @@ export const routes: Routes = [
         loadComponent: () => import('./features/academia/programa-form').then((m) => m.ProgramaFormComponent),
       },
       {
+        path: 'matricula/nueva',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/matricula-module-form').then((m) => m.MatriculaModuleFormComponent),
+      },
+      {
+        path: 'matricula/dashboard/:id',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/dashboard-curso-detalle').then((m) => m.DashboardCursoDetalleComponent),
+      },
+      {
+        path: 'gestion/sanciones/tarjeta',
+        outlet: 'panel',
+        loadComponent: () => import('./features/sanciones/tarjeta-form').then((m) => m.TarjetaFormComponent),
+      },
+      {
+        path: 'gestion/sanciones/sancion',
+        outlet: 'panel',
+        loadComponent: () => import('./features/sanciones/sancion-form').then((m) => m.SancionFormComponent),
+      },
+      {
         path: 'maestros/disciplinas/nueva',
         outlet: 'panel',
         loadComponent: () => import('./features/disciplinas/disciplina-form').then((m) => m.DisciplinaFormComponent),
@@ -122,9 +190,114 @@ export const routes: Routes = [
         loadComponent: () => import('./features/socios/socio-form').then((m) => m.SocioFormComponent),
       },
       {
+        path: 'maestros/socios/:id/detalle',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/socio-detail').then((m) => m.SocioDetailComponent),
+      },
+      {
+        path: 'maestros/socios/:id/editar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/socio-form').then((m) => m.SocioFormComponent),
+      },
+      {
+        path: 'maestros/socios/solicitud/nueva',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/solicitud-form').then((m) => m.SolicitudFormComponent),
+      },
+      {
+        path: 'maestros/socios/solicitud/:id/evaluar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/solicitud-detalle').then((m) => m.SolicitudDetalleComponent),
+      },
+      {
+        path: 'maestros/socios/cuota/:id/pagar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/cuota-pago-form').then((m) => m.CuotaPagoFormComponent),
+      },
+      {
+        path: 'maestros/socios/cuota/:id/exonerar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/socios/cuota-exonerar-form').then((m) => m.CuotaExonerarFormComponent),
+      },
+      {
         path: 'maestros/areas/nueva',
         outlet: 'panel',
         loadComponent: () => import('./features/areas/area-form').then((m) => m.AreaFormComponent),
+      },
+      {
+        path: 'operaciones/recuperaciones/nueva',
+        outlet: 'panel',
+        loadComponent: () => import('./features/recuperaciones/recuperacion-form').then((m) => m.RecuperacionFormComponent),
+      },
+      {
+        path: 'operaciones/recuperaciones/:id/evaluar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/recuperaciones/recuperacion-autorizar').then((m) => m.RecuperacionAutorizarComponent),
+      },
+      {
+        path: 'operaciones/retiros/nuevo',
+        outlet: 'panel',
+        loadComponent: () => import('./features/retiros/retiro-form').then((m) => m.RetiroFormComponent),
+      },
+      {
+        path: 'comercial/tarifas/nueva',
+        outlet: 'panel',
+        loadComponent: () => import('./features/precios/tarifa-form').then((m) => m.TarifaFormComponent),
+      },
+      {
+        path: 'comercial/campanas/nueva',
+        outlet: 'panel',
+        loadComponent: () => import('./features/precios/campana-form').then((m) => m.CampanaFormComponent),
+      },
+      {
+        path: 'comercial/convenios/nuevo',
+        outlet: 'panel',
+        loadComponent: () => import('./features/convenios/convenio-form').then((m) => m.ConvenioFormComponent),
+      },
+      {
+        path: 'comercial/convenios/:id/detalle',
+        outlet: 'panel',
+        loadComponent: () => import('./features/convenios/convenio-detalle').then((m) => m.ConvenioDetalleComponent),
+      },
+      {
+        path: 'comercial/convenios/:id/beneficiarios',
+        outlet: 'panel',
+        loadComponent: () => import('./features/convenios/convenio-beneficiarios').then((m) => m.ConvenioBeneficiariosComponent),
+      },
+      {
+        path: 'asistencia/:sesionId/roster',
+        outlet: 'panel',
+        loadComponent: () => import('./features/asistencia/roster-view').then((m) => m.RosterViewComponent),
+      },
+      {
+        path: 'asistencia/:sesionId/registrar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/asistencia/asistencia-form').then((m) => m.AsistenciaFormComponent),
+      },
+      {
+        path: 'asistencia/:sesionId/docente',
+        outlet: 'panel',
+        loadComponent: () => import('./features/asistencia/docente-control-form').then((m) => m.DocenteControlFormComponent),
+      },
+      {
+        path: 'acceso/carnets',
+        outlet: 'panel',
+        loadComponent: () => import('./features/acceso/carnet-list').then((m) => m.CarnetListComponent),
+      },
+      {
+        path: 'acceso/penalidades/:id/exonerar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/acceso/penalidad-form').then((m) => m.PenalidadFormComponent),
+      },
+      {
+        path: 'tramites/nuevo',
+        outlet: 'panel',
+        loadComponent: () => import('./features/tramites/tramite-academico-form').then((m) => m.TramiteAcademicoFormComponent),
+      },
+      {
+        path: 'tramites/:id/detalle',
+        outlet: 'panel',
+        loadComponent: () => import('./features/tramites/tramite-academico-detalle').then((m) => m.TramiteAcademicoDetalleComponent),
       },
     ],
   },

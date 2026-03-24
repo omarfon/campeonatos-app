@@ -63,6 +63,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: true, edadCertificadoMedico: 45,
     requiereDeclaracionJurada: true, manejaLevels: true,
     tipoNomenclaturaNivel: 'general', estado: 'activo',
+    docenteId: 'doc-1', ambienteId: 'amb-piscina', capacidad: 24, precio: 180,
   },
   {
     id: 'cur-karate', codigo: 'DEP-010', nombre: 'Karate Tradicional', descripcion: 'Arte marcial japonés enfocado en kata, kumite y defensa personal.',
@@ -72,6 +73,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: true, edadCertificadoMedico: 45,
     requiereDeclaracionJurada: true, manejaLevels: true,
     tipoNomenclaturaNivel: 'artes_marciales', estado: 'activo',
+    docenteId: 'doc-2', ambienteId: 'amb-dojo', capacidad: 18, precio: 150,
   },
   {
     id: 'cur-futbol', codigo: 'DEP-020', nombre: 'Fútbol', descripcion: 'Escuela de fútbol con formación técnica, táctica y competitiva.',
@@ -81,6 +83,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: false,
     requiereDeclaracionJurada: false, manejaLevels: true,
     tipoNomenclaturaNivel: 'general', estado: 'activo',
+    docenteId: 'doc-5', ambienteId: 'amb-cancha1', capacidad: 22, precio: 120,
   },
   {
     id: 'cur-guitarra', codigo: 'MUS-001', nombre: 'Guitarra Acústica', descripcion: 'Aprendizaje de guitarra acústica desde lectura musical hasta interpretación.',
@@ -90,6 +93,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: false,
     requiereDeclaracionJurada: false, manejaLevels: true,
     tipoNomenclaturaNivel: 'cultural_idiomas', estado: 'activo',
+    docenteId: 'doc-4', ambienteId: 'amb-salon1', capacidad: 12, precio: 100,
   },
   {
     id: 'cur-ballet', codigo: 'CUL-001', nombre: 'Ballet', descripcion: 'Formación en ballet clásico con técnica, expresión corporal y repertorio.',
@@ -99,6 +103,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: false,
     requiereDeclaracionJurada: false, manejaLevels: true,
     tipoNomenclaturaNivel: 'general', estado: 'activo',
+    docenteId: 'doc-3', ambienteId: 'amb-ballet', capacidad: 14, precio: 130,
   },
   {
     id: 'cur-ingles', codigo: 'CUL-010', nombre: 'Inglés', descripcion: 'Curso de inglés con enfoque comunicativo y preparación para certificaciones internacionales.',
@@ -108,6 +113,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: false,
     requiereDeclaracionJurada: false, manejaLevels: true,
     tipoNomenclaturaNivel: 'cultural_idiomas', estado: 'activo',
+    docenteId: 'doc-6', ambienteId: 'amb-aula1', capacidad: 20, precio: 160,
   },
   {
     id: 'cur-judo', codigo: 'DEP-011', nombre: 'Judo', descripcion: 'Arte marcial olímpico centrado en técnicas de proyección y control en el suelo.',
@@ -117,6 +123,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: true, edadCertificadoMedico: 45,
     requiereDeclaracionJurada: true, manejaLevels: true,
     tipoNomenclaturaNivel: 'artes_marciales', estado: 'activo',
+    docenteId: 'doc-2', ambienteId: 'amb-dojo', capacidad: 18, precio: 150,
   },
   {
     id: 'cur-pintura', codigo: 'CUL-020', nombre: 'Pintura y Dibujo', descripcion: 'Taller de expresión artística con técnicas de acuarela, óleo y grafito.',
@@ -126,6 +133,7 @@ const MOCK_CURSOS: Curso[] = [
     requiereCertificadoMedico: false,
     requiereDeclaracionJurada: false, manejaLevels: false,
     tipoNomenclaturaNivel: 'general', estado: 'activo',
+    docenteId: 'doc-7', ambienteId: 'amb-taller', capacidad: 10, precio: 90,
   },
 ];
 
@@ -763,12 +771,38 @@ export class AcademiaService {
     this._rubros.update(items => [...items, { ...rubro, id: crypto.randomUUID() }]);
   }
 
+  updateRubro(id: string, changes: Partial<Omit<Rubro, 'id'>>): void {
+    this._rubros.update(items => items.map(r => r.id === id ? { ...r, ...changes } : r));
+  }
+
+  deleteRubro(id: string): void {
+    this._rubros.update(items => items.filter(r => r.id !== id));
+    this._categorias.update(items => items.filter(c => c.rubroId !== id));
+  }
+
   createCategoria(cat: Omit<CategoriaAcademica, 'id'>): void {
     this._categorias.update(items => [...items, { ...cat, id: crypto.randomUUID() }]);
   }
 
+  updateCategoria(id: string, changes: Partial<Omit<CategoriaAcademica, 'id'>>): void {
+    this._categorias.update(items => items.map(c => c.id === id ? { ...c, ...changes } : c));
+  }
+
+  deleteCategoria(id: string): void {
+    this._categorias.update(items => items.filter(c => c.id !== id));
+    this._subcategorias.update(items => items.filter(s => s.categoriaId !== id));
+  }
+
   createSubcategoria(sub: Omit<SubcategoriaAcademica, 'id'>): void {
     this._subcategorias.update(items => [...items, { ...sub, id: crypto.randomUUID() }]);
+  }
+
+  updateSubcategoria(id: string, changes: Partial<Omit<SubcategoriaAcademica, 'id'>>): void {
+    this._subcategorias.update(items => items.map(s => s.id === id ? { ...s, ...changes } : s));
+  }
+
+  deleteSubcategoria(id: string): void {
+    this._subcategorias.update(items => items.filter(s => s.id !== id));
   }
 
   private horariosSeCruzan(inicioA: string, finA: string, inicioB: string, finB: string): boolean {

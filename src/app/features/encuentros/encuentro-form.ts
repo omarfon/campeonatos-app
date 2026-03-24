@@ -36,7 +36,7 @@ import {
             [attr.aria-selected]="currentStep() === i"
             class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
             [class]="currentStep() === i
-              ? 'bg-indigo-600 text-white shadow-md'
+              ? 'bg-brand text-white shadow-md'
               : currentStep() > i
                 ? 'bg-emerald-100 text-emerald-700'
                 : 'bg-slate-100 text-slate-500'"
@@ -101,8 +101,8 @@ import {
           <div class="space-y-4">
             <h3 class="font-semibold text-slate-800 text-lg">Equipos participantes</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div class="p-4 rounded-xl border border-blue-100 bg-blue-50/50">
-                <label for="equipoLocal" class="block text-sm font-semibold text-blue-800 mb-2">🏠 Equipo Local</label>
+              <div class="p-4 rounded-xl border border-green-100 bg-green-50/50">
+                <label for="equipoLocal" class="block text-sm font-semibold text-green-800 mb-2">🏠 Equipo Local</label>
                 <select id="equipoLocal" formControlName="equipoLocalId" class="input-modern">
                   <option value="">Seleccionar equipo...</option>
                   @for (eq of equipos(); track eq.id) {

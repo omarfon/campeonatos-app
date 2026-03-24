@@ -9,32 +9,56 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
-      <div>
-        <h2 class="text-2xl font-bold text-slate-900">Estadísticas y Tablas</h2>
-        <p class="text-slate-500 mt-1">Posiciones, goleadores, amonestados y rankings</p>
+      <!-- Hero Header -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand-700 to-brand-900 p-4 text-white shadow-xl shadow-brand-200">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M0%2010h10V0%22%20fill%3D%22none%22%20stroke%3D%22rgba(255%2C255%2C255%2C0.05)%22%2F%3E%3C%2Fsvg%3E')] opacity-50"></div>
+        <div class="relative">
+          <h2 class="text-xl font-extrabold tracking-tight">Estadísticas y Tablas</h2>
+          <p class="text-slate-300 text-xs mt-0.5">Posiciones, goleadores, amonestados y rankings</p>
+        </div>
       </div>
 
-      <!-- Selectors -->
-      <div class="flex gap-4 flex-wrap">
-        <div class="flex gap-2 flex-wrap">
-          <span class="self-center text-sm font-medium text-slate-500">Competencia:</span>
-          @for (camp of competencias(); track camp.id) {
-            <button
-              class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              [class]="selectedCompetencia() === camp.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border'"
-              (click)="selectedCompetencia.set(camp.id)"
-            >{{ camp.nombre }}</button>
-          }
-        </div>
-        <div class="flex gap-2 flex-wrap">
-          <span class="self-center text-sm font-medium text-slate-500">Disciplina:</span>
-          @for (disc of disciplinas(); track disc.id) {
-            <button
-              class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-              [class]="selectedDisciplina() === disc.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-50 border'"
-              (click)="selectedDisciplina.set(disc.id)"
-            >{{ disc.nombre }}</button>
-          }
+      <!-- Buscador y filtros -->
+      <div class="section-card">
+        <div class="flex flex-col gap-4">
+          <!-- Barra de búsqueda -->
+          <div class="relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+            </svg>
+            <input
+              type="search"
+              class="input-modern !pl-10 !py-4 !text-lg"
+              placeholder="Buscar por equipo o jugador..."
+              [value]="busqueda()"
+              (input)="busqueda.set($any($event.target).value)"
+              aria-label="Buscar en estadísticas"
+            />
+          </div>
+
+          <!-- Filtros en fila -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="flex-1">
+              <label for="filtro-competencia" class="block text-xs font-semibold text-slate-500 mb-1">Competencia</label>
+              <select id="filtro-competencia" class="input-modern !py-3 !text-base"
+                [value]="selectedCompetencia()"
+                (change)="selectedCompetencia.set($any($event.target).value)">
+                @for (camp of competencias(); track camp.id) {
+                  <option [value]="camp.id">{{ camp.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div class="flex-1">
+              <label for="filtro-disciplina" class="block text-xs font-semibold text-slate-500 mb-1">Disciplina</label>
+              <select id="filtro-disciplina" class="input-modern !py-3 !text-base"
+                [value]="selectedDisciplina()"
+                (change)="selectedDisciplina.set($any($event.target).value)">
+                @for (disc of disciplinas(); track disc.id) {
+                  <option [value]="disc.id">{{ disc.nombre }}</option>
+                }
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -60,8 +84,8 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              @for (row of posiciones(); track row.equipoId; let i = $index) {
-                <tr class="hover:bg-slate-50" [class]="i < 2 ? 'bg-green-50/50' : i >= posiciones().length - 1 ? 'bg-red-50/50' : ''">
+              @for (row of posicionesFiltradas(); track row.equipoId; let i = $index) {
+                <tr class="hover:bg-slate-50" [class]="i < 2 ? 'bg-green-50/50' : i >= posicionesFiltradas().length - 1 ? 'bg-red-50/50' : ''">
                   <td class="px-4 py-3 text-slate-500 font-medium">{{ i + 1 }}</td>
                   <td class="px-4 py-3 font-semibold text-slate-900">{{ row.equipoNombre }}</td>
                   <td class="px-4 py-3 text-center">{{ row.partidosJugados }}</td>
@@ -102,7 +126,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                @for (g of goleadores(); track g.participanteId; let i = $index) {
+                @for (g of goleadoresFiltrados(); track g.participanteId; let i = $index) {
                   <tr class="hover:bg-slate-50" [class]="i === 0 ? 'bg-yellow-50/50' : ''">
                     <td class="px-4 py-3 text-slate-500">{{ i + 1 }}</td>
                     <td class="px-4 py-3 font-medium text-slate-900">{{ g.apellido }}, {{ g.nombre }}</td>
@@ -135,7 +159,7 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                @for (a of amonestados(); track a.participanteId; let i = $index) {
+                @for (a of amonestadosFiltrados(); track a.participanteId; let i = $index) {
                   <tr class="hover:bg-slate-50">
                     <td class="px-4 py-3 text-slate-500">{{ i + 1 }}</td>
                     <td class="px-4 py-3 font-medium text-slate-900">{{ a.apellido }}, {{ a.nombre }}</td>
@@ -164,6 +188,7 @@ export class EstadisticasDashboardComponent {
   protected readonly disciplinas = this.disciplinaService.items;
   protected readonly selectedCompetencia = signal('camp-1');
   protected readonly selectedDisciplina = signal('disc-futbol');
+  protected readonly busqueda = signal('');
 
   protected readonly posiciones = computed(() => {
     const tabla = this.estadisticaService.calcularTablaPosiciones(
@@ -173,11 +198,34 @@ export class EstadisticasDashboardComponent {
     return tabla.posiciones;
   });
 
+  protected readonly posicionesFiltradas = computed(() => {
+    const term = this.busqueda().toLowerCase().trim();
+    if (!term) return this.posiciones();
+    return this.posiciones().filter(r => r.equipoNombre.toLowerCase().includes(term));
+  });
+
   protected readonly goleadores = computed(() =>
     this.estadisticaService.calcularGoleadores(this.selectedCompetencia(), this.selectedDisciplina())
   );
 
+  protected readonly goleadoresFiltrados = computed(() => {
+    const term = this.busqueda().toLowerCase().trim();
+    if (!term) return this.goleadores();
+    return this.goleadores().filter(g =>
+      `${g.apellido} ${g.nombre}`.toLowerCase().includes(term) ||
+      g.equipoNombre.toLowerCase().includes(term)
+    );
+  });
+
   protected readonly amonestados = computed(() =>
     this.estadisticaService.calcularAmonestados(this.selectedCompetencia())
   );
+
+  protected readonly amonestadosFiltrados = computed(() => {
+    const term = this.busqueda().toLowerCase().trim();
+    if (!term) return this.amonestados();
+    return this.amonestados().filter(a =>
+      `${a.apellido} ${a.nombre}`.toLowerCase().includes(term)
+    );
+  });
 }

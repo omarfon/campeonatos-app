@@ -14,11 +14,11 @@ import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
       <div class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <a routerLink="/maestros/equipos" class="text-indigo-600 hover:text-indigo-800 text-sm">&larr; Volver</a>
+            <a routerLink="/maestros/equipos" class="text-green-600 hover:text-green-800 text-sm">&larr; Volver</a>
             <h2 class="text-2xl font-bold text-slate-900 mt-1">{{ eq.nombre }}</h2>
             <p class="text-slate-500">{{ getCompetenciaNombre(eq.competenciaId) }} · {{ getDisciplinaNombre(eq.disciplinaId) }}</p>
           </div>
-          <a [routerLink]="['editar']" class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+          <a [routerLink]="['editar']" class="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors">
             Editar
           </a>
         </div>
@@ -49,7 +49,7 @@ import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
                     <td class="px-6 py-3 text-slate-600">{{ p.dni }}</td>
                     <td class="px-6 py-3">
                       <span class="text-xs px-2 py-0.5 rounded"
-                        [class]="p.tipo === 'socio' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'">
+                        [class]="p.tipo === 'socio' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'">
                         {{ p.tipo }}
                       </span>
                     </td>
@@ -108,7 +108,7 @@ import { Equipo, HistorialParticipante } from '../../core/models/equipo.model';
     } @else {
       <div class="text-center py-12">
         <p class="text-slate-400 text-lg">Equipo no encontrado</p>
-        <a routerLink="/maestros/equipos" class="text-indigo-600 hover:text-indigo-800 mt-2 inline-block">Volver al listado</a>
+        <a routerLink="/maestros/equipos" class="text-green-600 hover:text-green-800 mt-2 inline-block">Volver al listado</a>
       </div>
     }
   `,

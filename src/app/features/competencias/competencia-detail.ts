@@ -20,7 +20,7 @@ import { Equipo } from '../../core/models/equipo.model';
       <div class="space-y-5">
 
         <!-- Hero Banner -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 p-5 text-white shadow-xl shadow-indigo-200">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand-700 to-brand-900 p-5 text-white shadow-xl shadow-brand-200">
           <div class="absolute inset-0 opacity-10">
             <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="detailGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#detailGrid)"/></svg>
           </div>
@@ -86,27 +86,27 @@ import { Equipo } from '../../core/models/equipo.model';
 
         <!-- Info Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div class="section-card p-3 group hover:shadow-lg hover:shadow-indigo-100 transition-all duration-300">
+          <div class="section-card p-3 group hover:shadow-lg hover:shadow-green-100 transition-all duration-300">
             <div class="flex items-center gap-2 mb-1.5">
-              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center">
                 <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"/></svg>
               </span>
               <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Tipo</p>
             </div>
             <p class="text-sm font-bold text-slate-800">{{ tipoLabelsMap[c.tipo] }}</p>
           </div>
-          <div class="section-card p-3 group hover:shadow-lg hover:shadow-indigo-100 transition-all duration-300">
+          <div class="section-card p-3 group hover:shadow-lg hover:shadow-green-100 transition-all duration-300">
             <div class="flex items-center gap-2 mb-1.5">
-              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
                 <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z"/></svg>
               </span>
               <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Modalidad</p>
             </div>
             <p class="text-sm font-bold text-slate-800">{{ modalidadLabelsMap[c.modalidad] }}</p>
           </div>
-          <div class="section-card p-3 group hover:shadow-lg hover:shadow-indigo-100 transition-all duration-300">
+          <div class="section-card p-3 group hover:shadow-lg hover:shadow-green-100 transition-all duration-300">
             <div class="flex items-center gap-2 mb-1.5">
-              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
                 <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L12 12.75 6.429 9.75m11.142 0 4.179 2.25-9.75 5.25-9.75-5.25 4.179-2.25"/></svg>
               </span>
               <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Estructura</p>
@@ -125,9 +125,9 @@ import { Equipo } from '../../core/models/equipo.model';
               {{ estadoLabelsMap[c.estado] }}
             </span>
           </div>
-          <div class="section-card p-3 group hover:shadow-lg hover:shadow-blue-100 transition-all duration-300">
+          <div class="section-card p-3 group hover:shadow-lg hover:shadow-green-100 transition-all duration-300">
             <div class="flex items-center gap-2 mb-1.5">
-              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-cyan-500 flex items-center justify-center">
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
               </span>
               <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Vigencia</p>
@@ -159,9 +159,9 @@ import { Equipo } from '../../core/models/equipo.model';
 
         <!-- Panel de Transiciones de Estado -->
         @if (transicionesDisponibles().length > 0) {
-          <div class="section-card p-4 border-l-4 border-l-indigo-500">
+          <div class="section-card p-4 border-l-4 border-l-green-500">
             <div class="flex items-center gap-3 mb-3">
-              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center shadow-lg shadow-brand-200">
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
               </span>
               <div>
@@ -183,92 +183,95 @@ import { Equipo } from '../../core/models/equipo.model';
           </div>
         }
 
-        <!-- Configuración de Fechas (Inscripción + Días Hábiles + Bloqueadas) -->
-        @if (c.fechaInicioInscripcion || c.fechaFinInscripcion || c.diasHabilesCompetencia.length > 0 || c.fechasBloqueadas.length > 0) {
+        <!-- Configuración de Fechas + Disciplinas (50/50) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Configuración de Fechas -->
+          @if (c.fechaInicioInscripcion || c.fechaFinInscripcion || c.diasHabilesCompetencia.length > 0 || c.fechasBloqueadas.length > 0) {
+            <div class="section-card p-4">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-brand-200">
+                  <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+                </span>
+                <h3 class="text-base font-bold text-slate-800">Configuración de Fechas</h3>
+              </div>
+              <div class="space-y-4">
+                <!-- Inscripción -->
+                @if (c.fechaInicioInscripcion || c.fechaFinInscripcion) {
+                  <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Inscripción</p>
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-8">
+                      @if (c.fechaInicioInscripcion) {
+                        <div class="flex items-center gap-2">
+                          <span class="w-2 h-2 rounded-full bg-green-400" aria-hidden="true"></span>
+                          <span class="text-xs text-slate-400">Desde</span>
+                          <span class="text-sm font-bold text-slate-700">{{ c.fechaInicioInscripcion }}</span>
+                        </div>
+                      }
+                      @if (c.fechaFinInscripcion) {
+                        <div class="flex items-center gap-2">
+                          <span class="w-2 h-2 rounded-full bg-red-400" aria-hidden="true"></span>
+                          <span class="text-xs text-slate-400">Hasta</span>
+                          <span class="text-sm font-bold text-slate-700">{{ c.fechaFinInscripcion }}</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Días Hábiles -->
+                @if (c.diasHabilesCompetencia.length > 0) {
+                  <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Días Hábiles</p>
+                    <div class="flex flex-wrap gap-1.5">
+                      @for (dia of c.diasHabilesCompetencia; track dia) {
+                        <span class="inline-flex items-center bg-cyan-50 text-cyan-700 border border-cyan-200 px-3 py-1 rounded-lg text-xs font-semibold">
+                          {{ diasSemanaLabelsMap[dia] }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Fechas Bloqueadas -->
+                @if (c.fechasBloqueadas.length > 0) {
+                  <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Fechas Bloqueadas</p>
+                    <div class="space-y-1.5">
+                      @for (fb of c.fechasBloqueadas; track fb.id) {
+                        <div class="flex items-center justify-between rounded-lg bg-red-50/60 px-3 py-2 hover:bg-red-50 transition-colors">
+                          <div class="flex items-center gap-2">
+                            <span class="font-semibold text-sm text-slate-800">{{ fb.motivo }}</span>
+                            <span class="text-xs text-slate-400 capitalize">{{ fb.tipo }}</span>
+                          </div>
+                          <span class="text-xs font-semibold text-red-700 bg-white border border-red-200 px-2 py-0.5 rounded-md">{{ fb.fecha }}</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Disciplinas -->
           <div class="section-card p-4">
             <div class="flex items-center gap-3 mb-3">
-              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-200">
-                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200">
+                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0 1 16.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 0 1-7.54 0"/></svg>
               </span>
-              <h3 class="text-base font-bold text-slate-800">Configuración de Fechas</h3>
+              <h3 class="text-base font-bold text-slate-800">Disciplinas Asociadas</h3>
             </div>
-            <div class="space-y-4">
-              <!-- Inscripción -->
-              @if (c.fechaInicioInscripcion || c.fechaFinInscripcion) {
-                <div>
-                  <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Inscripción</p>
-                  <div class="flex gap-8">
-                    @if (c.fechaInicioInscripcion) {
-                      <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-400" aria-hidden="true"></span>
-                        <span class="text-xs text-slate-400">Desde</span>
-                        <span class="text-sm font-bold text-slate-700">{{ c.fechaInicioInscripcion }}</span>
-                      </div>
-                    }
-                    @if (c.fechaFinInscripcion) {
-                      <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-red-400" aria-hidden="true"></span>
-                        <span class="text-xs text-slate-400">Hasta</span>
-                        <span class="text-sm font-bold text-slate-700">{{ c.fechaFinInscripcion }}</span>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-              <!-- Días Hábiles -->
-              @if (c.diasHabilesCompetencia.length > 0) {
-                <div>
-                  <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Días Hábiles</p>
-                  <div class="flex flex-wrap gap-1.5">
-                    @for (dia of c.diasHabilesCompetencia; track dia) {
-                      <span class="inline-flex items-center bg-cyan-50 text-cyan-700 border border-cyan-200 px-3 py-1 rounded-lg text-xs font-semibold">
-                        {{ diasSemanaLabelsMap[dia] }}
-                      </span>
-                    }
-                  </div>
-                </div>
-              }
-              <!-- Fechas Bloqueadas -->
-              @if (c.fechasBloqueadas.length > 0) {
-                <div>
-                  <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-2">Fechas Bloqueadas</p>
-                  <div class="space-y-1.5">
-                    @for (fb of c.fechasBloqueadas; track fb.id) {
-                      <div class="flex items-center justify-between rounded-lg bg-red-50/60 px-3 py-2 hover:bg-red-50 transition-colors">
-                        <div class="flex items-center gap-2">
-                          <span class="font-semibold text-sm text-slate-800">{{ fb.motivo }}</span>
-                          <span class="text-xs text-slate-400 capitalize">{{ fb.tipo }}</span>
-                        </div>
-                        <span class="text-xs font-semibold text-red-700 bg-white border border-red-200 px-2 py-0.5 rounded-md">{{ fb.fecha }}</span>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
+            @if (c.disciplinaIds.length > 0) {
+              <div class="flex flex-wrap gap-2">
+                @for (dId of c.disciplinaIds; track dId) {
+                  <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-green-50 to-green-50 text-green-700 border border-green-200/60 px-4 py-1.5 rounded-xl text-sm font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-green-400" aria-hidden="true"></span>
+                    {{ getDisciplinaNombre(dId) }}
+                  </span>
+                }
+              </div>
+            } @else {
+              <p class="text-slate-400 italic">Sin disciplinas asociadas</p>
+            }
           </div>
-        }
-
-        <!-- Disciplinas -->
-        <div class="section-card p-4">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200">
-              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0 1 16.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 0 1-7.54 0"/></svg>
-            </span>
-            <h3 class="text-base font-bold text-slate-800">Disciplinas Asociadas</h3>
-          </div>
-          @if (c.disciplinaIds.length > 0) {
-            <div class="flex flex-wrap gap-2">
-              @for (dId of c.disciplinaIds; track dId) {
-                <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 border border-indigo-200/60 px-4 py-1.5 rounded-xl text-sm font-semibold">
-                  <span class="w-2 h-2 rounded-full bg-indigo-400" aria-hidden="true"></span>
-                  {{ getDisciplinaNombre(dId) }}
-                </span>
-              }
-            </div>
-          } @else {
-            <p class="text-slate-400 italic">Sin disciplinas asociadas</p>
-          }
         </div>
 
         <!-- Reglas y Parámetros -->
@@ -333,61 +336,20 @@ import { Equipo } from '../../core/models/equipo.model';
               <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/></svg>
             </span>
             <h3 class="text-base font-bold text-slate-800">Equipos Participantes</h3>
-            @if (puedeRegistrarEquipos()) {
-              <button (click)="toggleRegistroEquipo()"
-                class="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-teal-500 to-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md shadow-teal-200 hover:shadow-lg hover:shadow-teal-200 hover:-translate-y-0.5 transition-all">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                Registrar Equipo
-              </button>
-            }
           </div>
-          @if (showRegistroEquipo()) {
-            <div class="mb-4 rounded-xl border border-teal-200 bg-teal-50/50 p-4" role="form" aria-label="Registrar nuevo equipo">
-              <p class="text-sm font-semibold text-slate-700 mb-3">Nuevo equipo</p>
-              <div class="flex flex-col sm:flex-row gap-3">
-                <label class="sr-only" for="nuevoEquipoNombre">Nombre del equipo</label>
-                <input
-                  id="nuevoEquipoNombre"
-                  class="input-modern flex-1"
-                  placeholder="Nombre del equipo"
-                  [value]="nuevoEquipoNombre()"
-                  (input)="nuevoEquipoNombre.set($any($event.target).value)"
-                />
-                @if (c.disciplinaIds.length > 1) {
-                  <label class="sr-only" for="disciplinaEquipo">Disciplina</label>
-                  <select id="disciplinaEquipo" class="input-modern" [value]="selectedDisciplinaId()" (change)="selectedDisciplinaId.set($any($event.target).value)">
-                    @for (dId of c.disciplinaIds; track dId) {
-                      <option [value]="dId">{{ getDisciplinaNombre(dId) }}</option>
-                    }
-                  </select>
-                }
-                <div class="flex gap-2">
-                  <button (click)="registrarEquipo()" [disabled]="!nuevoEquipoNombre().trim()"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                    Agregar
-                  </button>
-                  <button (click)="showRegistroEquipo.set(false)"
-                    class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
           @if (equiposCompetencia().length > 0) {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               @for (eq of equiposCompetencia(); track eq.id) {
-                <button (click)="selectEquipo(eq.id)" class="group relative rounded-xl border border-slate-200/80 bg-white p-4 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-50 transition-all duration-300 text-left w-full cursor-pointer">
+                <button (click)="selectEquipo(eq.id)" class="group relative rounded-xl border border-slate-200/80 bg-white p-4 hover:border-green-200 hover:shadow-md hover:shadow-green-50 transition-all duration-300 text-left w-full cursor-pointer">
                   <div class="flex items-center gap-3">
-                    <span class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center text-sm font-bold text-indigo-600 shrink-0">
+                    <span class="w-10 h-10 rounded-full bg-gradient-to-br from-green-100 to-green-100 flex items-center justify-center text-sm font-bold text-green-600 shrink-0">
                       {{ eq.nombre.charAt(0) }}
                     </span>
                     <div class="flex-1 min-w-0">
-                      <p class="font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors truncate">{{ eq.nombre }}</p>
+                      <p class="font-semibold text-slate-800 group-hover:text-green-600 transition-colors truncate">{{ eq.nombre }}</p>
                       <p class="text-xs text-slate-400">{{ eq.participantes.length }} participantes</p>
                     </div>
-                    <svg class="w-4 h-4 text-slate-300 group-hover:text-indigo-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+                    <svg class="w-4 h-4 text-slate-300 group-hover:text-green-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
                   </div>
                 </button>
               }
@@ -404,6 +366,28 @@ import { Equipo } from '../../core/models/equipo.model';
                   Registrar primer equipo
                 </button>
               }
+              @if (showRegistroEquipo()) {
+                <form (ngSubmit)="registrarEquipo()" class="mt-6 max-w-sm mx-auto space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nombre del equipo</label>
+                    <input type="text" class="input-modern w-full" [value]="nuevoEquipoNombre()" (input)="nuevoEquipoNombre.set($any($event.target).value)" name="nombreEquipo" required maxlength="50" />
+                  </div>
+                  @if ((camp()?.disciplinaIds?.length ?? 0) > 1) {
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Disciplina</label>
+                      <select class="input-modern w-full" [value]="selectedDisciplinaId()" (change)="selectedDisciplinaId.set($any($event.target).value)" name="disciplinaEquipo" required>
+                        @for (dId of (camp()?.disciplinaIds ?? []); track dId) {
+                          <option [value]="dId">{{ getDisciplinaNombre(dId) }}</option>
+                        }
+                      </select>
+                    </div>
+                  }
+                  <div class="flex justify-end gap-2">
+                    <button type="button" (click)="toggleRegistroEquipo()" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Registrar equipo</button>
+                  </div>
+                </form>
+              }
             </div>
           }
         </div>
@@ -411,7 +395,7 @@ import { Equipo } from '../../core/models/equipo.model';
         <!-- Encuentros por Fecha -->
         <div class="section-card p-4">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-200">
+            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-brand-200">
               <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
             </span>
             <h3 class="text-base font-bold text-slate-800">Encuentros</h3>
@@ -424,7 +408,7 @@ import { Equipo } from '../../core/models/equipo.model';
               @for (fecha of fechasAgrupadas(); track fecha.numero) {
                 <div>
                   <div class="flex items-center gap-3 mb-3">
-                    <span class="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 rounded-lg text-sm font-bold">
+                    <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 px-3 py-1 rounded-lg text-sm font-bold">
                       Fecha {{ fecha.numero }}
                     </span>
                     <span class="text-sm text-slate-500 font-medium">{{ fecha.fecha }}</span>
@@ -435,11 +419,11 @@ import { Equipo } from '../../core/models/equipo.model';
                   </div>
                   <div class="space-y-2">
                     @for (enc of fecha.encuentros; track enc.id) {
-                      <div class="rounded-xl border border-slate-200/80 bg-white p-4 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-50 transition-all duration-200">
+                      <div class="rounded-xl border border-slate-200/80 bg-white p-4 hover:border-green-200 hover:shadow-md hover:shadow-green-50 transition-all duration-200">
                         <div class="flex items-center gap-3">
                           <!-- Equipo Local -->
-                          <button (click)="selectEquipo(enc.equipoLocalId)" class="flex items-center gap-2 hover:text-indigo-600 transition-colors text-left flex-1 min-w-0">
-                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-100 to-blue-100 flex items-center justify-center text-xs font-bold text-indigo-600 shrink-0">
+                          <button (click)="selectEquipo(enc.equipoLocalId)" class="flex items-center gap-2 hover:text-green-600 transition-colors text-left flex-1 min-w-0">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-green-100 flex items-center justify-center text-xs font-bold text-green-600 shrink-0">
                               {{ getEquipoNombre(enc.equipoLocalId).charAt(0) }}
                             </span>
                             <span class="font-semibold text-slate-800 truncate">{{ getEquipoNombre(enc.equipoLocalId) }}</span>
@@ -450,9 +434,9 @@ import { Equipo } from '../../core/models/equipo.model';
                             <span class="text-[10px] text-slate-400 mt-0.5">{{ formatHora(enc.fechaHora) }}</span>
                           </div>
                           <!-- Equipo Visitante -->
-                          <button (click)="selectEquipo(enc.equipoVisitanteId)" class="flex items-center gap-2 hover:text-indigo-600 transition-colors text-right flex-1 min-w-0 justify-end">
+                          <button (click)="selectEquipo(enc.equipoVisitanteId)" class="flex items-center gap-2 hover:text-green-600 transition-colors text-right flex-1 min-w-0 justify-end">
                             <span class="font-semibold text-slate-800 truncate">{{ getEquipoNombre(enc.equipoVisitanteId) }}</span>
-                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center text-xs font-bold text-blue-600 shrink-0">
+                            <span class="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-cyan-100 flex items-center justify-center text-xs font-bold text-green-600 shrink-0">
                               {{ getEquipoNombre(enc.equipoVisitanteId).charAt(0) }}
                             </span>
                           </button>
@@ -482,13 +466,13 @@ import { Equipo } from '../../core/models/equipo.model';
             </div>
           } @else if (puedeGenerarFixture()) {
             <div class="text-center py-8 space-y-3">
-              <div class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto">
-                <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
+              <div class="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center mx-auto">
+                <svg class="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
               </div>
               <p class="text-slate-700 font-semibold">{{ equiposCompetencia().length }} equipos registrados</p>
               <p class="text-slate-400 text-sm">Se generará un fixture todos contra todos (round-robin)</p>
               <button (click)="generarEncuentros()"
-                class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all">
+                class="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-200 hover:shadow-xl hover:shadow-brand-200 hover:-translate-y-0.5 transition-all">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/></svg>
                 Generar Fixture
               </button>
@@ -506,7 +490,7 @@ import { Equipo } from '../../core/models/equipo.model';
         <!-- Calendario -->
         <div class="section-card p-4">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-200">
+            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500 to-green-600 flex items-center justify-center shadow-lg shadow-sky-200">
               <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
             </span>
             <h3 class="text-base font-bold text-slate-800">Calendario</h3>
@@ -514,9 +498,9 @@ import { Equipo } from '../../core/models/equipo.model';
           @if (c.calendario.length > 0) {
             <div class="space-y-1.5">
               @for (evento of c.calendario; track evento.id) {
-                <div class="flex items-center justify-between rounded-lg px-3 py-2 odd:bg-slate-50/80 hover:bg-indigo-50/50 transition-colors">
+                <div class="flex items-center justify-between rounded-lg px-3 py-2 odd:bg-slate-50/80 hover:bg-green-50/50 transition-colors">
                   <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-indigo-400 shrink-0" aria-hidden="true"></span>
+                    <span class="w-2 h-2 rounded-full bg-green-400 shrink-0" aria-hidden="true"></span>
                     <div>
                       <p class="font-semibold text-sm text-slate-800">{{ evento.titulo }}</p>
                       <p class="text-xs text-slate-400 capitalize">{{ formatTipoEvento(evento.tipo) }}</p>
@@ -535,16 +519,16 @@ import { Equipo } from '../../core/models/equipo.model';
         @if (c.historialEstados.length > 0) {
           <div class="section-card p-4">
             <div class="flex items-center gap-3 mb-3">
-              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center shadow-lg shadow-brand-200">
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
               </span>
               <h3 class="text-base font-bold text-slate-800">Historial de Estados</h3>
             </div>
-            <ol class="relative border-l-2 border-indigo-100 ml-4 space-y-3">
+            <ol class="relative border-l-2 border-green-100 ml-4 space-y-3">
               @for (h of c.historialEstados; track h.fecha; let last = $last) {
                 <li class="ml-6">
                   <span class="absolute -left-2.5 w-5 h-5 rounded-full border-[3px] flex items-center justify-center"
-                    [class]="last ? 'bg-indigo-600 border-indigo-100 shadow-lg shadow-indigo-200' : 'bg-slate-300 border-white'"
+                    [class]="last ? 'bg-green-600 border-green-100 shadow-lg shadow-brand-200' : 'bg-slate-300 border-white'"
                     aria-hidden="true">
                     @if (last) {
                       <span class="w-1.5 h-1.5 rounded-full bg-white" aria-hidden="true"></span>
@@ -638,7 +622,7 @@ import { Equipo } from '../../core/models/equipo.model';
         <button class="absolute inset-0 bg-black/30 backdrop-blur-sm" (click)="closeEquipoPanel()" aria-label="Cerrar panel"></button>
         <!-- Panel -->
         <div class="relative w-full max-w-md bg-white shadow-2xl overflow-y-auto animate-slide-in-right">
-          <div class="sticky top-0 z-10 bg-gradient-to-br from-indigo-700 to-indigo-900 p-6 text-white">
+          <div class="sticky top-0 z-10 bg-gradient-to-br from-brand to-brand-900 p-6 text-white">
             <button (click)="closeEquipoPanel()" class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Cerrar panel">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
             </button>
@@ -698,7 +682,7 @@ import { Equipo } from '../../core/models/equipo.model';
                   @for (p of eq.participantes; track p.id) {
                     <div class="flex items-center gap-3 rounded-xl p-3 hover:bg-slate-50 transition-colors">
                       <span class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-                        [class]="p.elegibilidad === 'elegible' ? 'bg-indigo-100 text-indigo-700' : 'bg-red-100 text-red-700'">
+                        [class]="p.elegibilidad === 'elegible' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                         {{ p.numeroCamiseta ?? '?' }}
                       </span>
                       <div class="min-w-0 flex-1">
@@ -802,7 +786,7 @@ export class CompetenciaDetailComponent implements OnInit {
 
   protected readonly estadoClasses: Record<EstadoCompetencia, string> = {
     borrador: 'bg-slate-100 text-slate-700',
-    programado: 'bg-blue-100 text-blue-800',
+    programado: 'bg-green-100 text-green-800',
     en_ejecucion: 'bg-green-100 text-green-800',
     finalizado: 'bg-amber-100 text-amber-800',
     suspendido: 'bg-orange-100 text-orange-800',
@@ -924,7 +908,7 @@ export class CompetenciaDetailComponent implements OnInit {
   protected transicionBtnClass(estado: EstadoCompetencia): string {
     const map: Record<EstadoCompetencia, string> = {
       borrador: 'border-slate-300 text-slate-700 hover:bg-slate-50',
-      programado: 'border-blue-300 text-blue-700 hover:bg-blue-50',
+      programado: 'border-green-300 text-green-700 hover:bg-green-50',
       en_ejecucion: 'border-green-300 text-green-700 hover:bg-green-50',
       finalizado: 'border-amber-300 text-amber-700 hover:bg-amber-50',
       suspendido: 'border-orange-300 text-orange-700 hover:bg-orange-50',
@@ -956,7 +940,7 @@ export class CompetenciaDetailComponent implements OnInit {
   protected encuentroEstadoClass(estado: EstadoEncuentro): string {
     const map: Record<EstadoEncuentro, string> = {
       borrador: 'bg-slate-100 text-slate-600',
-      programado: 'bg-blue-100 text-blue-700',
+      programado: 'bg-green-100 text-green-700',
       en_curso: 'bg-green-100 text-green-700',
       finalizado: 'bg-amber-100 text-amber-700',
       suspendido: 'bg-orange-100 text-orange-700',
@@ -983,7 +967,7 @@ export class CompetenciaDetailComponent implements OnInit {
 
   protected fechaEstadoClass(estado: FechaCompetencia['estado']): string {
     const map: Record<FechaCompetencia['estado'], string> = {
-      pendiente: 'bg-blue-100 text-blue-700',
+      pendiente: 'bg-green-100 text-green-700',
       en_curso: 'bg-green-100 text-green-700',
       completada: 'bg-slate-100 text-slate-600',
     };

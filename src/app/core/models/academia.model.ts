@@ -63,6 +63,10 @@ export interface Curso {
   categoriaId: string;
   subcategoriaId?: string;
   publicoObjetivo?: string;
+  docenteId: string;
+  ambienteId: string;
+  capacidad: number;
+  precio: number;
   requiereCertificadoMedico: boolean;
   edadCertificadoMedico?: number;
   requiereDeclaracionJurada: boolean;

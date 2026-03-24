@@ -20,12 +20,12 @@ import { EstadoArea, TipoArea } from '../../core/models/area.model';
           <div>
             <label for="nombre" class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
             <input id="nombre" formControlName="nombre" type="text"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div>
             <label for="tipo" class="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
             <select id="tipo" formControlName="tipo"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="cancha_futbol">Cancha de fútbol</option>
               <option value="cancha_voley">Cancha de vóley</option>
               <option value="cancha_basquet">Cancha de básquet</option>
@@ -42,7 +42,7 @@ import { EstadoArea, TipoArea } from '../../core/models/area.model';
           <div>
             <label for="sedeId" class="block text-sm font-medium text-slate-700 mb-1">Sede</label>
             <select id="sedeId" formControlName="sedeId"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="">Sin sede</option>
               @for (sede of sedes(); track sede.id) {
                 <option [value]="sede.id">{{ sede.nombre }}</option>
@@ -52,7 +52,7 @@ import { EstadoArea, TipoArea } from '../../core/models/area.model';
           <div>
             <label for="estado" class="block text-sm font-medium text-slate-700 mb-1">Estado</label>
             <select id="estado" formControlName="estado"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
               <option value="disponible">Disponible</option>
               <option value="ocupada">Ocupada</option>
               <option value="en_mantenimiento">En mantenimiento</option>
@@ -64,41 +64,41 @@ import { EstadoArea, TipoArea } from '../../core/models/area.model';
         <div>
           <label for="descripcion" class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
           <textarea id="descripcion" formControlName="descripcion" rows="2"
-            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"></textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label for="superficie" class="block text-sm font-medium text-slate-700 mb-1">Superficie</label>
             <input id="superficie" formControlName="superficie" type="text" placeholder="Ej: césped natural"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div>
             <label for="dimensiones" class="block text-sm font-medium text-slate-700 mb-1">Dimensiones</label>
             <input id="dimensiones" formControlName="dimensiones" type="text" placeholder="Ej: 105m x 68m"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
           <div>
             <label for="capacidad" class="block text-sm font-medium text-slate-700 mb-1">Capacidad</label>
             <input id="capacidad" formControlName="capacidad" type="number"
-              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+              class="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500" />
           </div>
         </div>
 
         <div class="flex gap-6">
           <label class="inline-flex items-center gap-2">
-            <input type="checkbox" formControlName="techada" class="rounded text-indigo-600 focus:ring-indigo-500" />
+            <input type="checkbox" formControlName="techada" class="rounded text-green-600 focus:ring-green-500" />
             <span class="text-sm text-slate-700">Techada</span>
           </label>
           <label class="inline-flex items-center gap-2">
-            <input type="checkbox" formControlName="iluminacion" class="rounded text-indigo-600 focus:ring-indigo-500" />
+            <input type="checkbox" formControlName="iluminacion" class="rounded text-green-600 focus:ring-green-500" />
             <span class="text-sm text-slate-700">Iluminación</span>
           </label>
         </div>
 
         <div class="flex gap-3 pt-4">
           <button type="submit" [disabled]="form.invalid"
-            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             {{ isEdit() ? 'Actualizar' : 'Crear' }}
           </button>
           <button type="button" (click)="cancelar()"
