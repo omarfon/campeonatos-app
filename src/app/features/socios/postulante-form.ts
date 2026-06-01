@@ -236,10 +236,10 @@ export class PostulanteFormComponent {
       fechaIngreso: hoy,
     });
 
-    this.router.navigate(['/', { outlets: { primary: ['maestros', 'socios', 'postulantes'], panel: null } }]);
+    this.router.navigate(['/', 'maestros', 'socios', { outlets: { primary: ['postulantes'], panel: null } }]);
   }
 
   protected cancelar(): void {
-    this.router.navigate(['/', { outlets: { panel: null } }]);
+    this.router.navigate(['/', 'maestros', 'socios', { outlets: { primary: ['postulantes'], panel: null } }]);
   }
 }

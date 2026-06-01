@@ -1,4 +1,4 @@
-import { TipoDocumento } from './socio.model';
+import { TipoDocumento, RelacionDependiente, Sexo } from './socio.model';
 
 /** Estados del workflow de aprobación de postulantes */
 export type EstadoPostulante =
@@ -58,6 +58,34 @@ export const TIPO_DOC_POSTULANTE_LABELS: Record<DocumentoPostulante['tipo'], str
   otro: 'Otro',
 };
 
+/** Estado de cada integrante del grupo familiar postulante */
+export type EstadoDependientePostulante = 'pendiente' | 'aceptado' | 'rechazado';
+
+export const ESTADO_DEP_POSTULANTE_LABELS: Record<EstadoDependientePostulante, string> = {
+  pendiente: 'Pendiente',
+  aceptado: 'Aceptado',
+  rechazado: 'Rechazado',
+};
+
+export const ESTADO_DEP_POSTULANTE_CLASSES: Record<EstadoDependientePostulante, string> = {
+  pendiente: 'bg-amber-100 text-amber-700',
+  aceptado: 'bg-green-100 text-green-700',
+  rechazado: 'bg-red-100 text-red-700',
+};
+
+export interface DependientePostulante {
+  id: string;
+  nombre: string;
+  apellido: string;
+  tipoDocumento: TipoDocumento;
+  dni: string;
+  fechaNacimiento?: string;
+  relacion: RelacionDependiente;
+  sexo?: Sexo;
+  estado: EstadoDependientePostulante;
+  motivoRechazo?: string;
+}
+
 export interface Postulante {
   id: string;
   /** Número correlativo visible */
@@ -79,6 +107,8 @@ export interface Postulante {
   estado: EstadoPostulante;
   historial: HistorialWorkflow[];
   documentos: DocumentoPostulante[];
+  /** Integrantes del grupo familiar (solo condición familiar) */
+  dependientesPostulantes?: DependientePostulante[];
   motivoRechazo?: string;
   observaciones?: string;
   /** Fecha de creación del registro */

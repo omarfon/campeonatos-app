@@ -1,6 +1,7 @@
-import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { Router } from '@angular/router';
+import { Component, signal, ChangeDetectionStrategy, inject, DestroyRef } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd, UrlSegmentGroup } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 interface NavItem {
   path: string;
@@ -313,6 +314,7 @@ const NAV_ENTRIES: NavEntry[] = [
 })
 export class LayoutComponent {
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly sidebarOpen = signal(false);
   protected readonly panelOpen = signal(false);
@@ -320,6 +322,31 @@ export class LayoutComponent {
   protected readonly navEntries = NAV_ENTRIES;
   protected readonly isGroup = isGroup;
   protected readonly iconPaths = ICON_PATHS;
+
+  constructor() {
+    // Expand sidebar group matching the current route on init
+    this.expandActiveGroup(this.router.url);
+
+    // Expand sidebar group on every navigation
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(e => this.expandActiveGroup(e.urlAfterRedirects));
+  }
+
+  private expandActiveGroup(url: string): void {
+    const cleanUrl = url.split('(')[0];
+    const next = new Set(this.openGroups());
+    let changed = false;
+    for (const entry of NAV_ENTRIES) {
+      if (isGroup(entry) && !next.has(entry.label) &&
+          entry.children.some(c => cleanUrl.startsWith(c.path))) {
+        next.add(entry.label);
+        changed = true;
+      }
+    }
+    if (changed) this.openGroups.set(next);
+  }
 
   protected toggleGroup(label: string): void {
     this.openGroups.update(groups => {
@@ -332,10 +359,20 @@ export class LayoutComponent {
 
   protected closePanel(): void {
     const tree = this.router.parseUrl(this.router.url);
-    if (tree.root.children['panel']) {
-      delete tree.root.children['panel'];
+    if (this.removePanelOutlet(tree.root)) {
       void this.router.navigateByUrl(tree);
     }
     this.panelOpen.set(false);
+  }
+
+  private removePanelOutlet(group: UrlSegmentGroup): boolean {
+    if (group.children['panel']) {
+      delete group.children['panel'];
+      return true;
+    }
+    for (const child of Object.values(group.children)) {
+      if (this.removePanelOutlet(child)) return true;
+    }
+    return false;
   }
 }

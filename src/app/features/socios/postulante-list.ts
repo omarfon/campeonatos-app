@@ -23,7 +23,7 @@ import { confirmDialog } from '../../shared/confirm-dialog';
             <h2 class="text-2xl font-extrabold tracking-tight">Postulantes</h2>
             <p class="text-indigo-200 text-sm mt-0.5">Seguimiento del proceso de admisión de nuevos socios.</p>
           </div>
-          <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios', 'postulantes'], panel: ['maestros', 'socios', 'postulante', 'nuevo'] } }]"
+          <a [routerLink]="['/', 'maestros', 'socios', { outlets: { primary: ['postulantes'], panel: ['postulante', 'nuevo'] } }]"
              class="btn-primary !from-white !to-slate-50 !text-indigo-700 !shadow-xl !shadow-indigo-900/20 !text-xs !px-3 !py-1.5 shrink-0">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
             Nuevo Postulante
@@ -99,7 +99,7 @@ import { confirmDialog } from '../../shared/confirm-dialog';
               @for (p of paginados(); track p.id) {
                 <tr class="hover:bg-slate-50 transition-colors">
                   <td class="px-4 py-3">
-                    <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios', 'postulantes'], panel: ['maestros', 'socios', 'postulante', p.id, 'detalle'] } }]"
+                    <a [routerLink]="['/', 'maestros', 'socios', { outlets: { primary: ['postulantes'], panel: ['postulante', p.id, 'detalle'] } }]"
                        class="font-semibold text-indigo-600 hover:text-indigo-800 text-sm">
                       {{ p.apellido }}, {{ p.nombre }}
                     </a>
@@ -144,7 +144,7 @@ import { confirmDialog } from '../../shared/confirm-dialog';
                   <td class="px-4 py-3 text-sm text-slate-500 hidden sm:table-cell">{{ p.fechaIngreso }}</td>
                   <td class="px-4 py-3">
                     <div class="flex gap-1">
-                      <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios', 'postulantes'], panel: ['maestros', 'socios', 'postulante', p.id, 'detalle'] } }]"
+                      <a [routerLink]="['/', 'maestros', 'socios', { outlets: { primary: ['postulantes'], panel: ['postulante', p.id, 'detalle'] } }]"
                          class="p-1.5 rounded text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                          title="Ver / Gestionar" [attr.aria-label]="'Ver postulante ' + p.apellido">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

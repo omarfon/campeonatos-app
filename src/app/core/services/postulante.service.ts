@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Postulante, EstadoPostulante, HistorialWorkflow } from '../models/postulante.model';
+import { Postulante, EstadoPostulante, HistorialWorkflow, DependientePostulante, EstadoDependientePostulante } from '../models/postulante.model';
 
 @Injectable({ providedIn: 'root' })
 export class PostulanteService {
@@ -60,6 +60,30 @@ export class PostulanteService {
         },
       ],
       documentos: [],
+      dependientesPostulantes: [
+        {
+          id: 'dep-post-1',
+          nombre: 'Luciana',
+          apellido: 'Salas',
+          tipoDocumento: 'dni',
+          dni: '40112233',
+          fechaNacimiento: '1992-08-14',
+          relacion: 'conyuge',
+          sexo: 'femenino',
+          estado: 'pendiente',
+        },
+        {
+          id: 'dep-post-2',
+          nombre: 'Tomás',
+          apellido: 'Salas',
+          tipoDocumento: 'dni',
+          dni: '55223344',
+          fechaNacimiento: '2015-03-09',
+          relacion: 'hijo',
+          sexo: 'masculino',
+          estado: 'pendiente',
+        },
+      ],
     },
     {
       id: 'post-3',
@@ -165,6 +189,46 @@ export class PostulanteService {
   marcarConvertido(id: string, socioId: string): void {
     this.items.update(prev =>
       prev.map(p => (p.id === id ? { ...p, socioConvertidoId: socioId } : p))
+    );
+  }
+
+  agregarDependientePostulante(
+    postulanteId: string,
+    data: Omit<DependientePostulante, 'id' | 'estado'>
+  ): void {
+    const newId = `dep-post-${Date.now()}`;
+    this.items.update(prev =>
+      prev.map(p =>
+        p.id === postulanteId
+          ? {
+              ...p,
+              dependientesPostulantes: [
+                ...(p.dependientesPostulantes ?? []),
+                { ...data, id: newId, estado: 'pendiente' as EstadoDependientePostulante },
+              ],
+            }
+          : p
+      )
+    );
+  }
+
+  cambiarEstadoDependiente(
+    postulanteId: string,
+    depId: string,
+    estado: 'aceptado' | 'rechazado',
+    motivoRechazo?: string
+  ): void {
+    this.items.update(prev =>
+      prev.map(p =>
+        p.id === postulanteId
+          ? {
+              ...p,
+              dependientesPostulantes: (p.dependientesPostulantes ?? []).map(d =>
+                d.id === depId ? { ...d, estado, motivoRechazo } : d
+              ),
+            }
+          : p
+      )
     );
   }
 

@@ -4,20 +4,29 @@ import {
   signal,
   computed,
   OnInit,
+  DestroyRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostulanteService } from '../../core/services/postulante.service';
 import { SocioService } from '../../core/services/socio.service';
 import {
   Postulante,
+  DependientePostulante,
   EstadoPostulante,
   ESTADO_POSTULANTE_LABELS,
   ESTADO_POSTULANTE_CLASSES,
+  ESTADO_DEP_POSTULANTE_LABELS,
+  ESTADO_DEP_POSTULANTE_CLASSES,
   WORKFLOW_STEPS,
 } from '../../core/models/postulante.model';
-import { TIPO_DOCUMENTO_LABELS } from '../../core/models/socio.model';
+import {
+  TIPO_DOCUMENTO_LABELS,
+  RELACION_DEPENDIENTE_LABELS,
+  RelacionDependiente,
+} from '../../core/models/socio.model';
 
 @Component({
   selector: 'app-postulante-detalle',
@@ -144,6 +153,163 @@ import { TIPO_DOCUMENTO_LABELS } from '../../core/models/socio.model';
               </div>
             }
           </div>
+
+          <!-- Grupo familiar / Dependientes -->
+          @if (p.condicionDeseada === 'familiar' || (p.dependientesPostulantes ?? []).length > 0) {
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold text-slate-700">
+                  Grupo familiar
+                  <span class="ml-1 text-xs font-normal text-slate-400">({{ (p.dependientesPostulantes ?? []).length }})</span>
+                </p>
+                @if (p.estado !== 'rechazado' && p.estado !== 'aprobado') {
+                  <button type="button"
+                    class="text-xs px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 font-semibold transition-colors"
+                    (click)="mostrarFormDep.set(!mostrarFormDep())">
+                    @if (mostrarFormDep()) { Cancelar } @else { + Agregar integrante }
+                  </button>
+                }
+              </div>
+
+              @if (mostrarFormDep()) {
+                <div class="rounded-xl border-2 border-indigo-200 bg-indigo-50/40 p-4 space-y-3">
+                  <p class="text-xs font-semibold text-indigo-700">Nuevo integrante del grupo familiar</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label for="dep-apellido" class="block text-xs font-medium text-slate-600 mb-1">Apellido *</label>
+                      <input id="dep-apellido" type="text" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().apellido ?? ''"
+                        (input)="nuevoDep.update(d => ({...d, apellido: $any($event.target).value}))" />
+                    </div>
+                    <div>
+                      <label for="dep-nombre" class="block text-xs font-medium text-slate-600 mb-1">Nombre *</label>
+                      <input id="dep-nombre" type="text" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().nombre ?? ''"
+                        (input)="nuevoDep.update(d => ({...d, nombre: $any($event.target).value}))" />
+                    </div>
+                    <div>
+                      <label for="dep-dni" class="block text-xs font-medium text-slate-600 mb-1">DNI *</label>
+                      <input id="dep-dni" type="text" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().dni ?? ''"
+                        (input)="nuevoDep.update(d => ({...d, dni: $any($event.target).value}))" />
+                    </div>
+                    <div>
+                      <label for="dep-relacion" class="block text-xs font-medium text-slate-600 mb-1">Relación *</label>
+                      <select id="dep-relacion" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().relacion ?? 'hijo'"
+                        (change)="nuevoDep.update(d => ({...d, relacion: $any($event.target).value}))">
+                        @for (opt of relacionOpts; track opt.value) {
+                          <option [value]="opt.value">{{ opt.label }}</option>
+                        }
+                      </select>
+                    </div>
+                    <div>
+                      <label for="dep-fnac" class="block text-xs font-medium text-slate-600 mb-1">Fecha de nacimiento</label>
+                      <input id="dep-fnac" type="date" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().fechaNacimiento ?? ''"
+                        (input)="nuevoDep.update(d => ({...d, fechaNacimiento: $any($event.target).value || undefined}))" />
+                    </div>
+                    <div>
+                      <label for="dep-sexo" class="block text-xs font-medium text-slate-600 mb-1">Sexo</label>
+                      <select id="dep-sexo" class="input-modern !py-1.5 !text-sm"
+                        [value]="nuevoDep().sexo ?? ''"
+                        (change)="nuevoDep.update(d => ({...d, sexo: $any($event.target).value || undefined}))">
+                        <option value="">— Sin especificar —</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="flex gap-2">
+                    <button type="button"
+                      class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
+                      (click)="agregarDep(p.id)">
+                      Agregar
+                    </button>
+                    <button type="button"
+                      class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
+                      (click)="mostrarFormDep.set(false)">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              }
+
+              @if ((p.dependientesPostulantes ?? []).length === 0) {
+                <div class="rounded-lg bg-amber-50 border border-amber-100 p-3 text-xs text-amber-700 text-center">
+                  Sin integrantes registrados aún.
+                  @if (p.condicionDeseada === 'familiar') {
+                    &nbsp;Agregue los integrantes del grupo familiar.
+                  }
+                </div>
+              }
+
+              <ul class="space-y-2">
+                @for (dep of p.dependientesPostulantes ?? []; track dep.id) {
+                  <li class="rounded-xl border border-slate-100 bg-slate-50 overflow-hidden">
+                    <div class="flex items-center justify-between gap-3 px-3 py-3">
+                      <div class="min-w-0">
+                        <p class="font-semibold text-slate-800 text-sm leading-tight">{{ dep.apellido }}, {{ dep.nombre }}</p>
+                        <p class="text-xs text-slate-500">
+                          {{ relacionLabels[dep.relacion] }} · DNI {{ dep.dni }}
+                          @if (dep.fechaNacimiento) { · {{ dep.fechaNacimiento }} }
+                        </p>
+                      </div>
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                          [class]="depEstadoClasses[dep.estado]">
+                          {{ depEstadoLabels[dep.estado] }}
+                        </span>
+                        @if (dep.estado === 'pendiente' && p.estado !== 'rechazado' && p.estado !== 'aprobado') {
+                          <button type="button"
+                            class="text-[10px] px-2 py-0.5 rounded font-semibold bg-green-100 text-green-700 hover:bg-green-200 transition-colors"
+                            (click)="aceptarDep(p.id, dep.id)">
+                            Aceptar
+                          </button>
+                          <button type="button"
+                            class="text-[10px] px-2 py-0.5 rounded font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                            (click)="iniciarRechazoDir(dep.id)">
+                            Rechazar
+                          </button>
+                        }
+                      </div>
+                    </div>
+                    @if (rechazandoDepId() === dep.id) {
+                      <div class="border-t border-slate-200 bg-white px-3 py-3 space-y-2">
+                        <label [for]="'motivo-dep-' + dep.id" class="block text-xs font-medium text-slate-600">
+                          Motivo de rechazo <span class="text-red-500">*</span>
+                        </label>
+                        <textarea [id]="'motivo-dep-' + dep.id"
+                          class="input-modern !text-sm !h-auto resize-none"
+                          rows="2"
+                          [value]="motivoRechazoDep()"
+                          (input)="motivoRechazoDep.set($any($event.target).value)"
+                          placeholder="Especifique el motivo..."></textarea>
+                        <div class="flex gap-2">
+                          <button type="button"
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
+                            (click)="confirmarRechazoDep(p.id, dep.id)">
+                            Confirmar rechazo
+                          </button>
+                          <button type="button"
+                            class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors"
+                            (click)="rechazandoDepId.set(null)">
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    }
+                    @if (dep.estado === 'rechazado' && dep.motivoRechazo) {
+                      <div class="border-t border-red-100 bg-red-50 px-3 py-2">
+                        <p class="text-xs text-red-700 italic">Motivo: {{ dep.motivoRechazo }}</p>
+                      </div>
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          }
 
           <!-- Historial del workflow -->
           <div>
@@ -286,9 +452,45 @@ import { TIPO_DOCUMENTO_LABELS } from '../../core/models/socio.model';
 
           <!-- Convertir a socio (solo estado aprobado y no convertido aún) -->
           @if (p.estado === 'aprobado' && !p.socioConvertidoId) {
-            <div class="rounded-xl border-2 border-green-200 bg-green-50/60 p-5">
-              <p class="text-sm font-semibold text-green-800 mb-1">Postulante aprobado</p>
-              <p class="text-xs text-green-700 mb-4">Puede convertir este postulante en socio. Se creará un nuevo registro con los datos disponibles.</p>
+            <div class="rounded-xl border-2 border-green-200 bg-green-50/60 p-5 space-y-3">
+              <div>
+                <p class="text-sm font-semibold text-green-800">Postulante aprobado</p>
+                <p class="text-xs text-green-700 mt-1">Puede convertir este postulante en socio. Se creará un nuevo registro con los datos disponibles.</p>
+              </div>
+
+              @if ((p.dependientesPostulantes ?? []).length > 0) {
+                @if (depAceptados(p).length > 0) {
+                  <div class="rounded-lg bg-white border border-green-200 p-3">
+                    <p class="text-xs font-semibold text-green-800 mb-2">Dependientes que se incluirán:</p>
+                    <ul class="space-y-1">
+                      @for (dep of depAceptados(p); track dep.id) {
+                        <li class="text-xs text-green-700 flex items-center gap-1.5">
+                          <svg class="w-3 h-3 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>
+                          {{ dep.apellido }}, {{ dep.nombre }} ({{ relacionLabels[dep.relacion] }})
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (depRechazados(p).length > 0) {
+                  <div class="rounded-lg bg-white border border-red-100 p-3">
+                    <p class="text-xs font-semibold text-red-700 mb-1">No se incluirán (rechazados):</p>
+                    <ul class="space-y-1">
+                      @for (dep of depRechazados(p); track dep.id) {
+                        <li class="text-xs text-red-600">{{ dep.apellido }}, {{ dep.nombre }}</li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (depPendientes(p).length > 0) {
+                  <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
+                    <p class="text-xs text-amber-700">
+                      <strong>Atención:</strong> {{ depPendientes(p).length }} integrante(s) aún sin resolver quedarán excluidos.
+                    </p>
+                  </div>
+                }
+              }
+
               <button type="button"
                 class="w-full bg-green-700 hover:bg-green-800 text-white text-sm font-semibold rounded-lg px-4 py-2.5 transition-colors"
                 (click)="convertirEnSocio(p)">
@@ -312,6 +514,7 @@ export class PostulanteDetalleComponent implements OnInit {
   private readonly socioService = inject(SocioService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
 
   protected readonly postulante = signal<Postulante | undefined>(undefined);
@@ -321,17 +524,33 @@ export class PostulanteDetalleComponent implements OnInit {
   protected readonly estadoClasses = ESTADO_POSTULANTE_CLASSES;
   protected readonly tipoDocLabels = TIPO_DOCUMENTO_LABELS;
   protected readonly workflowSteps = WORKFLOW_STEPS;
+  protected readonly depEstadoLabels = ESTADO_DEP_POSTULANTE_LABELS;
+  protected readonly depEstadoClasses = ESTADO_DEP_POSTULANTE_CLASSES;
+  protected readonly relacionLabels = RELACION_DEPENDIENTE_LABELS;
+  protected readonly relacionOpts = Object.entries(RELACION_DEPENDIENTE_LABELS).map(
+    ([value, label]) => ({ value: value as RelacionDependiente, label })
+  );
 
   /** Control para observaciones de avance */
   protected readonly obsControl = this.fb.control('');
   /** Formulario de rechazo */
   protected readonly rechazarForm = this.fb.group({ motivo: ['', Validators.required] });
 
+  /** Dependientes del grupo familiar */
+  protected readonly mostrarFormDep = signal(false);
+  protected readonly nuevoDep = signal<Partial<DependientePostulante>>({ relacion: 'hijo', tipoDocumento: 'dni' });
+  protected readonly rechazandoDepId = signal<string | null>(null);
+  protected readonly motivoRechazoDep = signal('');
+
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.postulante.set(this.postulanteService.getById(id));
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.postulante.set(this.postulanteService.getById(id));
+        this.mostrarFormDep.set(false);
+        this.rechazandoDepId.set(null);
+      }
+    });
   }
 
   protected isStepCompleted(estadoActual: EstadoPostulante, step: EstadoPostulante): boolean {
@@ -388,6 +607,54 @@ export class PostulanteDetalleComponent implements OnInit {
     this.postulante.set(this.postulanteService.getById(id));
   }
 
+  protected depAceptados(p: Postulante): DependientePostulante[] {
+    return (p.dependientesPostulantes ?? []).filter(d => d.estado === 'aceptado');
+  }
+
+  protected depRechazados(p: Postulante): DependientePostulante[] {
+    return (p.dependientesPostulantes ?? []).filter(d => d.estado === 'rechazado');
+  }
+
+  protected depPendientes(p: Postulante): DependientePostulante[] {
+    return (p.dependientesPostulantes ?? []).filter(d => d.estado === 'pendiente');
+  }
+
+  protected agregarDep(postulanteId: string): void {
+    const dep = this.nuevoDep();
+    if (!dep.nombre?.trim() || !dep.apellido?.trim() || !dep.dni?.trim()) return;
+    this.postulanteService.agregarDependientePostulante(postulanteId, {
+      nombre: dep.nombre.trim(),
+      apellido: dep.apellido.trim(),
+      tipoDocumento: dep.tipoDocumento ?? 'dni',
+      dni: dep.dni.trim(),
+      fechaNacimiento: dep.fechaNacimiento,
+      relacion: dep.relacion ?? 'hijo',
+      sexo: dep.sexo,
+    });
+    this.nuevoDep.set({ relacion: 'hijo', tipoDocumento: 'dni' });
+    this.mostrarFormDep.set(false);
+    this.postulante.set(this.postulanteService.getById(postulanteId));
+  }
+
+  protected aceptarDep(postulanteId: string, depId: string): void {
+    this.postulanteService.cambiarEstadoDependiente(postulanteId, depId, 'aceptado');
+    this.postulante.set(this.postulanteService.getById(postulanteId));
+  }
+
+  protected iniciarRechazoDir(depId: string): void {
+    this.rechazandoDepId.set(depId);
+    this.motivoRechazoDep.set('');
+  }
+
+  protected confirmarRechazoDep(postulanteId: string, depId: string): void {
+    const motivo = this.motivoRechazoDep().trim();
+    if (!motivo) return;
+    this.postulanteService.cambiarEstadoDependiente(postulanteId, depId, 'rechazado', motivo);
+    this.rechazandoDepId.set(null);
+    this.motivoRechazoDep.set('');
+    this.postulante.set(this.postulanteService.getById(postulanteId));
+  }
+
   protected convertirEnSocio(p: Postulante): void {
     const hoy = new Date().toISOString().split('T')[0];
     this.socioService.create({
@@ -407,9 +674,22 @@ export class PostulanteDetalleComponent implements OnInit {
       fechaAlta: hoy,
       observaciones: `Convertido desde postulante ${p.codigoPostulante ?? p.id}.`,
     });
-    // Obtener el último socio creado (el que acabamos de crear)
     const socios = this.socioService.items();
     const nuevoSocio = socios[socios.length - 1];
+    // Agregar dependientes aceptados al socio recién creado
+    for (const dep of this.depAceptados(p)) {
+      this.socioService.agregarDependiente(nuevoSocio.id, {
+        nombre: dep.nombre,
+        apellido: dep.apellido,
+        dni: dep.dni,
+        fechaNacimiento: dep.fechaNacimiento,
+        relacion: dep.relacion,
+        condicion: 'dependiente',
+        marcaProteccionPermanencia: false,
+        estado: 'activo',
+        fechaAlta: hoy,
+      });
+    }
     this.postulanteService.marcarConvertido(p.id, nuevoSocio.id);
     this.postulante.set(this.postulanteService.getById(p.id));
   }
