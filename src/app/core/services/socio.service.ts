@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { Dependiente, Socio } from '../models/socio.model';
+import { Dependiente, DocumentoSocio, Socio } from '../models/socio.model';
 
 const MOCK_SOCIOS: Socio[] = [
   {
@@ -252,6 +252,46 @@ const MOCK_SOCIOS: Socio[] = [
     fechaAlta: '2023-09-05',
     fechaBaja: '2025-01-31',
   },
+  // Socios-dependientes vinculados al titular socio-1 (García Medina)
+  {
+    id: 'socio-dep-1',
+    codigoSocio: 'S-0015',
+    nombre: 'Valeria Paola',
+    apellido: 'Montoya de García',
+    dni: '32198765',
+    email: 'valeria.garcia@email.com',
+    telefono: '011-4555-0015',
+    fechaNacimiento: '1992-07-25',
+    condicionInstitucional: 'dependiente',
+    titularId: 'socio-1',
+    estado: 'activo',
+    fechaAlta: '2024-01-10',
+  },
+  {
+    id: 'socio-dep-2',
+    codigoSocio: 'S-0016',
+    nombre: 'Lucas Sebastián',
+    apellido: 'García Montoya',
+    dni: '55100001',
+    fechaNacimiento: '2018-03-20',
+    condicionInstitucional: 'dependiente',
+    titularId: 'socio-1',
+    estado: 'activo',
+    fechaAlta: '2024-01-10',
+  },
+  {
+    id: 'socio-dep-3',
+    codigoSocio: 'S-0017',
+    nombre: 'Sofía Valentina',
+    apellido: 'García Montoya',
+    dni: '55100009',
+    fechaNacimiento: '2020-11-12',
+    condicionInstitucional: 'dependiente',
+    titularId: 'socio-1',
+    discapacidad: undefined,
+    estado: 'activo',
+    fechaAlta: '2024-01-10',
+  },
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -264,6 +304,10 @@ export class SocioService {
 
   getById(id: string): Socio | undefined {
     return this._items().find((s) => s.id === id);
+  }
+
+  getDependientesSocios(titularId: string): Socio[] {
+    return this._items().filter((s) => s.titularId === titularId);
   }
 
   buscarPorDni(dni: string): Socio | undefined {
@@ -332,6 +376,26 @@ export class SocioService {
 
   inactivar(id: string, fechaBaja: string): void {
     this.update(id, { estado: 'inactivo', fechaBaja });
+  }
+
+  agregarDocumento(socioId: string, doc: Omit<DocumentoSocio, 'id'>): void {
+    this._items.update((items) =>
+      items.map((s) =>
+        s.id === socioId
+          ? { ...s, documentos: [...(s.documentos ?? []), { ...doc, id: crypto.randomUUID() }] }
+          : s
+      )
+    );
+  }
+
+  eliminarDocumento(socioId: string, docId: string): void {
+    this._items.update((items) =>
+      items.map((s) =>
+        s.id === socioId
+          ? { ...s, documentos: (s.documentos ?? []).filter((d) => d.id !== docId) }
+          : s
+      )
+    );
   }
 
   reactivar(id: string): void {

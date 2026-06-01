@@ -11,6 +11,10 @@ export const SOCIO_ROUTES: Routes = [
     loadComponent: () => import('./solicitud-list').then((m) => m.SolicitudListComponent),
   },
   {
+    path: 'postulantes',
+    loadComponent: () => import('./postulante-list').then((m) => m.PostulanteListComponent),
+  },
+  {
     path: 'cuotas',
     loadComponent: () => import('./cuota-list').then((m) => m.CuotaListComponent),
   },
@@ -34,6 +38,16 @@ export const SOCIO_ROUTES: Routes = [
     path: 'solicitud/nueva',
     outlet: 'panel',
     loadComponent: () => import('./solicitud-form').then((m) => m.SolicitudFormComponent),
+  },
+  {
+    path: 'postulante/nuevo',
+    outlet: 'panel',
+    loadComponent: () => import('./postulante-form').then((m) => m.PostulanteFormComponent),
+  },
+  {
+    path: 'postulante/:id/detalle',
+    outlet: 'panel',
+    loadComponent: () => import('./postulante-detalle').then((m) => m.PostulanteDetalleComponent),
   },
   {
     path: 'solicitud/:id/evaluar',

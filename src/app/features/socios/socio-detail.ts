@@ -1,5 +1,7 @@
-import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { SocioService } from '../../core/services/socio.service';
 import { TramiteSocietarioService } from '../../core/services/tramite-societario.service';
 import { CuotaSocietariaService } from '../../core/services/cuota-societaria.service';
@@ -7,11 +9,17 @@ import { CuotaSocietaria, ESTADO_CUOTA_LABELS, ESTADO_CUOTA_CLASSES } from '../.
 import {
   Socio,
   Dependiente,
+  DocumentoSocio,
+  TipoDocumentoSocio,
   ESTADO_SOCIO_LABELS,
   EstadoSocio,
   CONDICION_SOCIETARIA_LABELS,
   CondicionSocietaria,
   RELACION_DEPENDIENTE_LABELS,
+  SEXO_LABELS,
+  CONDICION_INSTITUCIONAL_LABELS,
+  TIPO_DOCUMENTO_LABELS,
+  TIPO_DOCUMENTO_SOCIO_LABELS,
 } from '../../core/models/socio.model';
 import {
   TIPO_TRAMITE_LABELS,
@@ -20,12 +28,12 @@ import {
   EstadoSolicitud,
 } from '../../core/models/tramite-societario.model';
 
-type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta';
+type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta' | 'documentos';
 
 @Component({
   selector: 'app-socio-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, ReactiveFormsModule],
   template: `
     @if (socio(); as s) {
       <div class="space-y-5">
@@ -73,8 +81,8 @@ type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta';
                 : 'flex-1 py-2 px-2 rounded-lg text-slate-500 hover:text-slate-800 font-medium text-xs'"
               (click)="activeTab.set(tab.id)">
               {{ tab.label }}
-              @if (tab.id === 'dependientes' && (s.dependientes ?? []).length > 0) {
-                <span class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-brand-100 text-brand text-[9px] font-bold">{{ (s.dependientes ?? []).length }}</span>
+              @if (tab.id === 'dependientes' && ((s.dependientes ?? []).length + dependientesSocios().length) > 0) {
+                <span class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-brand-100 text-brand text-[9px] font-bold">{{ (s.dependientes ?? []).length + dependientesSocios().length }}</span>
               }
               @if (tab.id === 'tramites' && tramitesPendientes().length > 0) {
                 <span class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-100 text-amber-700 text-[9px] font-bold">{{ tramitesPendientes().length }}</span>
@@ -157,9 +165,177 @@ type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta';
 
         <!-- TAB: Dependientes -->
         @if (activeTab() === 'dependientes') {
-          <div class="space-y-3">
+          <div class="space-y-4">
+
+            <!-- Socios vinculados como dependientes (tabla socios) -->
+            @if (dependientesSocios().length > 0) {
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-semibold text-slate-700">Socios vinculados como dependientes</p>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-brand-100 text-brand font-medium">{{ dependientesSocios().length }}</span>
+                </div>
+                @for (dep of dependientesSocios(); track dep.id) {
+                  <div class="section-card overflow-hidden !p-0">
+
+                    <!-- Cabecera — siempre visible -->
+                    <button type="button"
+                      class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left"
+                      [attr.aria-expanded]="expandedDepSocioIds().has(dep.id)"
+                      (click)="toggleDepSocio(dep.id)">
+                      <div class="flex items-center gap-3 min-w-0">
+                        @if (dep.fotografiaUrl) {
+                          <img [src]="dep.fotografiaUrl" [alt]="dep.nombre + ' ' + dep.apellido"
+                               class="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-brand-100" />
+                        } @else {
+                          <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand font-bold text-sm" aria-hidden="true">
+                            {{ dep.nombre[0] }}{{ dep.apellido[0] }}
+                          </div>
+                        }
+                        <div class="min-w-0">
+                          <p class="font-semibold text-slate-800 text-sm leading-tight">{{ dep.apellido }}, {{ dep.nombre }}</p>
+                          <p class="text-xs text-slate-500 font-mono">DNI {{ dep.dni }}
+                            @if (dep.codigoSocio) { &nbsp;·&nbsp; {{ dep.codigoSocio }} }
+                          </p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-[10px] px-1.5 py-0.5 rounded font-medium"
+                          [class]="dep.estado === 'activo' ? 'bg-green-100 text-green-700' : dep.estado === 'suspendido' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'">
+                          {{ estadoLabels[dep.estado] }}
+                        </span>
+                        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios'], panel: ['maestros', 'socios', dep.id, 'detalle'] } }]"
+                           class="p-1.5 rounded text-slate-400 hover:text-brand hover:bg-brand-50 transition-colors"
+                           title="Ver ficha"
+                           [attr.aria-label]="'Ver ficha de ' + dep.apellido + ', ' + dep.nombre"
+                           (click)="$event.stopPropagation()">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                          </svg>
+                        </a>
+                        <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios'], panel: ['maestros', 'socios', dep.id, 'editar'] } }]"
+                           class="p-1.5 rounded text-slate-400 hover:text-brand hover:bg-brand-50 transition-colors"
+                           title="Editar"
+                           [attr.aria-label]="'Editar ' + dep.apellido + ', ' + dep.nombre"
+                           (click)="$event.stopPropagation()">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 4.487 18.55 2.8a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/>
+                          </svg>
+                        </a>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 transition-transform duration-200 ml-0.5"
+                          [class]="expandedDepSocioIds().has(dep.id) ? 'rotate-180' : ''"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                      </div>
+                    </button>
+
+                    <!-- Detalle expandible -->
+                    @if (expandedDepSocioIds().has(dep.id)) {
+                      <div class="border-t border-slate-100 bg-slate-50/50 px-4 py-4 space-y-4">
+
+                        <!-- Fotografía -->
+                        <div class="flex flex-col items-center gap-2">
+                          @if (dep.fotografiaUrl) {
+                            <img [src]="dep.fotografiaUrl" [alt]="dep.nombre + ' ' + dep.apellido"
+                                 class="w-28 h-28 rounded-2xl object-cover shadow-md ring-4 ring-white border border-slate-200" />
+                          } @else {
+                            <div class="w-28 h-28 rounded-2xl bg-gradient-to-br from-brand-100 to-brand-200 flex flex-col items-center justify-center shadow-md ring-4 ring-white border border-slate-200 gap-1">
+                              <span class="text-3xl font-bold text-brand leading-none">{{ dep.nombre[0] }}{{ dep.apellido[0] }}</span>
+                              <span class="text-[9px] text-brand-400 font-medium uppercase tracking-wide">Sin foto</span>
+                            </div>
+                          }
+                          <p class="text-xs text-slate-500 italic">Fotografía de identificación</p>
+                        </div>
+
+                        <!-- Datos personales -->
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                          <div>
+                            <p class="text-xs text-slate-400">Tipo de doc.</p>
+                            <p class="font-medium text-slate-700">
+                              {{ dep.tipoDocumento ? tipoDocumentoLabels[dep.tipoDocumento] : 'DNI' }}
+                            </p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Número de documento</p>
+                            <p class="font-medium text-slate-700 font-mono">{{ dep.dni }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Fecha de nacimiento</p>
+                            <p class="font-medium text-slate-700">{{ dep.fechaNacimiento ?? '—' }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Sexo</p>
+                            <p class="font-medium text-slate-700">
+                              {{ dep.sexo ? sexoLabels[dep.sexo] : '—' }}
+                            </p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Nacionalidad</p>
+                            <p class="font-medium text-slate-700">{{ dep.nacionalidad ?? '—' }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Condición institucional</p>
+                            <p class="font-medium text-slate-700">
+                              {{ dep.condicionInstitucional ? condicionInstitucionalLabels[dep.condicionInstitucional] : '—' }}
+                            </p>
+                          </div>
+                          <div class="col-span-2">
+                            <p class="text-xs text-slate-400">Dirección</p>
+                            <p class="font-medium text-slate-700">{{ dep.direccion ?? '—' }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Email</p>
+                            <p class="font-medium text-slate-700 break-all">{{ dep.email ?? '—' }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Teléfono</p>
+                            <p class="font-medium text-slate-700">{{ dep.telefono ?? '—' }}</p>
+                          </div>
+                          <div>
+                            <p class="text-xs text-slate-400">Fecha de alta</p>
+                            <p class="font-medium text-slate-700">{{ dep.fechaAlta }}</p>
+                          </div>
+                          @if (dep.fechaBaja) {
+                            <div>
+                              <p class="text-xs text-slate-400">Fecha de baja</p>
+                              <p class="font-medium text-red-600">{{ dep.fechaBaja }}</p>
+                            </div>
+                          }
+                        </div>
+
+                        @if (dep.observaciones) {
+                          <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
+                            <p class="text-xs font-semibold text-amber-700 mb-0.5">Observaciones</p>
+                            <p class="text-sm text-amber-800">{{ dep.observaciones }}</p>
+                          </div>
+                        }
+
+                        @if (dep.discapacidad?.tieneDiscapacidad) {
+                          <div class="rounded-lg bg-purple-50 border border-purple-100 p-3 space-y-1">
+                            <p class="text-xs font-semibold text-purple-700">Situación de salud / habilidad diferente</p>
+                            <p class="text-sm text-purple-800">Tipo: {{ dep.discapacidad?.tipo ?? '—' }}</p>
+                            @if (dep.discapacidad?.grado) {
+                              <p class="text-xs text-purple-600">Grado: {{ dep.discapacidad?.grado }}</p>
+                            }
+                            @if (dep.discapacidad?.numeroConadis) {
+                              <p class="text-xs text-purple-600">N° CONADIS: {{ dep.discapacidad?.numeroConadis }}</p>
+                            }
+                          </div>
+                        }
+
+                      </div>
+                    }
+
+                  </div>
+                }
+              </div>
+              <hr class="border-slate-100">
+            }
+
+            <!-- Dependientes registrados (ficha simplificada) -->
             <div class="flex items-center justify-between">
-              <p class="text-sm font-semibold text-slate-700">Dependientes de este socio</p>
+              <p class="text-sm font-semibold text-slate-700">Dependientes registrados</p>
               <button type="button"
                 class="btn-primary !text-xs !px-3 !py-1.5"
                 (click)="abrirFormDependiente()">
@@ -428,6 +604,125 @@ type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta';
           </div>
         }
 
+        <!-- TAB: Documentos -->
+        @if (activeTab() === 'documentos') {
+          <div class="space-y-4">
+
+            <!-- Encabezado + botón agregar -->
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-semibold text-slate-700">
+                Documentos adjuntos
+                <span class="ml-1.5 text-xs font-normal text-slate-400">({{ (s.documentos ?? []).length }})</span>
+              </p>
+              <button type="button" class="btn-primary !text-xs !px-3 !py-1.5"
+                (click)="mostrarFormDoc.set(!mostrarFormDoc())">
+                @if (mostrarFormDoc()) { Cancelar } @else { + Agregar documento }
+              </button>
+            </div>
+
+            <!-- Formulario de carga -->
+            @if (mostrarFormDoc()) {
+              <form [formGroup]="docForm" class="section-card border-2 border-brand-200 space-y-3"
+                (ngSubmit)="guardarDocumento(s.id)">
+                <p class="text-sm font-semibold text-brand">Registrar nuevo documento</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label for="doc-nombre" class="block text-xs font-medium text-slate-600 mb-1">
+                      Nombre del archivo <span class="text-red-500">*</span>
+                    </label>
+                    <input id="doc-nombre" type="text" formControlName="nombre" class="input-modern !py-1.5 !text-sm"
+                      placeholder="Ej: DNI_Garcia_2024.pdf"
+                      [class]="docForm.get('nombre')!.invalid && docForm.get('nombre')!.touched ? '!border-red-400' : ''" />
+                    @if (docForm.get('nombre')!.invalid && docForm.get('nombre')!.touched) {
+                      <p class="text-xs text-red-500 mt-1">El nombre es obligatorio.</p>
+                    }
+                  </div>
+                  <div>
+                    <label for="doc-tipo" class="block text-xs font-medium text-slate-600 mb-1">
+                      Tipo de documento <span class="text-red-500">*</span>
+                    </label>
+                    <select id="doc-tipo" formControlName="tipo" class="input-modern !py-1.5 !text-sm">
+                      @for (opt of tipoDocSocioOpts; track opt.value) {
+                        <option [value]="opt.value">{{ opt.label }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label for="doc-desc" class="block text-xs font-medium text-slate-600 mb-1">Descripción (opcional)</label>
+                    <input id="doc-desc" type="text" formControlName="descripcion" class="input-modern !py-1.5 !text-sm"
+                      placeholder="Notas adicionales sobre el documento..." />
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label for="doc-archivo" class="block text-xs font-medium text-slate-600 mb-1">Archivo</label>
+                    <div class="flex items-center justify-center w-full">
+                      <label for="doc-archivo"
+                        class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <div class="flex flex-col items-center justify-center py-3">
+                          <svg class="w-7 h-7 mb-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
+                          </svg>
+                          <p class="text-xs text-slate-500">Seleccionar archivo <span class="text-brand font-medium">(PDF, JPG, PNG)</span></p>
+                          <p class="text-[10px] text-slate-400 mt-0.5">Solo registro simulado — sin almacenamiento real</p>
+                        </div>
+                        <input id="doc-archivo" type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button type="submit" class="btn-primary !text-xs !px-3 !py-1.5">Guardar registro</button>
+                  <button type="button" class="btn-secondary !text-xs !px-3 !py-1.5"
+                    (click)="mostrarFormDoc.set(false)">Cancelar</button>
+                </div>
+              </form>
+            }
+
+            <!-- Lista de documentos -->
+            @if ((s.documentos ?? []).length === 0 && !mostrarFormDoc()) {
+              <div class="section-card text-center py-10">
+                <svg class="w-10 h-10 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+                </svg>
+                <p class="text-slate-400 text-sm">Sin documentos registrados.</p>
+                <p class="text-xs text-slate-300 mt-1">Use el botón "Agregar documento" para registrar uno.</p>
+              </div>
+            }
+
+            @for (doc of s.documentos ?? []; track doc.id) {
+              <div class="section-card flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3 min-w-0">
+                  <!-- Icono según tipo -->
+                  <div class="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+                    [class]="docIconBg(doc.tipo)">
+                    <svg class="w-5 h-5" [class]="docIconColor(doc.tipo)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-semibold text-slate-800 truncate">{{ doc.nombre }}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                      <span class="font-medium text-slate-600">{{ tipoDocSocioLabels[doc.tipo] }}</span>
+                      &nbsp;·&nbsp; Cargado el {{ doc.fechaCarga }}
+                    </p>
+                    @if (doc.descripcion) {
+                      <p class="text-xs text-slate-400 italic mt-0.5">{{ doc.descripcion }}</p>
+                    }
+                  </div>
+                </div>
+                <button type="button"
+                  class="shrink-0 p-1.5 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  [attr.aria-label]="'Eliminar ' + doc.nombre"
+                  (click)="eliminarDocumento(s.id, doc.id)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                  </svg>
+                </button>
+              </div>
+            }
+
+          </div>
+        }
+
       </div>
     } @else {
       <div class="text-center py-12">
@@ -440,26 +735,47 @@ type Tab = 'ficha' | 'dependientes' | 'tramites' | 'cuenta';
 export class SocioDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly socioService = inject(SocioService);
   private readonly tramiteService = inject(TramiteSocietarioService);
   private readonly cuotaService = inject(CuotaSocietariaService);
+  private readonly fb = inject(FormBuilder);
 
   protected readonly socio = signal<Socio | undefined>(undefined);
   protected readonly activeTab = signal<Tab>('ficha');
   protected readonly mostrarFormDep = signal(false);
   protected readonly nuevoDep = signal<Partial<Dependiente>>({ relacion: 'hijo', marcaProteccionPermanencia: false, estado: 'activo' });
   protected readonly expandedDepIds = signal<Set<string>>(new Set<string>());
+  protected readonly expandedDepSocioIds = signal<Set<string>>(new Set<string>());
+
+  /** Documentos */
+  protected readonly mostrarFormDoc = signal(false);
+  protected readonly docForm = this.fb.group({
+    nombre: ['', Validators.required],
+    tipo: ['dni_frente' as TipoDocumentoSocio, Validators.required],
+    descripcion: [''],
+  });
+  protected readonly tipoDocSocioLabels = TIPO_DOCUMENTO_SOCIO_LABELS;
+  protected readonly tipoDocSocioOpts = Object.entries(TIPO_DOCUMENTO_SOCIO_LABELS).map(
+    ([value, label]) => ({ value: value as TipoDocumentoSocio, label })
+  );
 
   protected readonly tabs: { id: Tab; label: string }[] = [
     { id: 'ficha', label: 'Ficha' },
     { id: 'dependientes', label: 'Dependientes' },
     { id: 'tramites', label: 'Trámites' },
     { id: 'cuenta', label: 'Cuenta Corriente' },
+    { id: 'documentos', label: 'Documentos' },
   ];
 
   protected readonly tramitesSocio = computed(() => {
     const s = this.socio();
     return s ? this.tramiteService.getBySocioId(s.id) : [];
+  });
+
+  protected readonly dependientesSocios = computed(() => {
+    const s = this.socio();
+    return s ? this.socioService.getDependientesSocios(s.id) : [];
   });
 
   protected readonly tramitesPendientes = computed(() =>
@@ -509,6 +825,9 @@ export class SocioDetailComponent implements OnInit {
 
   protected readonly estadoLabels = ESTADO_SOCIO_LABELS;
   protected readonly condicionLabels = CONDICION_SOCIETARIA_LABELS;
+  protected readonly sexoLabels = SEXO_LABELS;
+  protected readonly condicionInstitucionalLabels = CONDICION_INSTITUCIONAL_LABELS;
+  protected readonly tipoDocumentoLabels = TIPO_DOCUMENTO_LABELS;
   protected readonly tipoTramiteLabels = TIPO_TRAMITE_LABELS;
   protected readonly estadoSolicitudLabels = ESTADO_SOLICITUD_LABELS;
   protected readonly estadoSolicitudClasses = ESTADO_SOLICITUD_CLASSES;
@@ -529,14 +848,27 @@ export class SocioDetailComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.socio.set(this.socioService.getById(id));
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.socio.set(this.socioService.getById(id));
+        this.activeTab.set('ficha');
+        this.expandedDepIds.set(new Set());
+        this.expandedDepSocioIds.set(new Set());
+      }
+    });
   }
 
   protected toggleDep(id: string): void {
     this.expandedDepIds.update((set) => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  protected toggleDepSocio(id: string): void {
+    this.expandedDepSocioIds.update((set) => {
       const next = new Set(set);
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
@@ -566,5 +898,52 @@ export class SocioDetailComponent implements OnInit {
     });
     this.socio.set(this.socioService.getById(s.id));
     this.mostrarFormDep.set(false);
+  }
+
+  protected guardarDocumento(socioId: string): void {
+    this.docForm.markAllAsTouched();
+    if (this.docForm.invalid) return;
+    const v = this.docForm.getRawValue();
+    const hoy = new Date().toISOString().split('T')[0];
+    this.socioService.agregarDocumento(socioId, {
+      nombre: v.nombre!,
+      tipo: v.tipo as TipoDocumentoSocio,
+      descripcion: v.descripcion || undefined,
+      fechaCarga: hoy,
+    });
+    this.docForm.reset({ nombre: '', tipo: 'dni_frente', descripcion: '' });
+    this.mostrarFormDoc.set(false);
+    this.socio.set(this.socioService.getById(socioId));
+  }
+
+  protected eliminarDocumento(socioId: string, docId: string): void {
+    this.socioService.eliminarDocumento(socioId, docId);
+    this.socio.set(this.socioService.getById(socioId));
+  }
+
+  protected docIconBg(tipo: TipoDocumentoSocio): string {
+    const map: Record<TipoDocumentoSocio, string> = {
+      dni_frente: 'bg-blue-100',
+      dni_dorso: 'bg-blue-100',
+      fotografia: 'bg-purple-100',
+      certificado_medico: 'bg-green-100',
+      constancia_domicilio: 'bg-amber-100',
+      formulario_alta: 'bg-brand-100',
+      otro: 'bg-slate-100',
+    };
+    return map[tipo] ?? 'bg-slate-100';
+  }
+
+  protected docIconColor(tipo: TipoDocumentoSocio): string {
+    const map: Record<TipoDocumentoSocio, string> = {
+      dni_frente: 'text-blue-500',
+      dni_dorso: 'text-blue-500',
+      fotografia: 'text-purple-500',
+      certificado_medico: 'text-green-600',
+      constancia_domicilio: 'text-amber-600',
+      formulario_alta: 'text-brand',
+      otro: 'text-slate-500',
+    };
+    return map[tipo] ?? 'text-slate-500';
   }
 }

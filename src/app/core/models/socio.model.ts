@@ -37,6 +37,33 @@ export interface Dependiente {
   fechaBaja?: string;
 }
 
+export type TipoDocumentoSocio =
+  | 'dni_frente'
+  | 'dni_dorso'
+  | 'fotografia'
+  | 'certificado_medico'
+  | 'constancia_domicilio'
+  | 'formulario_alta'
+  | 'otro';
+
+export const TIPO_DOCUMENTO_SOCIO_LABELS: Record<TipoDocumentoSocio, string> = {
+  dni_frente: 'DNI (frente)',
+  dni_dorso: 'DNI (dorso)',
+  fotografia: 'Fotografía',
+  certificado_medico: 'Certificado médico',
+  constancia_domicilio: 'Constancia de domicilio',
+  formulario_alta: 'Formulario de alta',
+  otro: 'Otro',
+};
+
+export interface DocumentoSocio {
+  id: string;
+  nombre: string;
+  tipo: TipoDocumentoSocio;
+  descripcion?: string;
+  fechaCarga: string;
+}
+
 export interface NivelAcademicoAlumno {
   id: string;
   disciplina: string;
@@ -59,6 +86,7 @@ export interface Socio {
   telefono?: string;
   fechaNacimiento?: string;
   direccion?: string;
+  fotografiaUrl?: string;
   condicionInstitucional?: CondicionInstitucional;
   condicionSocietaria?: CondicionSocietaria;
   titularId?: string;
@@ -66,6 +94,7 @@ export interface Socio {
   personasRelacionadas?: PersonaRelacionadaSocio[];
   discapacidad?: DiscapacidadInfo;
   historialNiveles?: NivelAcademicoAlumno[];
+  documentos?: DocumentoSocio[];
   estado: EstadoSocio;
   fechaAlta: string;
   fechaBaja?: string;

@@ -27,8 +27,8 @@ type Tab = 'general' | 'apoderado' | 'salud' | 'niveles';
   template: `
     <div class="max-w-3xl mx-auto space-y-6">
       <div class="mb-2">
-        <h2 class="text-2xl font-bold text-slate-900">{{ isEdit() ? 'Editar' : 'Nueva' }} Ficha de Alumno</h2>
-        <p class="text-slate-500 mt-1 text-sm">Perfil único del estudiante con datos personales, apoderados, salud e historial de niveles.</p>
+        <h2 class="text-2xl font-bold text-slate-900">{{ isEdit() ? 'Editar' : 'Nueva' }} Ficha de Socio</h2>
+        <p class="text-slate-500 mt-1 text-sm">Perfil del socio con datos personales, apoderados, salud e historial de niveles.</p>
       </div>
 
       <!-- Tabs -->
@@ -286,7 +286,7 @@ type Tab = 'general' | 'apoderado' | 'salud' | 'niveles';
             <div class="flex items-center gap-3">
               <input id="tieneDiscapacidad" type="checkbox" formControlName="tieneDiscapacidad"
                 class="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand-400" />
-              <label for="tieneDiscapacidad" class="text-sm font-medium text-slate-700">El alumno presenta alguna habilidad diferente o discapacidad</label>
+              <label for="tieneDiscapacidad" class="text-sm font-medium text-slate-700">El socio presenta alguna habilidad diferente o discapacidad</label>
             </div>
 
             @if (form.value.tieneDiscapacidad) {

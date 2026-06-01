@@ -26,6 +26,9 @@ import { confirmDialog } from '../../shared/confirm-dialog';
             <p class="text-brand-200 text-sm mt-0.5">Gestión de membresías, dependientes y trámites societarios.</p>
           </div>
           <div class="flex gap-2 shrink-0">
+            <a routerLink="/maestros/socios/postulantes" class="btn-secondary !text-xs !px-3 !py-1.5">
+              Postulantes
+            </a>
             <a routerLink="/maestros/socios/solicitudes" class="btn-secondary !text-xs !px-3 !py-1.5">
               Solicitudes
             </a>
@@ -68,14 +71,14 @@ import { confirmDialog } from '../../shared/confirm-dialog';
               placeholder="Nombre, apellido, DNI o código..."
               class="input-modern !py-1.5 !text-sm"
               [value]="busqueda()"
-              (input)="busqueda.set($any($event.target).value)"
+              (input)="setBusqueda($any($event.target).value)"
             />
           </div>
           <div class="sm:w-44">
             <label for="filtro-estado" class="block text-xs font-semibold text-slate-500 mb-1">Estado</label>
             <select id="filtro-estado" class="input-modern !py-1.5 !text-sm"
               [value]="filtroEstado()"
-              (change)="filtroEstado.set($any($event.target).value)">
+              (change)="setFiltroEstado($any($event.target).value)">
               <option value="todos">Todos</option>
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
@@ -86,7 +89,7 @@ import { confirmDialog } from '../../shared/confirm-dialog';
             <label for="filtro-condicion" class="block text-xs font-semibold text-slate-500 mb-1">Condición societal.</label>
             <select id="filtro-condicion" class="input-modern !py-1.5 !text-sm"
               [value]="filtroCondicion()"
-              (change)="filtroCondicion.set($any($event.target).value)">
+              (change)="setFiltroCondicion($any($event.target).value)">
               <option value="todos">Todas</option>
               <option value="individual">Individual</option>
               <option value="familiar">Familiar</option>
@@ -115,7 +118,7 @@ import { confirmDialog } from '../../shared/confirm-dialog';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              @for (socio of filteredSocios(); track socio.id) {
+              @for (socio of sociosPaginados(); track socio.id) {
                 <tr class="hover:bg-slate-50 transition-colors">
                   <td class="px-4 py-3">
                     <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios'], panel: ['maestros', 'socios', socio.id, 'detalle'] } }]"
@@ -153,10 +156,31 @@ import { confirmDialog } from '../../shared/confirm-dialog';
                   <td class="px-4 py-3 text-sm text-slate-500 hidden sm:table-cell">{{ socio.fechaAlta }}</td>
                   <td class="px-4 py-3">
                     <div class="flex gap-1">
+                      <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios'], panel: ['maestros', 'socios', socio.id, 'detalle'] } }]"
+                         class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 transition-colors"
+                         title="Ver detalle"
+                         [attr.aria-label]="'Ver detalle de ' + socio.apellido + ', ' + socio.nombre">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                        </svg>
+                      </a>
                       <a [routerLink]="['/', { outlets: { primary: ['maestros', 'socios'], panel: ['maestros', 'socios', socio.id, 'editar'] } }]"
-                         class="text-xs text-brand hover:text-brand-700 font-medium px-2 py-1 rounded hover:bg-brand-50 transition-colors">Editar</a>
+                         class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 transition-colors"
+                         title="Editar"
+                         [attr.aria-label]="'Editar ' + socio.apellido + ', ' + socio.nombre">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 4.487 18.55 2.8a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/>
+                        </svg>
+                      </a>
                       <button (click)="eliminar(socio.id)"
-                        class="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">Eliminar</button>
+                        class="p-1.5 rounded text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        title="Eliminar"
+                        [attr.aria-label]="'Eliminar ' + socio.apellido + ', ' + socio.nombre">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                        </svg>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -171,6 +195,48 @@ import { confirmDialog } from '../../shared/confirm-dialog';
             </tbody>
           </table>
         </div>
+
+        <!-- Paginado -->
+        @if (totalPaginas() > 1) {
+          <div class="px-4 py-3 border-t border-slate-100 flex items-center justify-between gap-4">
+            <p class="text-xs text-slate-500">
+              {{ rangoInicio() }}–{{ rangoFin() }} de {{ filteredSocios().length }}
+            </p>
+            <nav class="flex items-center gap-1" aria-label="Paginación">
+              <button type="button"
+                class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                [disabled]="pagina() === 1"
+                (click)="irAPagina(1)"
+                aria-label="Primera página">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+              </button>
+              <button type="button"
+                class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                [disabled]="pagina() === 1"
+                (click)="irAPagina(pagina() - 1)"
+                aria-label="Página anterior">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <span class="text-xs font-medium text-slate-700 px-2">
+                {{ pagina() }} / {{ totalPaginas() }}
+              </span>
+              <button type="button"
+                class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                [disabled]="pagina() === totalPaginas()"
+                (click)="irAPagina(pagina() + 1)"
+                aria-label="Página siguiente">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+              <button type="button"
+                class="p-1.5 rounded text-slate-500 hover:text-brand hover:bg-brand-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                [disabled]="pagina() === totalPaginas()"
+                (click)="irAPagina(totalPaginas())"
+                aria-label="Última página">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+              </button>
+            </nav>
+          </div>
+        }
       </div>
     </div>
   `,
@@ -182,6 +248,8 @@ export class SocioListComponent {
   protected readonly busqueda = signal('');
   protected readonly filtroEstado = signal<string>('todos');
   protected readonly filtroCondicion = signal<string>('todos');
+  protected readonly pagina = signal(1);
+  protected readonly PAGE_SIZE = 10;
 
   protected readonly filteredSocios = computed(() => {
     const q = this.busqueda().toLowerCase();
@@ -202,6 +270,30 @@ export class SocioListComponent {
 
   protected readonly estadoLabels = ESTADO_SOCIO_LABELS;
   protected readonly condicionLabels = CONDICION_SOCIETARIA_LABELS;
+
+  protected readonly totalPaginas = computed(() =>
+    Math.max(1, Math.ceil(this.filteredSocios().length / this.PAGE_SIZE))
+  );
+
+  protected readonly sociosPaginados = computed(() => {
+    const p = Math.min(this.pagina(), this.totalPaginas());
+    return this.filteredSocios().slice((p - 1) * this.PAGE_SIZE, p * this.PAGE_SIZE);
+  });
+
+  protected readonly rangoInicio = computed(() =>
+    this.filteredSocios().length === 0 ? 0 : (this.pagina() - 1) * this.PAGE_SIZE + 1
+  );
+
+  protected readonly rangoFin = computed(() =>
+    Math.min(this.pagina() * this.PAGE_SIZE, this.filteredSocios().length)
+  );
+
+  protected setBusqueda(v: string): void { this.busqueda.set(v); this.pagina.set(1); }
+  protected setFiltroEstado(v: string): void { this.filtroEstado.set(v); this.pagina.set(1); }
+  protected setFiltroCondicion(v: string): void { this.filtroCondicion.set(v); this.pagina.set(1); }
+  protected irAPagina(n: number): void {
+    this.pagina.set(Math.max(1, Math.min(n, this.totalPaginas())));
+  }
 
   protected readonly estadoClasses: Record<EstadoSocio, string> = {
     activo: 'bg-green-100 text-green-700',
