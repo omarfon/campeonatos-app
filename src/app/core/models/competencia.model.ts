@@ -1,3 +1,5 @@
+import type { FaseEncuentro } from './encuentro.model';
+
 // ──── Tipos base ────
 
 export type TipoCompetencia = 'interno' | 'abierto';
@@ -54,6 +56,11 @@ export interface CalendarioEvento {
   tipo: 'inicio_fase' | 'fin_fase' | 'fecha_limite' | 'evento';
 }
 
+export interface DisciplinaCompetenciaConfig {
+  disciplinaId: string;
+  fases: FaseEncuentro[];
+}
+
 // ──── Entidad principal ────
 
 export interface Competencia {
@@ -68,6 +75,7 @@ export interface Competencia {
   observaciones?: string;
 
   disciplinaIds: string[];
+  disciplinasConfig?: DisciplinaCompetenciaConfig[];
   reglasGenerales: ReglaGeneral[];
 
   // Calendario y vigencia

@@ -124,117 +124,124 @@ import {
         </div>
       </div>
 
-      <!-- Cards Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        @for (camp of filteredItems(); track camp.id) {
-          <div class="section-card card-hover group">
-            <!-- Card Header -->
-            <div class="flex items-start justify-between gap-3 mb-4">
-              <div class="flex-1 min-w-0">
-                <a [routerLink]="[camp.id]"
-                  class="text-lg font-bold text-slate-900 hover:text-green-600 transition-colors truncate block">
-                  {{ camp.nombre }}
-                </a>
-                <div class="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-bold uppercase tracking-wider"
-                    [class]="tipoClasses[camp.tipo]">
-                    {{ tipoLabelsMap[camp.tipo] }}
+      <!-- Listado -->
+      <div class="section-card overflow-hidden">
+        @if (filteredItems().length > 0) {
+          <div class="hidden md:grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.5fr)] gap-3 px-4 py-3 border-b border-slate-200 bg-slate-50">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Competencia</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Estado</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Vigencia</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Acciones</p>
+          </div>
+
+          <div class="divide-y divide-slate-100">
+            @for (camp of filteredItems(); track camp.id) {
+              <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.5fr)] gap-3 px-4 py-4 hover:bg-slate-50 transition-colors">
+                <div class="min-w-0">
+                  <a [routerLink]="[camp.id]"
+                    class="text-base font-bold text-slate-900 hover:text-green-600 transition-colors truncate block">
+                    {{ camp.nombre }}
+                  </a>
+                  <div class="flex items-center gap-2 mt-1 flex-wrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-bold uppercase tracking-wider"
+                      [class]="tipoClasses[camp.tipo]">
+                      {{ tipoLabelsMap[camp.tipo] }}
+                    </span>
+                    <span class="text-xs text-slate-400 font-medium">{{ modalidadLabelsMap[camp.modalidad] }}</span>
+                    <span class="text-xs text-slate-400">·</span>
+                    <span class="text-xs text-slate-500 font-medium">{{ estructuraLabelsMap[camp.estructura] }}</span>
+                    <span class="text-xs text-slate-400">·</span>
+                    <span class="text-xs text-green-600 font-semibold">{{ camp.anio }}</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5 mt-2">
+                    @for (dId of camp.disciplinaIds; track dId) {
+                      <span class="inline-flex items-center bg-green-50 text-green-700 rounded-lg px-2 py-0.5 text-[11px] font-medium border border-green-100">
+                        {{ getDisciplinaNombre(dId) }}
+                      </span>
+                    }
+                  </div>
+                </div>
+
+                <div class="md:pt-1">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold shrink-0"
+                    [class]="estadoClasses[camp.estado]">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                      [class]="estadoDotClasses[camp.estado]" aria-hidden="true"></span>
+                    {{ estadoLabelsMap[camp.estado] }}
                   </span>
-                  <span class="text-xs text-slate-400 font-medium">{{ modalidadLabelsMap[camp.modalidad] }}</span>
-                  <span class="text-xs text-slate-400">·</span>
-                  <span class="text-xs text-slate-500 font-medium">{{ estructuraLabelsMap[camp.estructura] }}</span>
-                  <span class="text-xs text-slate-400">·</span>
-                  <span class="text-xs text-green-600 font-semibold">{{ camp.anio }}</span>
+                  <div class="mt-2">
+                    @if (camp.publicado) {
+                      <span class="flex items-center gap-1 text-emerald-600 font-medium text-xs">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+                        Publicado
+                      </span>
+                    } @else if (camp.publicacionAutomatica && camp.fechaProgramadaPublicacion) {
+                      <span class="text-xs text-amber-600 font-medium">Prog. {{ camp.fechaProgramadaPublicacion }}</span>
+                    } @else {
+                      <span class="text-xs text-slate-400">Sin publicar</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="md:pt-1">
+                  <div class="flex items-center gap-1.5 text-sm text-slate-500">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span>{{ camp.fechaInicio }} — {{ camp.fechaFin }}</span>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-start gap-2">
+                  <a [routerLink]="[camp.id]" class="btn-ghost !px-3 !py-1.5 !text-xs !gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    Ver
+                  </a>
+
+                  @if (camp.estado === 'borrador') {
+                    <a [routerLink]="[camp.id, 'editar']" class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Editar</a>
+                    <button (click)="cambiarEstado(camp.id, 'programado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">
+                      Programar
+                    </button>
+                    @if (!camp.publicado) {
+                      <button (click)="publicar(camp.id)"
+                        class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Publicar</button>
+                    }
+                    <button (click)="cambiarEstado(camp.id, 'anulado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
+                    <button (click)="eliminar(camp.id)"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Eliminar</button>
+                  }
+
+                  @if (camp.estado === 'programado') {
+                    <button (click)="cambiarEstado(camp.id, 'en_ejecucion')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Iniciar</button>
+                    <button (click)="cambiarEstado(camp.id, 'suspendido')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-amber-600 hover:!bg-amber-50">Suspender</button>
+                    <button (click)="cambiarEstado(camp.id, 'anulado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
+                  }
+
+                  @if (camp.estado === 'en_ejecucion') {
+                    <button (click)="cambiarEstado(camp.id, 'finalizado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-amber-600 hover:!bg-amber-50">Finalizar</button>
+                    <button (click)="cambiarEstado(camp.id, 'suspendido')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Suspender</button>
+                  }
+
+                  @if (camp.estado === 'suspendido') {
+                    <button (click)="cambiarEstado(camp.id, 'programado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Reprogramar</button>
+                    <button (click)="cambiarEstado(camp.id, 'en_ejecucion')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Reanudar</button>
+                    <button (click)="cambiarEstado(camp.id, 'anulado')"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
+                  }
                 </div>
               </div>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold shrink-0"
-                [class]="estadoClasses[camp.estado]">
-                <span class="w-1.5 h-1.5 rounded-full"
-                  [class]="estadoDotClasses[camp.estado]" aria-hidden="true"></span>
-                {{ estadoLabelsMap[camp.estado] }}
-              </span>
-            </div>
-
-            <!-- Meta row -->
-            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm mb-4">
-              <div class="flex items-center gap-1.5 text-slate-500">
-                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <span>{{ camp.fechaInicio }} — {{ camp.fechaFin }}</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                @if (camp.publicado) {
-                  <span class="flex items-center gap-1 text-emerald-600 font-medium text-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
-                    Publicado
-                  </span>
-                } @else if (camp.publicacionAutomatica && camp.fechaProgramadaPublicacion) {
-                  <span class="text-xs text-amber-600 font-medium">Prog. {{ camp.fechaProgramadaPublicacion }}</span>
-                } @else {
-                  <span class="text-xs text-slate-400">Sin publicar</span>
-                }
-              </div>
-            </div>
-
-            <!-- Disciplines chips -->
-            <div class="flex flex-wrap gap-1.5 mb-5">
-              @for (dId of camp.disciplinaIds; track dId) {
-                <span class="inline-flex items-center bg-gradient-to-r from-green-50 to-green-50 text-green-700 rounded-lg px-2.5 py-1 text-xs font-medium border border-green-100">
-                  {{ getDisciplinaNombre(dId) }}
-                </span>
-              }
-            </div>
-
-            <!-- Actions -->
-            <div class="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-100">
-              <a [routerLink]="[camp.id]" class="btn-ghost !px-3 !py-1.5 !text-xs !gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                Ver
-              </a>
-
-              @if (camp.estado === 'borrador') {
-                <a [routerLink]="[camp.id, 'editar']" class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Editar</a>
-                <button (click)="cambiarEstado(camp.id, 'programado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">
-                  Programar
-                </button>
-                @if (!camp.publicado) {
-                  <button (click)="publicar(camp.id)"
-                    class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Publicar</button>
-                }
-                <button (click)="cambiarEstado(camp.id, 'anulado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
-                <button (click)="eliminar(camp.id)"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50 ml-auto">Eliminar</button>
-              }
-
-              @if (camp.estado === 'programado') {
-                <button (click)="cambiarEstado(camp.id, 'en_ejecucion')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Iniciar</button>
-                <button (click)="cambiarEstado(camp.id, 'suspendido')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-amber-600 hover:!bg-amber-50">Suspender</button>
-                <button (click)="cambiarEstado(camp.id, 'anulado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
-              }
-
-              @if (camp.estado === 'en_ejecucion') {
-                <button (click)="cambiarEstado(camp.id, 'finalizado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-amber-600 hover:!bg-amber-50">Finalizar</button>
-                <button (click)="cambiarEstado(camp.id, 'suspendido')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Suspender</button>
-              }
-
-              @if (camp.estado === 'suspendido') {
-                <button (click)="cambiarEstado(camp.id, 'programado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-green-600 hover:!bg-green-50">Reprogramar</button>
-                <button (click)="cambiarEstado(camp.id, 'en_ejecucion')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-emerald-600 hover:!bg-emerald-50">Reanudar</button>
-                <button (click)="cambiarEstado(camp.id, 'anulado')"
-                  class="btn-ghost !px-3 !py-1.5 !text-xs !text-red-500 hover:!bg-red-50">Anular</button>
-              }
-            </div>
+            }
           </div>
-        } @empty {
-          <div class="col-span-full flex flex-col items-center justify-center py-16 section-card">
+        } @else {
+          <div class="col-span-full flex flex-col items-center justify-center py-16">
             <div class="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center text-3xl mb-4">🏆</div>
             <p class="text-slate-500 font-medium">No se encontraron competencias</p>
             <p class="text-sm text-slate-400 mt-1">Crea tu primer competencia para comenzar</p>

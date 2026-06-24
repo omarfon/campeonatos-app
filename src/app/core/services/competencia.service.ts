@@ -7,7 +7,9 @@ import {
   TRANSICIONES_ESTADO,
   PARAMETROS_DEFAULT,
   FechaBloqueada,
+  DisciplinaCompetenciaConfig,
 } from '../models/competencia.model';
+import { FaseEncuentro } from '../models/encuentro.model';
 
 const MOCK_COMPETENCIAS: Competencia[] = [
   {
@@ -444,6 +446,31 @@ export class CompetenciaService {
         i.id === id ? { ...i, ...changes, actualizadoEn: new Date().toISOString() } : i
       )
     );
+  }
+
+  getDisciplinasConfig(competenciaId: string): DisciplinaCompetenciaConfig[] {
+    const camp = this.getById(competenciaId);
+    if (!camp) return [];
+    const fasesPorDefecto: FaseEncuentro[] = ['fase_grupos'];
+    const configMap = new Map(
+      (camp.disciplinasConfig ?? []).map((config) => [config.disciplinaId, config.fases]),
+    );
+    return camp.disciplinaIds.map((disciplinaId) => ({
+      disciplinaId,
+      fases: [...(configMap.get(disciplinaId) ?? fasesPorDefecto)],
+    }));
+  }
+
+  actualizarDisciplinasYFases(
+    competenciaId: string,
+    disciplinaIds: string[],
+    disciplinasConfig: DisciplinaCompetenciaConfig[],
+  ): void {
+    const configFiltrada = disciplinasConfig.filter((config) => disciplinaIds.includes(config.disciplinaId));
+    this.update(competenciaId, {
+      disciplinaIds,
+      disciplinasConfig: configFiltrada,
+    });
   }
 
   delete(id: string): void {

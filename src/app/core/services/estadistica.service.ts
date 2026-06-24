@@ -1,5 +1,5 @@
 import { Injectable, inject, computed } from '@angular/core';
-import { TablaPosiciones, PosicionEquipo, Goleador, EstadisticaAmonestado, RankingHistorico } from '../models/estadistica.model';
+import { TablaPosiciones, PosicionEquipo, Goleador, EstadisticaAmonestado, RankingHistorico, ResumenCompetencia } from '../models/estadistica.model';
 import { EncuentroService } from './encuentro.service';
 import { ResultadoService } from './resultado.service';
 import { EquipoService } from './equipo.service';
@@ -160,5 +160,84 @@ export class EstadisticaService {
         mejorFairPlayId: 'eq-3',
       },
     ];
+  }
+
+  getResumenPorCompetencias(competencias: Array<{ id: string; nombre: string; estado: string }>): ResumenCompetencia[] {
+    return competencias.map((comp) => {
+      const equipos = this.equipoService.getEquiposByCompetencia(comp.id);
+      const encuentrosFinalizados = this.encuentroService.getByCompetencia(comp.id)
+        .filter((e) => e.estado === 'finalizado');
+
+      let totalGoles = 0;
+      const equipoPuntos = new Map<string, { nombre: string; puntos: number }>();
+
+      for (const enc of encuentrosFinalizados) {
+        const resultado = this.resultadoService.getByEncuentro(enc.id);
+        if (!resultado) continue;
+
+        totalGoles += resultado.golesLocal + resultado.golesVisitante;
+
+        const localEntry = equipoPuntos.get(enc.equipoLocalId) ?? {
+          nombre: this.equipoService.getEquipoById(enc.equipoLocalId)?.nombre ?? '',
+          puntos: 0,
+        };
+        const visitanteEntry = equipoPuntos.get(enc.equipoVisitanteId) ?? {
+          nombre: this.equipoService.getEquipoById(enc.equipoVisitanteId)?.nombre ?? '',
+          puntos: 0,
+        };
+
+        if (resultado.golesLocal > resultado.golesVisitante) {
+          localEntry.puntos += 3;
+        } else if (resultado.golesLocal === resultado.golesVisitante) {
+          localEntry.puntos += 1;
+          visitanteEntry.puntos += 1;
+        } else {
+          visitanteEntry.puntos += 3;
+        }
+
+        equipoPuntos.set(enc.equipoLocalId, localEntry);
+        equipoPuntos.set(enc.equipoVisitanteId, visitanteEntry);
+      }
+
+      const liderNombre = equipoPuntos.size > 0
+        ? Array.from(equipoPuntos.values()).sort((a, b) => b.puntos - a.puntos)[0].nombre
+        : '-';
+
+      // Top goleador de esta competencia
+      const encuentroIds = new Set(this.encuentroService.getByCompetencia(comp.id).map((e) => e.id));
+      const resultadoIdSet = new Set(
+        this.resultadoService.resultados()
+          .filter((r) => encuentroIds.has(r.encuentroId))
+          .map((r) => r.id)
+      );
+      const golesComp = this.resultadoService.goles().filter((g) => resultadoIdSet.has(g.resultadoId));
+
+      const goleadoresMap = new Map<string, number>();
+      for (const gol of golesComp) {
+        goleadoresMap.set(gol.participanteId, (goleadoresMap.get(gol.participanteId) ?? 0) + 1);
+      }
+
+      let topGoleadorNombre = '-';
+      let topGoleadorGoles = 0;
+      if (goleadoresMap.size > 0) {
+        const sorted = Array.from(goleadoresMap.entries()).sort((a, b) => b[1] - a[1]);
+        const [topId, topGoles] = sorted[0];
+        const p = this.equipoService.getParticipante(topId);
+        if (p) topGoleadorNombre = `${p.apellido}, ${p.nombre}`;
+        topGoleadorGoles = topGoles;
+      }
+
+      return {
+        competenciaId: comp.id,
+        competenciaNombre: comp.nombre,
+        estado: comp.estado,
+        totalEquipos: equipos.length,
+        partidosJugados: encuentrosFinalizados.length,
+        totalGoles,
+        liderNombre,
+        topGoleadorNombre,
+        topGoleadorGoles,
+      };
+    });
   }
 }

@@ -52,3 +52,15 @@ export interface RankingHistorico {
   goleadorNombre?: string;
   mejorFairPlayId?: string;
 }
+
+export interface ResumenCompetencia {
+  competenciaId: string;
+  competenciaNombre: string;
+  estado: string;
+  totalEquipos: number;
+  partidosJugados: number;
+  totalGoles: number;
+  liderNombre: string;
+  topGoleadorNombre: string;
+  topGoleadorGoles: number;
+}

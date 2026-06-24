@@ -5,10 +5,10 @@ import { DisciplinaService } from '../../core/services/disciplina.service';
 import { EquipoService } from '../../core/services/equipo.service';
 import { EncuentroService } from '../../core/services/encuentro.service';
 import {
-  Competencia, EstadoCompetencia,
+  Competencia, EstadoCompetencia, DisciplinaCompetenciaConfig,
   ESTADO_LABELS, TIPO_LABELS, MODALIDAD_LABELS, ESTRUCTURA_LABELS, DIAS_SEMANA_LABELS,
 } from '../../core/models/competencia.model';
-import { Encuentro, EstadoEncuentro, FechaCompetencia } from '../../core/models/encuentro.model';
+import { Encuentro, EstadoEncuentro, FechaCompetencia, FaseEncuentro, FASE_LABELS } from '../../core/models/encuentro.model';
 import { Equipo } from '../../core/models/equipo.model';
 
 @Component({
@@ -258,18 +258,34 @@ import { Equipo } from '../../core/models/equipo.model';
                 <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0 1 16.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 0 1-7.54 0"/></svg>
               </span>
               <h3 class="text-base font-bold text-slate-800">Disciplinas Asociadas</h3>
+              <button (click)="openDisciplinasPanel()"
+                class="ml-auto btn-ghost !px-3 !py-1.5 !text-xs !text-amber-600 hover:!bg-amber-50">
+                Gestionar disciplinas
+              </button>
             </div>
             @if (c.disciplinaIds.length > 0) {
-              <div class="flex flex-wrap gap-2">
+              <div class="space-y-2">
                 @for (dId of c.disciplinaIds; track dId) {
-                  <span class="inline-flex items-center gap-1.5 bg-gradient-to-r from-green-50 to-green-50 text-green-700 border border-green-200/60 px-4 py-1.5 rounded-xl text-sm font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-green-400" aria-hidden="true"></span>
-                    {{ getDisciplinaNombre(dId) }}
-                  </span>
+                  <div class="rounded-xl border border-green-100 bg-green-50/40 px-3 py-2">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-green-400" aria-hidden="true"></span>
+                      <p class="text-sm font-semibold text-green-800">{{ getDisciplinaNombre(dId) }}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                      @for (fase of getFasesDisciplina(c.id, dId); track fase) {
+                        <span class="inline-flex items-center rounded-lg border border-amber-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                          {{ faseLabelsMap[fase] }}
+                        </span>
+                      }
+                    </div>
+                  </div>
                 }
               </div>
             } @else {
-              <p class="text-slate-400 italic">Sin disciplinas asociadas</p>
+              <div class="flex items-center justify-between gap-3">
+                <p class="text-slate-400 italic">Sin disciplinas asociadas</p>
+                <button (click)="openDisciplinasPanel()" class="btn-primary !text-xs !px-3 !py-1.5">Agregar disciplinas</button>
+              </div>
             }
           </div>
         </div>
@@ -615,6 +631,110 @@ import { Equipo } from '../../core/models/equipo.model';
       </div>
     }
 
+    <!-- Side Panel: Disciplinas y Fases -->
+    @if (showDisciplinasPanel()) {
+      <div class="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label="Gestionar disciplinas y fases">
+        <button class="absolute inset-0 bg-black/30 backdrop-blur-sm" (click)="closeDisciplinasPanel()" aria-label="Cerrar panel"></button>
+        <div class="relative w-full max-w-xl bg-white shadow-2xl overflow-y-auto animate-slide-in-right">
+          <div class="sticky top-0 z-10 bg-gradient-to-br from-amber-500 to-orange-600 p-5 text-white">
+            <button (click)="closeDisciplinasPanel()" class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Cerrar panel">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+            <h3 class="text-lg font-bold">Disciplinas de la competencia</h3>
+            <p class="text-sm text-white/80 mt-1">Selecciona disciplinas y configura fases por cada una.</p>
+          </div>
+
+          <div class="p-5 space-y-5">
+            <div class="space-y-2">
+              @for (disc of disciplinasPanel(); track disc.id) {
+                <div class="rounded-xl border p-3"
+                  [class]="draftDisciplinasSeleccionadas().has(disc.id) ? 'border-amber-300 bg-amber-50/40' : 'border-slate-200 bg-white'">
+                  <div class="flex items-start gap-3">
+                    <input type="checkbox"
+                      class="mt-1 rounded-md text-amber-600 focus:ring-amber-500"
+                      [checked]="draftDisciplinasSeleccionadas().has(disc.id)"
+                      (change)="toggleDraftDisciplina(disc.id)" />
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-semibold text-slate-800">{{ disc.nombre }}</p>
+                      @if (disc.descripcion) {
+                        <p class="text-xs text-slate-500 mt-0.5">{{ disc.descripcion }}</p>
+                      }
+                      @if (draftDisciplinasSeleccionadas().has(disc.id)) {
+                        <div class="mt-2 flex flex-wrap gap-1.5">
+                          @for (fase of getDraftFases(disc.id); track fase) {
+                            <span class="inline-flex items-center rounded-lg border border-amber-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                              {{ faseLabelsMap[fase] }}
+                            </span>
+                          }
+                        </div>
+                      }
+                    </div>
+                    @if (draftDisciplinasSeleccionadas().has(disc.id)) {
+                      <button (click)="setDisciplinaEnEdicion(disc.id)"
+                        class="btn-ghost !px-2.5 !py-1 !text-xs !text-amber-700 hover:!bg-amber-100">
+                        Fases
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (disciplinaEnEdicion(); as dId) {
+              <div class="rounded-xl border border-amber-200 bg-amber-50/40 p-4">
+                <p class="text-sm font-bold text-slate-800">Fases para {{ getDisciplinaNombre(dId) }}</p>
+                <p class="text-xs text-slate-500 mt-0.5">Puedes agregar, editar y eliminar fases. Debe quedar al menos una.</p>
+
+                <div class="space-y-2 mt-3">
+                  @for (fase of getDraftFases(dId); track $index; let i = $index) {
+                    <div class="flex items-center gap-2 rounded-lg border border-amber-200 bg-white p-2">
+                      <select
+                        class="input-modern !py-1.5 !text-xs flex-1"
+                        [value]="fase"
+                        (change)="actualizarDraftFase(dId, i, $any($event.target).value)">
+                        @for (opt of fasesDisponibles; track opt) {
+                          <option [value]="opt">{{ faseLabelsMap[opt] }}</option>
+                        }
+                      </select>
+                      <button
+                        type="button"
+                        class="btn-ghost !px-2.5 !py-1 !text-xs !text-red-600 hover:!bg-red-50"
+                        (click)="eliminarDraftFase(dId, i)">
+                        Eliminar
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                @if (fasesDisponiblesParaAgregar(dId).length > 0) {
+                  <div class="mt-3 flex items-center gap-2">
+                    <select #nuevaFase class="input-modern !py-1.5 !text-xs flex-1">
+                      @for (fase of fasesDisponiblesParaAgregar(dId); track fase) {
+                        <option [value]="fase">{{ faseLabelsMap[fase] }}</option>
+                      }
+                    </select>
+                    <button
+                      type="button"
+                      class="btn-ghost !px-3 !py-1.5 !text-xs !text-amber-700 hover:!bg-amber-100"
+                      (click)="agregarDraftFase(dId, nuevaFase.value)">
+                      Agregar fase
+                    </button>
+                  </div>
+                } @else {
+                  <p class="mt-3 text-xs text-slate-500">Ya agregaste todas las fases disponibles.</p>
+                }
+              </div>
+            }
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button (click)="closeDisciplinasPanel()" class="btn-secondary">Cancelar</button>
+              <button (click)="guardarDisciplinasYFases()" class="btn-primary">Guardar cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Side Panel: Detalle de Equipo -->
     @if (selectedEquipo(); as eq) {
       <div class="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" [attr.aria-label]="'Detalle de ' + eq.nombre">
@@ -724,9 +844,15 @@ export class CompetenciaDetailComponent implements OnInit {
 
   protected readonly camp = signal<Competencia | undefined>(undefined);
   protected readonly selectedEquipo = signal<Equipo | undefined>(undefined);
+  protected readonly showDisciplinasPanel = signal(false);
+  protected readonly draftDisciplinasSeleccionadas = signal(new Set<string>());
+  protected readonly draftFasesByDisciplina = signal<Record<string, FaseEncuentro[]>>({});
+  protected readonly disciplinaEnEdicion = signal<string | undefined>(undefined);
   protected readonly showRegistroEquipo = signal(false);
   protected readonly nuevoEquipoNombre = signal('');
   protected readonly selectedDisciplinaId = signal('');
+  protected readonly fasesDisponibles: FaseEncuentro[] = ['fase_grupos', 'octavos', 'cuartos', 'semifinal', 'final', 'tercer_puesto'];
+  protected readonly disciplinasPanel = this.disciplinaService.items;
 
   protected readonly equiposCompetencia = computed(() => {
     const c = this.camp();
@@ -798,6 +924,7 @@ export class CompetenciaDetailComponent implements OnInit {
   protected readonly modalidadLabelsMap = MODALIDAD_LABELS;
   protected readonly estructuraLabelsMap = ESTRUCTURA_LABELS;
   protected readonly diasSemanaLabelsMap = DIAS_SEMANA_LABELS;
+  protected readonly faseLabelsMap = FASE_LABELS;
 
   protected readonly transicionLabelsMap: Record<EstadoCompetencia, string> = {
     borrador: 'Volver a borrador',
@@ -917,6 +1044,12 @@ export class CompetenciaDetailComponent implements OnInit {
     return map[estado];
   }
 
+  protected getFasesDisciplina(competenciaId: string, disciplinaId: string): FaseEncuentro[] {
+    return this.competenciaService
+      .getDisciplinasConfig(competenciaId)
+      .find((config) => config.disciplinaId === disciplinaId)?.fases ?? ['fase_grupos'];
+  }
+
   // ──── Encuentros helpers ────
 
   protected getEquipoNombre(id: string): string {
@@ -985,8 +1118,128 @@ export class CompetenciaDetailComponent implements OnInit {
 
   // ──── Side Panel ────
 
+  protected openDisciplinasPanel(): void {
+    const c = this.camp();
+    if (!c) return;
+    const config = this.competenciaService.getDisciplinasConfig(c.id);
+    this.draftDisciplinasSeleccionadas.set(new Set(c.disciplinaIds));
+    this.draftFasesByDisciplina.set(
+      config.reduce<Record<string, FaseEncuentro[]>>((acc, item) => {
+        acc[item.disciplinaId] = [...item.fases];
+        return acc;
+      }, {}),
+    );
+    this.disciplinaEnEdicion.set(c.disciplinaIds[0]);
+    this.selectedEquipo.set(undefined);
+    this.showDisciplinasPanel.set(true);
+  }
+
+  protected closeDisciplinasPanel(): void {
+    this.showDisciplinasPanel.set(false);
+    this.disciplinaEnEdicion.set(undefined);
+  }
+
+  protected toggleDraftDisciplina(disciplinaId: string): void {
+    this.draftDisciplinasSeleccionadas.update((actual) => {
+      const next = new Set(actual);
+      if (next.has(disciplinaId)) {
+        next.delete(disciplinaId);
+      } else {
+        next.add(disciplinaId);
+      }
+      return next;
+    });
+
+    this.draftFasesByDisciplina.update((actual) => {
+      if (!this.draftDisciplinasSeleccionadas().has(disciplinaId)) {
+        const next = { ...actual };
+        delete next[disciplinaId];
+        if (this.disciplinaEnEdicion() === disciplinaId) {
+          this.disciplinaEnEdicion.set(undefined);
+        }
+        return next;
+      }
+      return { ...actual, [disciplinaId]: actual[disciplinaId] ?? ['fase_grupos'] };
+    });
+  }
+
+  protected setDisciplinaEnEdicion(disciplinaId: string): void {
+    this.disciplinaEnEdicion.set(disciplinaId);
+  }
+
+  protected getDraftFases(disciplinaId: string): FaseEncuentro[] {
+    return this.draftFasesByDisciplina()[disciplinaId] ?? ['fase_grupos'];
+  }
+
+  protected fasesDisponiblesParaAgregar(disciplinaId: string): FaseEncuentro[] {
+    const fasesActuales = this.getDraftFases(disciplinaId);
+    return this.fasesDisponibles.filter((fase) => !fasesActuales.includes(fase));
+  }
+
+  protected agregarDraftFase(disciplinaId: string, faseRaw: string): void {
+    const fase = faseRaw as FaseEncuentro;
+    if (!this.fasesDisponibles.includes(fase)) return;
+    this.draftFasesByDisciplina.update((actual) => {
+      const fases = actual[disciplinaId] ?? ['fase_grupos'];
+      if (fases.includes(fase)) return actual;
+      return {
+        ...actual,
+        [disciplinaId]: [...fases, fase],
+      };
+    });
+  }
+
+  protected actualizarDraftFase(disciplinaId: string, index: number, faseRaw: string): void {
+    const fase = faseRaw as FaseEncuentro;
+    if (!this.fasesDisponibles.includes(fase)) return;
+    this.draftFasesByDisciplina.update((actual) => {
+      const fases = [...(actual[disciplinaId] ?? ['fase_grupos'])];
+      if (index < 0 || index >= fases.length) return actual;
+      fases[index] = fase;
+      // Evita duplicados conservando el orden de aparición.
+      const unicas = Array.from(new Set(fases));
+      return {
+        ...actual,
+        [disciplinaId]: unicas.length > 0 ? unicas : ['fase_grupos'],
+      };
+    });
+  }
+
+  protected eliminarDraftFase(disciplinaId: string, index: number): void {
+    this.draftFasesByDisciplina.update((actual) => {
+      const fases = [...(actual[disciplinaId] ?? ['fase_grupos'])];
+      if (fases.length <= 1) {
+        alert('Cada disciplina debe tener al menos una fase.');
+        return actual;
+      }
+      fases.splice(index, 1);
+      return {
+        ...actual,
+        [disciplinaId]: fases,
+      };
+    });
+  }
+
+  protected guardarDisciplinasYFases(): void {
+    const c = this.camp();
+    if (!c) return;
+    const disciplinaIds = Array.from(this.draftDisciplinasSeleccionadas());
+    if (disciplinaIds.length === 0) {
+      alert('Debe seleccionar al menos una disciplina.');
+      return;
+    }
+    const config: DisciplinaCompetenciaConfig[] = disciplinaIds.map((disciplinaId) => ({
+      disciplinaId,
+      fases: this.getDraftFases(disciplinaId),
+    }));
+    this.competenciaService.actualizarDisciplinasYFases(c.id, disciplinaIds, config);
+    this.camp.set(this.competenciaService.getById(c.id));
+    this.closeDisciplinasPanel();
+  }
+
   protected selectEquipo(equipoId: string): void {
     const eq = this.equipoService.getEquipoById(equipoId);
+    this.showDisciplinasPanel.set(false);
     this.selectedEquipo.set(eq);
   }
 
