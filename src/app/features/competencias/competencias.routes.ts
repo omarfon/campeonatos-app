@@ -27,4 +27,9 @@ export const COMPETENCIA_ROUTES: Routes = [
     loadComponent: () =>
       import('./competencia-form').then((m) => m.CompetenciaFormComponent),
   },
+  {
+    path: ':id/disciplinas',
+    loadComponent: () =>
+      import('./competencia-disciplinas').then((m) => m.CompetenciaDisciplinasComponent),
+  },
 ];

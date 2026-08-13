@@ -56,9 +56,39 @@ export interface CalendarioEvento {
   tipo: 'inicio_fase' | 'fin_fase' | 'fecha_limite' | 'evento';
 }
 
+export type EstadoFaseDisciplina = 'borrador' | 'activa' | 'inactiva' | 'cerrada';
+
+export interface FaseDisciplinaConfig {
+  id: string;
+  nombre: string;
+  tipo_fase: FaseEncuentro;
+  cantidad_grupos: number;
+  clasificados_por_grupo: number;
+  cantidad_equipos_llave: number;
+  cantidad_clasificados: number;
+  fase_anterior_id?: string;
+  fase_posterior_id?: string;
+  es_fase_inicial: boolean;
+  es_fase_final: boolean;
+  permite_empates: boolean;
+  arrastra_sanciones: boolean;
+  limpia_tarjetas: boolean;
+  estado: EstadoFaseDisciplina;
+}
+
+export interface PruebaDisciplinaConfig {
+  id: string;
+  nombre: string;
+  fases: FaseDisciplinaConfig[];
+}
+
+/**
+ * Configuración por disciplina dentro del campeonato.
+ * Premisa de negocio: un campeonato maneja una disciplina principal.
+ */
 export interface DisciplinaCompetenciaConfig {
   disciplinaId: string;
-  fases: FaseEncuentro[];
+  pruebas: PruebaDisciplinaConfig[];
 }
 
 // ──── Entidad principal ────

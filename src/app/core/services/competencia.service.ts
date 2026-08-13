@@ -8,6 +8,8 @@ import {
   PARAMETROS_DEFAULT,
   FechaBloqueada,
   DisciplinaCompetenciaConfig,
+  FaseDisciplinaConfig,
+  PruebaDisciplinaConfig,
 } from '../models/competencia.model';
 import { FaseEncuentro } from '../models/encuentro.model';
 
@@ -451,13 +453,13 @@ export class CompetenciaService {
   getDisciplinasConfig(competenciaId: string): DisciplinaCompetenciaConfig[] {
     const camp = this.getById(competenciaId);
     if (!camp) return [];
-    const fasesPorDefecto: FaseEncuentro[] = ['fase_grupos'];
+    const pruebasPorDefecto = [this.crearPruebaPorDefecto('Prueba 1')];
     const configMap = new Map(
-      (camp.disciplinasConfig ?? []).map((config) => [config.disciplinaId, config.fases]),
+      (camp.disciplinasConfig ?? []).map((config) => [config.disciplinaId, config]),
     );
     return camp.disciplinaIds.map((disciplinaId) => ({
       disciplinaId,
-      fases: [...(configMap.get(disciplinaId) ?? fasesPorDefecto)],
+      pruebas: this.normalizarPruebas(configMap.get(disciplinaId), pruebasPorDefecto),
     }));
   }
 
@@ -466,11 +468,117 @@ export class CompetenciaService {
     disciplinaIds: string[],
     disciplinasConfig: DisciplinaCompetenciaConfig[],
   ): void {
-    const configFiltrada = disciplinasConfig.filter((config) => disciplinaIds.includes(config.disciplinaId));
+    const configFiltrada = disciplinasConfig
+      .filter((config) => disciplinaIds.includes(config.disciplinaId))
+      .map((config) => ({ ...config, pruebas: this.normalizarPruebas(config, [this.crearPruebaPorDefecto('Prueba 1')]) }));
     this.update(competenciaId, {
       disciplinaIds,
       disciplinasConfig: configFiltrada,
     });
+  }
+
+  actualizarPruebasDisciplina(
+    competenciaId: string,
+    disciplinaId: string,
+    pruebas: PruebaDisciplinaConfig[],
+  ): void {
+    const camp = this.getById(competenciaId);
+    if (!camp) return;
+
+    const pruebasNormalizadas = this.normalizarPruebas(
+      { disciplinaId, pruebas },
+      [this.crearPruebaPorDefecto('Prueba 1')],
+    );
+    const configExistente = camp.disciplinasConfig ?? [];
+    const indice = configExistente.findIndex((c) => c.disciplinaId === disciplinaId);
+    const nuevaEntrada: DisciplinaCompetenciaConfig = { disciplinaId, pruebas: pruebasNormalizadas };
+
+    const disciplinasConfig = indice >= 0
+      ? configExistente.map((c, i) => (i === indice ? nuevaEntrada : c))
+      : [...configExistente, nuevaEntrada];
+
+    this.update(competenciaId, { disciplinasConfig });
+  }
+
+  private normalizarFases(fases: unknown[]): FaseDisciplinaConfig[] {
+    if (fases.length === 0) return [this.crearFasePorDefecto('Fase de grupos', 'fase_grupos', true, true)];
+    const primera = fases[0];
+    if (typeof primera === 'string') {
+      return (fases as FaseEncuentro[]).map((fase, index, arr) =>
+        this.crearFasePorDefecto(index === 0 ? 'Fase de grupos' : `Fase ${index + 1}`, fase, index === 0, index === arr.length - 1),
+      );
+    }
+    return (fases as FaseDisciplinaConfig[]).map((fase, index, arr) => ({
+      id: fase.id ?? crypto.randomUUID(),
+      nombre: fase.nombre ?? `Fase ${index + 1}`,
+      tipo_fase: fase.tipo_fase ?? 'fase_grupos',
+      cantidad_grupos: fase.cantidad_grupos ?? 1,
+      clasificados_por_grupo: fase.clasificados_por_grupo ?? 1,
+      cantidad_equipos_llave: fase.cantidad_equipos_llave ?? 0,
+      cantidad_clasificados: fase.cantidad_clasificados ?? 0,
+      fase_anterior_id: fase.fase_anterior_id,
+      fase_posterior_id: fase.fase_posterior_id,
+      es_fase_inicial: fase.es_fase_inicial ?? index === 0,
+      es_fase_final: fase.es_fase_final ?? index === arr.length - 1,
+      permite_empates: fase.permite_empates ?? false,
+      arrastra_sanciones: fase.arrastra_sanciones ?? true,
+      limpia_tarjetas: fase.limpia_tarjetas ?? false,
+      estado: fase.estado ?? 'borrador',
+    }));
+  }
+
+  private normalizarPruebas(origen: unknown, pruebasPorDefecto: PruebaDisciplinaConfig[]): PruebaDisciplinaConfig[] {
+    if (!origen) return pruebasPorDefecto;
+    const config = origen as DisciplinaCompetenciaConfig & { fases?: unknown[] };
+
+    // Compatibilidad con versión previa (fases directamente en disciplina).
+    if (Array.isArray(config.fases)) {
+      return [{
+        id: crypto.randomUUID(),
+        nombre: 'Prueba 1',
+        fases: this.normalizarFases(config.fases),
+      }];
+    }
+
+    const pruebas = config.pruebas ?? [];
+    if (pruebas.length === 0) return pruebasPorDefecto;
+
+    return pruebas.map((prueba, index) => ({
+      id: prueba.id ?? crypto.randomUUID(),
+      nombre: prueba.nombre ?? `Prueba ${index + 1}`,
+      fases: this.normalizarFases(prueba.fases ?? []),
+    }));
+  }
+
+  private crearPruebaPorDefecto(nombre: string): PruebaDisciplinaConfig {
+    return {
+      id: crypto.randomUUID(),
+      nombre,
+      fases: [this.crearFasePorDefecto('Fase de grupos', 'fase_grupos', true, true)],
+    };
+  }
+
+  private crearFasePorDefecto(
+    nombre: string,
+    tipo_fase: FaseEncuentro,
+    es_fase_inicial: boolean,
+    es_fase_final: boolean,
+  ): FaseDisciplinaConfig {
+    return {
+      id: crypto.randomUUID(),
+      nombre,
+      tipo_fase,
+      cantidad_grupos: 1,
+      clasificados_por_grupo: 1,
+      cantidad_equipos_llave: 0,
+      cantidad_clasificados: 0,
+      es_fase_inicial,
+      es_fase_final,
+      permite_empates: false,
+      arrastra_sanciones: true,
+      limpia_tarjetas: false,
+      estado: 'borrador',
+    };
   }
 
   delete(id: string): void {

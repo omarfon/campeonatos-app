@@ -97,6 +97,14 @@ export const routes: Routes = [
         loadChildren: () => import('./features/acceso/acceso.routes').then((m) => m.ACCESO_ROUTES),
       },
       {
+        path: 'eventos',
+        loadChildren: () => import('./features/events/events.routes').then((m) => m.EVENT_ROUTES),
+      },
+      {
+        path: 'portal/eventos',
+        loadChildren: () => import('./features/events/events.routes').then((m) => m.PORTAL_EVENT_ROUTES),
+      },
+      {
         path: 'operaciones',
         children: [
           { path: '', redirectTo: 'recuperaciones', pathMatch: 'full' },
@@ -150,9 +158,29 @@ export const routes: Routes = [
         loadComponent: () => import('./features/academia/programa-form').then((m) => m.ProgramaFormComponent),
       },
       {
+        path: 'matricula/estudiantes/:id/editar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/pages/students/enrollment-student-form').then((m) => m.EnrollmentStudentFormComponent),
+      },
+      {
+        path: 'matricula/estudiantes/nuevo',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/pages/students/enrollment-student-form').then((m) => m.EnrollmentStudentFormComponent),
+      },
+      {
+        path: 'matricula/convenios/nuevo',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/pages/agreements/enrollment-agreement-form').then((m) => m.EnrollmentAgreementFormComponent),
+      },
+      {
+        path: 'matricula/convenios/:id/editar',
+        outlet: 'panel',
+        loadComponent: () => import('./features/matricula/pages/agreements/enrollment-agreement-form').then((m) => m.EnrollmentAgreementFormComponent),
+      },
+      {
         path: 'matricula/nueva',
         outlet: 'panel',
-        loadComponent: () => import('./features/matricula/matricula-module-form').then((m) => m.MatriculaModuleFormComponent),
+        loadComponent: () => import('./features/matricula/pages/enrollment-wizard/enrollment-wizard').then((m) => m.EnrollmentWizardComponent),
       },
       {
         path: 'matricula/dashboard/:id',

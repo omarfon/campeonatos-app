@@ -48,10 +48,25 @@ const ICON_PATHS: Record<string, string> = {
   'clipboard-check': 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6v4H9V2zM9 12l2 2 4-4',
   'shield-key': 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM8 11h8M12 8v6',
   'id-card': 'M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zM8 10a2 2 0 1 0 4 0 2 2 0 0 0-4 0M6 18c0-2 2-3 4-3s4 1 4 3M14 9h4M14 13h3',
-  'document-check': 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 15l2 2 4-4',
+  'ticket': 'M2 9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V9zM2 12h20',
+  'party': 'M5.8 11.3 2 22l10.5-3.5L22 22l-3.8-10.7M12 2v7',
 };
 
 const NAV_ENTRIES: NavEntry[] = [
+  {
+    label: 'Gestión de Eventos',
+    icon: 'party',
+    children: [
+      { path: '/eventos/dashboard', label: 'Dashboard', icon: 'chart-bar' },
+      { path: '/eventos/listado', label: 'Eventos', icon: 'calendar' },
+      { path: '/eventos/calendario', label: 'Calendario', icon: 'calendar' },
+      { path: '/eventos/inscripciones', label: 'Inscripciones', icon: 'user-check' },
+      { path: '/eventos/entradas', label: 'Entradas', icon: 'ticket' },
+      { path: '/eventos/control-entradas', label: 'Control de tickets', icon: 'shield-key' },
+      { path: '/eventos/consumos', label: 'Consumos', icon: 'clipboard-check' },
+      { path: '/eventos/liquidaciones', label: 'Liquidaciones', icon: 'file-text' },
+    ],
+  },
   {
     label: 'Gestión de Competencias',
     icon: 'star',
@@ -74,9 +89,12 @@ const NAV_ENTRIES: NavEntry[] = [
     label: 'Matrícula',
     icon: 'file-text',
     children: [
+      { path: '/matricula/dashboard', label: 'Dashboard', icon: 'chart-bar' },
       { path: '/matricula', label: 'Matrículas', icon: 'file-text' },
-      { path: '/matricula/dashboard', label: 'Dashboard visual', icon: 'chart-bar' },
-      { path: '/matricula/nueva', label: 'Nueva matrícula', icon: 'pencil', outlet: 'panel' },
+      { path: '/matricula/estudiantes', label: 'Estudiantes', icon: 'user' },
+      { path: '/matricula/clases', label: 'Clases disponibles', icon: 'book' },
+      { path: '/matricula/convenios', label: 'Convenios', icon: 'briefcase' },
+      { path: '/matricula/pagos', label: 'Pagos / Pendientes', icon: 'credit-card' },
     ],
   },
   {
