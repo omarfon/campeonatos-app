@@ -2,6 +2,11 @@ import { Component, signal, ChangeDetectionStrategy, inject, DestroyRef } from '
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd, UrlSegmentGroup } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
+import { AppSessionService } from '../../core/services/app-session.service';
+import { StudentSessionService } from '../../features/student-portal/services/student-session.service';
+import { STUDENT_PORTAL_LOGIN_ROUTE } from '../../features/student-portal/student-portal.constants';
+import { MEMBER_PORTAL_LOGIN_ROUTE } from '../../features/member-portal/member-portal.constants';
+import { MemberSessionService } from '../../features/member-portal/services/member-session.service';
 
 interface NavItem {
   path: string;
@@ -196,7 +201,7 @@ const NAV_ENTRIES: NavEntry[] = [
         <div class="mx-5 border-t border-white/10"></div>
 
         <!-- Navigation -->
-        <nav class="mt-6 px-4 space-y-1 overflow-y-auto" aria-label="Navegación principal" style="max-height: calc(100vh - 10rem)">
+        <nav class="mt-6 px-4 space-y-1 overflow-y-auto pb-36" aria-label="Navegación principal" style="max-height: calc(100vh - 5rem)">
           @for (entry of navEntries; track entry.label) {
             @if (isGroup(entry)) {
               <!-- Collapsible group -->
@@ -252,7 +257,23 @@ const NAV_ENTRIES: NavEntry[] = [
         </nav>
 
         <!-- Bottom section -->
-        <div class="absolute bottom-0 left-0 right-0 p-4">
+        <div class="absolute bottom-0 left-0 right-0 p-4 space-y-3 z-10 bg-gradient-to-t from-brand-900 via-brand-900/95 to-transparent pt-8">
+          <button type="button"
+            (click)="openMemberPortalLogin()"
+            class="flex items-center justify-center gap-2 w-full rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold py-2.5 px-4 transition-colors shadow-lg shadow-amber-900/20">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path [attr.d]="iconPaths['users']" />
+            </svg>
+            Portal Socio
+          </button>
+          <button type="button"
+            (click)="openStudentPortalLogin()"
+            class="flex items-center justify-center gap-2 w-full rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold py-2.5 px-4 transition-colors shadow-lg shadow-teal-900/20">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path [attr.d]="iconPaths['graduation-cap']" />
+            </svg>
+            Portal Alumno
+          </button>
           <div class="rounded-xl bg-brand-400/10 border border-brand-400/20 p-4">
             <p class="text-xs text-brand-200 font-medium">Versión 1.0</p>
             <p class="text-[10px] text-slate-500 mt-1">Gestión deportiva integral</p>
@@ -280,9 +301,9 @@ const NAV_ENTRIES: NavEntry[] = [
 
       <!-- Main content -->
       <div class="flex-1 flex flex-col min-w-0">
-        <header class="h-12 glass sticky top-0 z-10 flex items-center px-4 lg:px-8 shadow-sm shadow-slate-100">
+        <header class="h-14 glass sticky top-0 z-10 flex items-center gap-3 px-4 lg:px-8 shadow-sm shadow-slate-100">
           <button
-            class="lg:hidden mr-4 p-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors shrink-0"
             (click)="sidebarOpen.set(true)"
             aria-label="Abrir menú"
           >
@@ -290,7 +311,80 @@ const NAV_ENTRIES: NavEntry[] = [
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
           </button>
-          <h1 class="text-base font-semibold text-slate-700 tracking-tight">AELU — Gestión Integral Deportiva</h1>
+          <h1 class="flex-1 min-w-0 text-base font-semibold text-slate-700 tracking-tight truncate">AELU — Gestión Integral Deportiva</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button"
+              (click)="openMemberPortalLogin()"
+              class="inline-flex items-center gap-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold py-2 px-4 transition-colors shadow-md shadow-amber-900/15">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path [attr.d]="iconPaths['users']" />
+              </svg>
+              <span class="hidden sm:inline">Portal Socio</span>
+              <span class="sm:hidden">Socio</span>
+            </button>
+            <button type="button"
+              (click)="openStudentPortalLogin()"
+              class="inline-flex items-center gap-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold py-2 px-4 transition-colors shadow-md shadow-teal-900/15">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path [attr.d]="iconPaths['graduation-cap']" />
+              </svg>
+              <span class="hidden sm:inline">Portal Alumno</span>
+              <span class="sm:hidden">Alumno</span>
+            </button>
+            <div class="relative" data-main-user-menu>
+              <button type="button"
+                class="flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
+                [attr.aria-expanded]="userMenuOpen()"
+                aria-haspopup="menu"
+                aria-label="Menú de usuario"
+                (click)="toggleUserMenu()">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path [attr.d]="iconPaths['user']" />
+                </svg>
+              </button>
+              @if (userMenuOpen()) {
+                <div class="absolute right-0 top-full mt-2 w-72 rounded-xl border border-slate-200 bg-white shadow-lg z-50 overflow-hidden"
+                  role="menu" aria-label="Menú de perfil">
+                  @if (session(); as user) {
+                    <div class="px-4 py-4 border-b border-slate-100 bg-slate-50">
+                      <div class="flex items-center gap-3">
+                        <span class="w-11 h-11 rounded-xl text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg, #1A3263, #0d9488)"
+                          aria-hidden="true">
+                          {{ userInitials() }}
+                        </span>
+                        <div class="min-w-0">
+                          <p class="font-bold text-slate-900 truncate text-sm">{{ user.fullName }}</p>
+                          <p class="text-xs text-brand font-medium mt-0.5">{{ user.role }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="px-4 py-3 space-y-2 text-sm border-b border-slate-100">
+                      <div class="flex justify-between gap-2 py-0.5">
+                        <span class="text-slate-500">Documento</span>
+                        <span class="font-medium text-slate-800 text-right">{{ user.documentType }} {{ user.documentNumber }}</span>
+                      </div>
+                      <div class="flex justify-between gap-2 py-0.5">
+                        <span class="text-slate-500">Correo</span>
+                        <span class="font-medium text-slate-800 truncate max-w-[10rem] text-right">{{ user.email }}</span>
+                      </div>
+                      <div class="flex justify-between gap-2 py-0.5">
+                        <span class="text-slate-500">Área</span>
+                        <span class="font-medium text-slate-800 text-right">{{ user.area }}</span>
+                      </div>
+                    </div>
+                  }
+                  <div class="py-1">
+                    <button type="button" role="menuitem"
+                      class="w-full text-left px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50 transition-colors"
+                      (click)="logout()">
+                      Cerrar sesión
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
         </header>
         <main class="flex-1 p-4 lg:p-8 overflow-auto">
           <router-outlet />
@@ -329,10 +423,16 @@ const NAV_ENTRIES: NavEntry[] = [
       </aside>
     </div>
   `,
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+  },
 })
 export class LayoutComponent {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly sessionService = inject(AppSessionService);
+  private readonly studentSessionService = inject(StudentSessionService);
+  private readonly memberSessionService = inject(MemberSessionService);
 
   protected readonly sidebarOpen = signal(false);
   protected readonly panelOpen = signal(false);
@@ -340,6 +440,8 @@ export class LayoutComponent {
   protected readonly navEntries = NAV_ENTRIES;
   protected readonly isGroup = isGroup;
   protected readonly iconPaths = ICON_PATHS;
+  protected readonly userMenuOpen = signal(false);
+  protected readonly session = this.sessionService.session;
 
   constructor() {
     // Expand sidebar group matching the current route on init
@@ -381,6 +483,42 @@ export class LayoutComponent {
       void this.router.navigateByUrl(tree);
     }
     this.panelOpen.set(false);
+  }
+
+  protected toggleUserMenu(): void {
+    this.userMenuOpen.update(v => !v);
+  }
+
+  protected closeUserMenu(): void {
+    this.userMenuOpen.set(false);
+  }
+
+  protected userInitials(): string {
+    const name = this.session()?.fullName ?? '';
+    return name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+  }
+
+  protected logout(): void {
+    this.sessionService.logout();
+    this.closeUserMenu();
+    void this.router.navigate(['/login']);
+  }
+
+  protected openStudentPortalLogin(): void {
+    this.studentSessionService.logout();
+    void this.router.navigate([STUDENT_PORTAL_LOGIN_ROUTE]);
+  }
+
+  protected openMemberPortalLogin(): void {
+    this.memberSessionService.logout();
+    void this.router.navigate([MEMBER_PORTAL_LOGIN_ROUTE]);
+  }
+
+  protected onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('[data-main-user-menu]')) {
+      this.userMenuOpen.set(false);
+    }
   }
 
   private removePanelOutlet(group: UrlSegmentGroup): boolean {

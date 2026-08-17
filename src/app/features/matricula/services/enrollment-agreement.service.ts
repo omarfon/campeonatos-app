@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { delay, Observable, of } from 'rxjs';
 import {
   AgreementFilters,
@@ -12,17 +12,18 @@ import { ValidationSeverity } from '../enums/validation-severity.enum';
 import {
   MOCK_ENROLLMENT_AGREEMENTS,
   MOCK_ENROLLMENT_CLASSES,
-  MOCK_ENROLLMENT_STUDENTS,
 } from '../mocks/enrollment.mock';
 import { ClassStatus } from '../enums/class-status.enum';
+import { EnrollmentStudentService } from './enrollment-student.service';
 
 @Injectable({ providedIn: 'root' })
 export class EnrollmentAgreementService {
+  private readonly studentService = inject(EnrollmentStudentService);
   private readonly _agreements = signal<EnrollmentAgreement[]>([...MOCK_ENROLLMENT_AGREEMENTS]);
   private _nextId = MOCK_ENROLLMENT_AGREEMENTS.length + 1;
 
   getAvailableAgreements(studentId: number): Observable<EnrollmentAgreement[]> {
-    const student = MOCK_ENROLLMENT_STUDENTS.find(s => s.id === studentId);
+    const student = this.studentService.students().find(s => s.id === studentId);
     if (!student) return of([]).pipe(delay(200));
     const agreements = this._agreements().filter(a =>
       student.agreementIds.includes(a.id) && a.status === 'active',
@@ -119,7 +120,7 @@ export class EnrollmentAgreementService {
   }
 
   validateAgreement(studentId: number, agreementId: number): Observable<AgreementValidationResult> {
-    const student = MOCK_ENROLLMENT_STUDENTS.find(s => s.id === studentId);
+    const student = this.studentService.students().find(s => s.id === studentId);
     const agreement = this._agreements().find(a => a.id === agreementId);
     const errors: ValidationMessage[] = [];
     const warnings: ValidationMessage[] = [];

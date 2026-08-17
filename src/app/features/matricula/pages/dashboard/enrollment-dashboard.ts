@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EnrollmentService } from '../../services/enrollment.service';
 import { EnrollmentStatusBadgeComponent } from '../../components/enrollment-status-badge/enrollment-status-badge';
 import { EnrollmentListItem } from '../../models/enrollment.model';
@@ -91,8 +91,14 @@ import { STUDENT_TYPE_LABELS } from '../../models/enrollment.model';
             </thead>
             <tbody>
               @for (m of recent(); track m.id) {
-                <tr class="border-b border-slate-50 hover:bg-slate-50">
-                  <td class="py-2 px-4"><a [routerLink]="['/matricula', m.id]" class="font-mono text-brand font-semibold">{{ m.code }}</a></td>
+                <tr class="border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors"
+                  tabindex="0"
+                  role="link"
+                  [attr.aria-label]="'Ver matrícula ' + m.code"
+                  (click)="openDetail(m.id)"
+                  (keydown.enter)="openDetail(m.id)"
+                  (keydown.space)="openDetail(m.id); $event.preventDefault()">
+                  <td class="py-2 px-4 font-mono text-xs text-brand font-semibold">{{ m.code }}</td>
                   <td class="py-2 px-4">{{ m.studentName }}</td>
                   <td class="py-2 px-4">{{ m.courseName }}</td>
                   <td class="py-2 px-4">{{ m.className }}</td>
@@ -114,6 +120,7 @@ import { STUDENT_TYPE_LABELS } from '../../models/enrollment.model';
 })
 export class EnrollmentDashboardComponent implements OnInit {
   private readonly service = inject(EnrollmentService);
+  private readonly router = inject(Router);
 
   protected readonly recent = signal<EnrollmentListItem[]>([]);
   protected readonly alerts = signal(this.service.getAlerts());
@@ -148,5 +155,9 @@ export class EnrollmentDashboardComponent implements OnInit {
 
   protected typeLabel(t: EnrollmentListItem['studentType']): string {
     return STUDENT_TYPE_LABELS[t];
+  }
+
+  protected openDetail(id: number): void {
+    this.router.navigate(['/matricula', id]);
   }
 }

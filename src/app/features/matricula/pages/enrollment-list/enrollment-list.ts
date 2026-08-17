@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentService } from '../../services/enrollment.service';
 import { EnrollmentCourseService } from '../../services/enrollment-course.service';
@@ -85,13 +85,18 @@ import { EnrollmentListItem, STUDENT_TYPE_LABELS, StudentType } from '../../mode
                 <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Importe</th>
                 <th class="py-2 px-4 text-xs font-semibold text-slate-500">Estado</th>
                 <th class="py-2 px-4 text-xs font-semibold text-slate-500">Fecha</th>
-                <th class="py-2 px-4 text-xs font-semibold text-slate-500">Acciones</th>
               </tr>
             </thead>
             <tbody>
               @for (m of paged(); track m.id) {
-                <tr class="border-b border-slate-50 hover:bg-slate-50">
-                  <td class="py-2 px-4 font-mono text-xs">{{ m.code }}</td>
+                <tr class="border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors"
+                  tabindex="0"
+                  role="link"
+                  [attr.aria-label]="'Ver matrícula ' + m.code"
+                  (click)="openDetail(m.id)"
+                  (keydown.enter)="openDetail(m.id)"
+                  (keydown.space)="openDetail(m.id); $event.preventDefault()">
+                  <td class="py-2 px-4 font-mono text-xs text-brand font-semibold">{{ m.code }}</td>
                   <td class="py-2 px-4 font-medium">{{ m.studentName }}</td>
                   <td class="py-2 px-4">{{ m.studentDocument }}</td>
                   <td class="py-2 px-4">{{ m.courseName }}</td>
@@ -101,12 +106,9 @@ import { EnrollmentListItem, STUDENT_TYPE_LABELS, StudentType } from '../../mode
                   <td class="py-2 px-4 text-right font-semibold">S/ {{ m.total.toFixed(2) }}</td>
                   <td class="py-2 px-4"><app-enrollment-status-badge [status]="m.status" /></td>
                   <td class="py-2 px-4 text-xs">{{ m.createdAt }}</td>
-                  <td class="py-2 px-4">
-                    <a [routerLink]="['/matricula', m.id]" class="text-brand font-semibold text-xs hover:underline">Ver</a>
-                  </td>
                 </tr>
               } @empty {
-                <tr><td colspan="11" class="py-8 text-center text-slate-400">Sin matrículas</td></tr>
+                <tr><td colspan="10" class="py-8 text-center text-slate-400">Sin matrículas</td></tr>
               }
             </tbody>
           </table>
@@ -125,6 +127,7 @@ import { EnrollmentListItem, STUDENT_TYPE_LABELS, StudentType } from '../../mode
 export class EnrollmentListComponent implements OnInit {
   private readonly service = inject(EnrollmentService);
   private readonly courseService = inject(EnrollmentCourseService);
+  private readonly router = inject(Router);
 
   protected readonly items = signal<EnrollmentListItem[]>([]);
   protected readonly courses = signal<{ id: number; name: string }[]>([]);
@@ -168,6 +171,10 @@ export class EnrollmentListComponent implements OnInit {
 
   protected typeLabel(t: StudentType): string {
     return STUDENT_TYPE_LABELS[t];
+  }
+
+  protected openDetail(id: number): void {
+    this.router.navigate(['/matricula', id]);
   }
 
   private load(): void {

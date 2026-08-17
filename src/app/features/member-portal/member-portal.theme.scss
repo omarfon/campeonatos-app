@@ -1,0 +1,96 @@
+/* Tema visual — Portal Socio */
+.member-portal {
+  --mp-bg: #f8f6f3;
+  --mp-bg-accent: #fef3e2;
+  --mp-surface: #ffffff;
+  --mp-border: rgba(148, 163, 184, 0.18);
+  --mp-shadow: 0 4px 24px -4px rgba(120, 53, 15, 0.08);
+  --mp-shadow-lg: 0 12px 40px -8px rgba(120, 53, 15, 0.12);
+  --mp-radius: 1.25rem;
+  --mp-radius-lg: 1.5rem;
+  --mp-gold: #b45309;
+  --mp-gold-light: #fef3c7;
+  --mp-navy: #1A3263;
+  --mp-teal: #0d9488;
+
+  background: var(--mp-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(180, 83, 9, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(26, 50, 99, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(13, 148, 136, 0.06), transparent);
+
+  .mp-card {
+    @apply rounded-[var(--mp-radius-lg)] border bg-white transition-all duration-300;
+    border-color: var(--mp-border);
+    box-shadow: var(--mp-shadow);
+  }
+
+  .mp-card-hover:hover {
+    box-shadow: var(--mp-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .mp-page-title {
+    @apply text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight;
+  }
+
+  .mp-page-subtitle {
+    @apply text-sm text-slate-500 mt-1;
+  }
+
+  .mp-stat {
+    @apply rounded-[var(--mp-radius-lg)] border bg-white transition-all duration-300 p-4 sm:p-5 block relative overflow-hidden;
+    border-color: var(--mp-border);
+    box-shadow: var(--mp-shadow);
+  }
+
+  .mp-stat:hover {
+    box-shadow: var(--mp-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .mp-stat-icon {
+    @apply w-10 h-10 rounded-2xl flex items-center justify-center text-lg mb-3;
+  }
+
+  .mp-btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-all duration-200;
+    @apply bg-white border text-slate-700 hover:bg-slate-50 hover:shadow-md;
+    border-color: var(--mp-border);
+  }
+
+  .mp-sidebar {
+    @apply rounded-[var(--mp-radius-lg)] m-4 ml-0 lg:ml-4 mb-4 border bg-white/90 backdrop-blur-md;
+    border-color: var(--mp-border);
+    box-shadow: var(--mp-shadow);
+  }
+
+  .mp-mobile-nav {
+    @apply rounded-t-3xl border-t bg-white/95 backdrop-blur-xl;
+    border-color: var(--mp-border);
+    box-shadow: 0 -8px 32px -8px rgba(120, 53, 15, 0.1);
+  }
+
+  .mp-status-enabled {
+    @apply inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800;
+  }
+
+  .mp-status-restricted {
+    @apply inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-amber-100 text-amber-800;
+  }
+
+  .mp-status-suspended {
+    @apply inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-rose-100 text-rose-800;
+  }
+
+  .mp-tab {
+    @apply px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-200;
+    @apply bg-slate-100/80 text-slate-600 hover:bg-slate-200/80;
+  }
+
+  .mp-tab-active {
+    @apply text-white shadow-md;
+    background: linear-gradient(135deg, #1A3263, #b45309);
+    box-shadow: 0 4px 14px -2px rgba(180, 83, 9, 0.35);
+  }
+}

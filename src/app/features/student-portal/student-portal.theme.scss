@@ -1,0 +1,93 @@
+/* Tema visual — Portal Alumno */
+.student-portal {
+  --sp-bg: #f4f7fb;
+  --sp-bg-accent: #e8f4fc;
+  --sp-surface: #ffffff;
+  --sp-border: rgba(148, 163, 184, 0.18);
+  --sp-shadow: 0 4px 24px -4px rgba(26, 50, 99, 0.08);
+  --sp-shadow-lg: 0 12px 40px -8px rgba(26, 50, 99, 0.12);
+  --sp-radius: 1.25rem;
+  --sp-radius-lg: 1.5rem;
+  --sp-teal: #0d9488;
+  --sp-teal-light: #ccfbf1;
+  --sp-violet: #7c3aed;
+  --sp-violet-light: #ede9fe;
+  --sp-amber: #d97706;
+  --sp-amber-light: #fef3c7;
+  --sp-rose: #e11d48;
+  --sp-rose-light: #ffe4e6;
+
+  background: var(--sp-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(14, 165, 233, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(26, 50, 99, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(13, 148, 136, 0.08), transparent);
+
+  .sp-card {
+    @apply rounded-[var(--sp-radius-lg)] border bg-white transition-all duration-300;
+    border-color: var(--sp-border);
+    box-shadow: var(--sp-shadow);
+  }
+
+  .sp-card-hover:hover {
+    box-shadow: var(--sp-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .sp-page-title {
+    @apply text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight;
+  }
+
+  .sp-page-subtitle {
+    @apply text-sm text-slate-500 mt-1;
+  }
+
+  .sp-stat {
+    @apply rounded-[var(--sp-radius-lg)] border bg-white transition-all duration-300 p-4 sm:p-5 block relative overflow-hidden;
+    border-color: var(--sp-border);
+    box-shadow: var(--sp-shadow);
+  }
+
+  .sp-stat:hover {
+    box-shadow: var(--sp-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .sp-stat-icon {
+    @apply w-10 h-10 rounded-2xl flex items-center justify-center text-lg mb-3;
+  }
+
+  .sp-btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-all duration-200;
+    @apply bg-white border text-slate-700 hover:bg-slate-50 hover:shadow-md;
+    border-color: var(--sp-border);
+  }
+
+  .sp-sidebar {
+    @apply rounded-[var(--sp-radius-lg)] m-4 ml-0 lg:ml-4 mb-4 border bg-white/90 backdrop-blur-md;
+    border-color: var(--sp-border);
+    box-shadow: var(--sp-shadow);
+  }
+
+  .sp-mobile-nav {
+    @apply rounded-t-3xl border-t bg-white/95 backdrop-blur-xl;
+    border-color: var(--sp-border);
+    box-shadow: 0 -8px 32px -8px rgba(26, 50, 99, 0.1);
+  }
+
+  .sp-tab {
+    @apply px-4 py-2 rounded-2xl text-sm font-semibold transition-all duration-200;
+    @apply bg-slate-100/80 text-slate-600 hover:bg-slate-200/80;
+  }
+
+  .sp-tab-active {
+    @apply text-white shadow-md shadow-brand/20;
+    background: linear-gradient(135deg, #1A3263, #0d9488);
+  }
+
+  .sp-table-wrap {
+    @apply rounded-[var(--sp-radius-lg)] border bg-white overflow-hidden !p-0;
+    border-color: var(--sp-border);
+    box-shadow: var(--sp-shadow);
+  }
+}

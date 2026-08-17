@@ -96,6 +96,7 @@ interface StudentMenuAction {
                 <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Documento</th>
                 <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden md:table-cell">Contacto</th>
                 <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Tipo</th>
+                <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Convenio</th>
                 <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide">Estado</th>
                 <th class="py-2.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide text-right">Acciones</th>
               </tr>
@@ -122,6 +123,15 @@ interface StudentMenuAction {
                       [class]="s.isRegularStudent ? 'bg-brand/10 text-brand' : 'bg-blue-100 text-blue-800'">
                       {{ typeLabel(s) }}
                     </span>
+                  </td>
+                  <td class="py-2.5 px-4 whitespace-nowrap">
+                    @if (s.agreementIds.length > 0) {
+                      <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-100 text-violet-800">
+                        {{ s.agreementIds.length === 1 ? '1 convenio' : s.agreementIds.length + ' convenios' }}
+                      </span>
+                    } @else {
+                      <span class="text-xs text-slate-400">—</span>
+                    }
                   </td>
                   <td class="py-2.5 px-4 whitespace-nowrap">
                     <span class="text-xs font-semibold px-2 py-0.5 rounded-full" [class]="statusClass(s.status)">

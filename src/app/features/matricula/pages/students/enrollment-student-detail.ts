@@ -1,7 +1,8 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EnrollmentStudentService } from '../../services/enrollment-student.service';
-import { EnrollmentStudent, STUDENT_TYPE_LABELS } from '../../models/enrollment.model';
+import { EnrollmentAgreementService } from '../../services/enrollment-agreement.service';
+import { EnrollmentStudent, STUDENT_TYPE_LABELS, EnrollmentAgreement } from '../../models/enrollment.model';
 
 @Component({
   selector: 'app-enrollment-student-detail',
@@ -84,6 +85,22 @@ import { EnrollmentStudent, STUDENT_TYPE_LABELS } from '../../models/enrollment.
             </div>
           }
 
+          <div class="section-card p-4 space-y-3">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Convenios</h2>
+            @if (agreements().length > 0) {
+              <ul class="space-y-2 text-sm">
+                @for (a of agreements(); track a.id) {
+                  <li class="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
+                    <p class="font-semibold text-violet-900">{{ a.name }}</p>
+                    <p class="text-violet-800">{{ a.benefitSummary }} · {{ a.company }}</p>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="text-sm text-slate-500">Sin convenios registrados.</p>
+            }
+          </div>
+
           @if (s.notes) {
             <div class="section-card p-4 lg:col-span-2">
               <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Observaciones</h2>
@@ -100,12 +117,19 @@ import { EnrollmentStudent, STUDENT_TYPE_LABELS } from '../../models/enrollment.
 export class EnrollmentStudentDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly service = inject(EnrollmentStudentService);
+  private readonly agreementService = inject(EnrollmentAgreementService);
 
   protected readonly student = signal<EnrollmentStudent | undefined>(undefined);
+  protected readonly agreements = signal<EnrollmentAgreement[]>([]);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.service.getById(id).subscribe(s => this.student.set(s));
+    this.service.getById(id).subscribe(s => {
+      this.student.set(s);
+      if (s) {
+        this.agreementService.getAvailableAgreements(s.id).subscribe(list => this.agreements.set(list));
+      }
+    });
   }
 
   protected typeLabel(s: EnrollmentStudent): string {

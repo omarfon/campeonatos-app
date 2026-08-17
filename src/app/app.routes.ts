@@ -1,8 +1,43 @@
 import { Routes } from '@angular/router';
+import { studentAuthGuard, studentGuestGuard } from './features/student-portal/guards/student-auth.guard';
+import { memberAuthGuard, memberGuestGuard } from './features/member-portal/guards/member-auth.guard';
+import { appAuthGuard, appGuestGuard } from './core/guards/app-auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    canActivate: [appGuestGuard],
+    loadComponent: () => import('./features/auth/pages/login/app-login').then(m => m.AppLoginComponent),
+  },
+  {
+    path: 'socio/login',
+    canActivate: [memberGuestGuard],
+    loadComponent: () => import('./features/member-portal/pages/login/member-login').then(m => m.MemberLoginComponent),
+  },
+  {
+    path: 'portal-alumno/login',
+    canActivate: [studentGuestGuard],
+    loadComponent: () => import('./features/student-portal/pages/login/student-login').then(m => m.StudentLoginComponent),
+  },
+  {
+    path: 'portal/eventos',
+    loadChildren: () => import('./features/events/events.routes').then(m => m.PORTAL_EVENT_ROUTES),
+  },
+  {
+    path: 'socio',
+    canActivate: [memberAuthGuard],
+    loadComponent: () => import('./features/member-portal/layout/member-portal-layout').then(m => m.MemberPortalLayoutComponent),
+    loadChildren: () => import('./features/member-portal/member-portal.routes').then(m => m.MEMBER_PORTAL_ROUTES),
+  },
+  {
+    path: 'portal-alumno',
+    canActivate: [studentAuthGuard],
+    loadComponent: () => import('./features/student-portal/layout/student-portal-layout').then(m => m.StudentPortalLayoutComponent),
+    loadChildren: () => import('./features/student-portal/student-portal.routes').then(m => m.STUDENT_PORTAL_ROUTES),
+  },
+  {
     path: '',
+    canActivate: [appAuthGuard],
     loadComponent: () => import('./shared/components/layout').then((m) => m.LayoutComponent),
     children: [
       { path: '', redirectTo: 'gestion/competencias', pathMatch: 'full' },
@@ -99,10 +134,6 @@ export const routes: Routes = [
       {
         path: 'eventos',
         loadChildren: () => import('./features/events/events.routes').then((m) => m.EVENT_ROUTES),
-      },
-      {
-        path: 'portal/eventos',
-        loadChildren: () => import('./features/events/events.routes').then((m) => m.PORTAL_EVENT_ROUTES),
       },
       {
         path: 'operaciones',

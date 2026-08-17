@@ -58,15 +58,25 @@ function student(id: number, isRegular: boolean, agreementIds: number[] = []): E
 }
 
 export const MOCK_ENROLLMENT_STUDENTS: EnrollmentStudent[] = [
-  // Escenarios específicos del DAS
-  { ...student(1, false), firstName: 'Juan', lastName: 'Tanaka', documentNumber: '45123456' },
-  { ...student(2, true), firstName: 'María', lastName: 'Nakamura', documentNumber: '46234567' },
+  // Escenarios específicos del DAS — varios con convenio para probar el flujo
+  { ...student(1, false, [1]), firstName: 'Juan', lastName: 'Tanaka', documentNumber: '45123456', agreementIds: [1] },
+  { ...student(2, true, [2]), firstName: 'María', lastName: 'Nakamura', documentNumber: '46234567', agreementIds: [2] },
   { ...student(3, false, [1]), firstName: 'Carlos', lastName: 'Pérez García', documentNumber: '47345678' },
   { ...student(4, false, [3]), firstName: 'Ana', lastName: 'García López', documentNumber: '48456789', agreementIds: [3] },
   ...Array.from({ length: 26 }, (_, i) => {
     const id = i + 5;
     const isRegular = id <= 24;
-    const agreementIds = id === 10 ? [2] : id === 15 ? [1] : [];
+    const agreementIds =
+      id === 5 ? [3] :
+      id === 6 ? [1, 4] :
+      id === 7 ? [4] :
+      id === 8 ? [2] :
+      id === 10 ? [2] :
+      id === 12 ? [1] :
+      id === 15 ? [1] :
+      id === 18 ? [3] :
+      id === 20 ? [1, 2] :
+      [];
     return student(id, isRegular, agreementIds);
   }),
 ];

@@ -270,6 +270,16 @@ export class EnrollmentWizardFacade {
     }
   }
 
+  clearCourse(): void {
+    this.invalidateFrom('course');
+    this.course.set(null);
+  }
+
+  clearClass(): void {
+    this.invalidateFrom('class');
+    this.selectedClass.set(null);
+  }
+
   generateCharges(): void {
     const st = this.student();
     const crs = this.course();

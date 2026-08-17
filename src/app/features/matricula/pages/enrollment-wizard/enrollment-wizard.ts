@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWizardFacade } from '../../facades/enrollment-wizard.facade';
@@ -71,77 +71,111 @@ import {
                 <div>
                   <h2 class="text-lg font-bold">Selección del estudiante</h2>
                   <p class="text-sm text-slate-500 mt-1">
-                    Busque y seleccione al estudiante. Se verificará si está liquidado antes de continuar.
+                    @if (facade.student()) {
+                      Estudiante seleccionado. Puede continuar o elegir otro.
+                    } @else {
+                      Busque y seleccione al estudiante. Se verificará si está liquidado antes de continuar.
+                    }
                   </p>
                 </div>
-                <input type="search" class="input-modern w-full" placeholder="DNI, CE, código, nombres o apellidos..."
-                  [(ngModel)]="studentQuery" (ngModelChange)="searchStudents($event)" />
-                @if (studentQuery.trim().length > 0 && studentQuery.trim().length < 2) {
-                  <p class="text-xs text-slate-400">Escriba al menos 2 caracteres para buscar</p>
-                }
-                <div class="section-card overflow-hidden">
-                  <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                      <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50 text-left">
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Código</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Estudiante</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Documento</th>
+
+                @if (!facade.student()) {
+                  <input type="search" class="input-modern w-full" placeholder="DNI, CE, código, nombres o apellidos..."
+                    [(ngModel)]="studentQuery" (ngModelChange)="searchStudents($event)" />
+                  @if (studentQuery.trim().length > 0 && studentQuery.trim().length < 2) {
+                    <p class="text-xs text-slate-400">Escriba al menos 2 caracteres para buscar</p>
+                  }
+                  <div class="section-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-sm">
+                        <thead>
+                          <tr class="border-b border-slate-200 bg-slate-50 text-left">
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Código</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Estudiante</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Documento</th>
                           <th class="py-2 px-4 text-xs font-semibold text-slate-500">Tipo</th>
+                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Convenio</th>
                           <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Acción</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (s of searchResults; track s.id) {
-                          <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
-                            [class.bg-brand/5]="facade.student()?.id === s.id"
-                            (click)="facade.selectStudent(s)">
-                            <td class="py-2.5 px-4 font-mono text-xs">{{ s.code }}</td>
-                            <td class="py-2.5 px-4 font-semibold text-slate-900">{{ s.firstName }} {{ s.lastName }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ s.documentType }} {{ s.documentNumber }}</td>
-                            <td class="py-2.5 px-4">
-                              <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
-                                [class]="s.isRegularStudent ? 'bg-brand/10 text-brand' : 'bg-blue-100 text-blue-800'">
-                                {{ s.isRegularStudent ? STUDENT_TYPE_LABELS.REGULAR : STUDENT_TYPE_LABELS.NEW }}
-                              </span>
-                            </td>
-                            <td class="py-2.5 px-4 text-right">
-                              <span class="text-xs font-semibold text-brand">
-                                {{ facade.student()?.id === s.id ? 'Seleccionado' : 'Seleccionar' }}
-                              </span>
-                            </td>
                           </tr>
-                        } @empty {
-                          <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-400">
-                              @if (studentQuery.trim().length >= 2) {
-                                No se encontraron estudiantes.
-                              } @else {
-                                Escriba para buscar o seleccione uno del listado inicial.
-                              }
-                            </td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          @for (s of searchResults; track s.id) {
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+                              (click)="facade.selectStudent(s)">
+                              <td class="py-2.5 px-4 font-mono text-xs">{{ s.code }}</td>
+                              <td class="py-2.5 px-4 font-semibold text-slate-900">{{ s.firstName }} {{ s.lastName }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ s.documentType }} {{ s.documentNumber }}</td>
+                              <td class="py-2.5 px-4">
+                                <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                                  [class]="s.isRegularStudent ? 'bg-brand/10 text-brand' : 'bg-blue-100 text-blue-800'">
+                                  {{ s.isRegularStudent ? STUDENT_TYPE_LABELS.REGULAR : STUDENT_TYPE_LABELS.NEW }}
+                                </span>
+                              </td>
+                              <td class="py-2.5 px-4">
+                                @if (s.agreementIds.length > 0) {
+                                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-violet-100 text-violet-800">
+                                    {{ s.agreementIds.length === 1 ? '1 convenio' : s.agreementIds.length + ' convenios' }}
+                                  </span>
+                                } @else {
+                                  <span class="text-xs text-slate-400">Sin convenio</span>
+                                }
+                              </td>
+                              <td class="py-2.5 px-4 text-right">
+                                <span class="text-xs font-semibold text-brand">Seleccionar</span>
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td colspan="6" class="py-8 text-center text-slate-400">
+                                @if (studentQuery.trim().length >= 2) {
+                                  No se encontraron estudiantes.
+                                } @else {
+                                  Escriba para buscar o seleccione uno del listado inicial.
+                                }
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-                @if (facade.student(); as selected) {
-                  <div class="rounded-xl bg-slate-50 p-4 border border-slate-200 space-y-2">
+                } @else if (facade.student(); as selected) {
+                  <div class="rounded-xl bg-brand/5 p-4 border border-brand/20 space-y-3">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p class="font-mono text-xs text-slate-500">{{ selected.code }}</p>
+                        <p class="font-bold text-lg text-slate-900">{{ selected.firstName }} {{ selected.lastName }}</p>
+                        <p class="text-sm text-slate-600">{{ selected.documentType }} {{ selected.documentNumber }}</p>
+                      </div>
+                      <button type="button" class="btn-ghost !text-sm shrink-0" (click)="onChangeStudent()">
+                        Cambiar estudiante
+                      </button>
+                    </div>
                     @if (!selected.isRegularStudent) {
                       <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded">PRIMERA MATRÍCULA</span>
                       <p class="text-sm text-slate-600">Se aplicará derecho de registro.</p>
                     } @else {
                       <p class="font-bold text-brand">ESTUDIANTE REGULAR</p>
                       @if (selected.lastCourseName) {
-                        <p class="text-sm mt-2">Último curso: {{ selected.lastCourseName }} · {{ selected.lastEnrollmentDate }}</p>
+                        <p class="text-sm">Último curso: {{ selected.lastCourseName }} · {{ selected.lastEnrollmentDate }}</p>
                       }
                     }
                     @if (facade.studentSettlement(); as settlement) {
-                      <div class="rounded-lg p-3 text-sm mt-2"
+                      <div class="rounded-lg p-3 text-sm"
                         [class]="settlement.isSettled ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-amber-50 border border-amber-200 text-amber-900'">
                         <p class="font-semibold">{{ settlement.isSettled ? '✓ Liquidado' : '⚠ Con deuda pendiente' }}</p>
                         <p>{{ settlement.message }}</p>
+                      </div>
+                    }
+                    @if (facade.agreements().length > 0) {
+                      <div class="rounded-lg p-3 text-sm bg-violet-50 border border-violet-200 space-y-1">
+                        <p class="font-semibold text-violet-900">
+                          {{ facade.agreements().length === 1 ? '1 convenio disponible' : facade.agreements().length + ' convenios disponibles' }}
+                        </p>
+                        @for (a of facade.agreements(); track a.id) {
+                          <p class="text-violet-800">{{ a.name }} · {{ a.benefitSummary }}</p>
+                        }
+                        <p class="text-xs text-violet-700 pt-1">Podrá elegirlo en el paso de convenios.</p>
                       </div>
                     }
                   </div>
@@ -176,25 +210,61 @@ import {
             }
             @case ('agreement') {
               <div class="section-card p-6 space-y-4">
-                <h2 class="text-lg font-bold">Convenios disponibles</h2>
-                <fieldset class="space-y-3">
-                  <label class="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
-                    <input type="radio" name="agreement" [checked]="facade.selectedAgreementId() === null" (change)="facade.selectAgreement(null)" class="mt-1" />
-                    <span>Continuar sin convenio</span>
-                  </label>
-                  @for (a of facade.agreements(); track a.id) {
-                    <label class="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
-                      <input type="radio" name="agreement" [checked]="facade.selectedAgreementId() === a.id" (change)="facade.selectAgreement(a.id)" class="mt-1" />
-                      <div>
-                        <p class="font-bold">{{ a.name }}</p>
-                        <p class="text-sm text-slate-600">{{ a.description }}</p>
-                        <p class="text-xs text-slate-500">{{ a.validFrom }} - {{ a.validTo }} · {{ a.benefitSummary }}</p>
-                      </div>
-                    </label>
-                  } @empty {
-                    <p class="text-slate-500">El estudiante no posee convenios aplicables.</p>
+                <div>
+                  <h2 class="text-lg font-bold">Convenios disponibles</h2>
+                  @if (facade.agreements().length > 0) {
+                    <p class="text-sm text-violet-800 bg-violet-50 border border-violet-200 rounded-lg px-4 py-3 mt-2">
+                      Este estudiante tiene {{ facade.agreements().length === 1 ? 'un convenio aplicable' : facade.agreements().length + ' convenios aplicables' }}.
+                      Seleccione uno o continúe sin convenio.
+                    </p>
+                  } @else {
+                    <p class="text-sm text-slate-500 mt-1">El estudiante no tiene convenios registrados.</p>
                   }
-                </fieldset>
+                </div>
+
+                @if (agreementChosen()) {
+                  <div class="rounded-xl bg-brand/5 p-4 border border-brand/20 space-y-2">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        @if (facade.selectedAgreement(); as agr) {
+                          <p class="font-bold text-slate-900">{{ agr.name }}</p>
+                          <p class="text-sm text-slate-600">{{ agr.description }}</p>
+                          <p class="text-xs text-slate-500 mt-1">{{ agr.validFrom }} - {{ agr.validTo }} · {{ agr.benefitSummary }}</p>
+                        } @else {
+                          <p class="font-bold text-slate-900">Sin convenio</p>
+                          <p class="text-sm text-slate-600">Continuará la matrícula sin aplicar convenio.</p>
+                        }
+                      </div>
+                      <button type="button" class="btn-ghost !text-sm shrink-0" (click)="changeAgreement()">
+                        Cambiar convenio
+                      </button>
+                    </div>
+                    @if (facade.selectedAgreementId() !== null && !facade.agreementValidated()) {
+                      <p class="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                        Validando convenio...
+                      </p>
+                    }
+                  </div>
+                } @else {
+                  <fieldset class="space-y-3">
+                    <label class="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                      <input type="radio" name="agreement" [checked]="facade.selectedAgreementId() === null" (change)="chooseAgreement(null)" class="mt-1" />
+                      <span>Continuar sin convenio</span>
+                    </label>
+                    @for (a of facade.agreements(); track a.id) {
+                      <label class="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                        <input type="radio" name="agreement" [checked]="facade.selectedAgreementId() === a.id" (change)="chooseAgreement(a.id)" class="mt-1" />
+                        <div>
+                          <p class="font-bold">{{ a.name }}</p>
+                          <p class="text-sm text-slate-600">{{ a.description }}</p>
+                          <p class="text-xs text-slate-500">{{ a.validFrom }} - {{ a.validTo }} · {{ a.benefitSummary }}</p>
+                        </div>
+                      </label>
+                    } @empty {
+                      <p class="text-slate-500">El estudiante no posee convenios aplicables.</p>
+                    }
+                  </fieldset>
+                }
               </div>
             }
             @case ('validation') {
@@ -215,126 +285,162 @@ import {
                   <div>
                     <h2 class="text-lg font-bold">Selección del curso</h2>
                     <p class="text-sm text-slate-500 mt-1">
-                      Elija un curso de la lista para continuar.
+                      @if (facade.course()) {
+                        Curso seleccionado. Puede continuar o elegir otro.
+                      } @else {
+                        Elija un curso de la lista para continuar.
+                      }
                     </p>
                   </div>
-                  <button type="button" class="btn-ghost !text-sm shrink-0" (click)="loadCourses()">
-                    Actualizar listado
-                  </button>
+                  @if (!facade.course()) {
+                    <button type="button" class="btn-ghost !text-sm shrink-0" (click)="loadCourses()">
+                      Actualizar listado
+                    </button>
+                  }
                 </div>
 
                 @if (facade.course(); as selected) {
-                  <div class="rounded-lg bg-brand/5 border border-brand/20 px-4 py-3 text-sm">
-                    <span class="font-semibold text-brand">Curso seleccionado:</span>
-                    {{ selected.name }} · S/ {{ selected.basePrice }}
+                  <div class="rounded-xl bg-brand/5 p-4 border border-brand/20">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p class="font-bold text-lg text-slate-900">{{ selected.name }}</p>
+                        <p class="text-sm text-slate-600">{{ selected.level }} · {{ selected.modality }} · {{ selected.campus }}</p>
+                        <p class="text-brand font-bold mt-1">S/ {{ selected.basePrice }}</p>
+                      </div>
+                      <button type="button" class="btn-ghost !text-sm shrink-0" (click)="facade.clearCourse()">
+                        Cambiar curso
+                      </button>
+                    </div>
                   </div>
-                } @else if (facade.coursesCache().length > 0) {
-                  <p class="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-                    Haga clic en una fila para seleccionar el curso. El botón Continuar se habilitará al seleccionar.
-                  </p>
+                } @else {
+                  @if (facade.coursesCache().length > 0) {
+                    <p class="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                      Haga clic en una fila para seleccionar el curso.
+                    </p>
+                  }
+                  <div class="section-card overflow-hidden !shadow-none border border-slate-200">
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-sm">
+                        <thead>
+                          <tr class="border-b border-slate-200 bg-slate-50 text-left">
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Curso</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Nivel</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Modalidad</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Sede</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Precio</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Acción</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (c of facade.coursesCache(); track c.id) {
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+                              (click)="facade.selectCourse(c)">
+                              <td class="py-2.5 px-4 font-semibold text-slate-900">{{ c.name }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ c.level }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ c.modality }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ c.campus }}</td>
+                              <td class="py-2.5 px-4 text-right font-semibold text-brand">S/ {{ c.basePrice }}</td>
+                              <td class="py-2.5 px-4 text-right">
+                                <span class="text-xs font-semibold text-brand">Seleccionar</span>
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td colspan="6" class="py-8 text-center text-slate-400">
+                                @if (facade.loading()) {
+                                  Cargando cursos...
+                                } @else {
+                                  No hay cursos habilitados para este estudiante o convenio.
+                                }
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 }
-
-                <div class="section-card overflow-hidden !shadow-none border border-slate-200">
-                  <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                      <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50 text-left">
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Curso</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Nivel</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Modalidad</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Sede</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Precio</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Estado</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (c of facade.coursesCache(); track c.id) {
-                          <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
-                            [class.bg-brand/5]="facade.course()?.id === c.id"
-                            (click)="facade.selectCourse(c)">
-                            <td class="py-2.5 px-4 font-semibold text-slate-900">{{ c.name }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ c.level }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ c.modality }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ c.campus }}</td>
-                            <td class="py-2.5 px-4 text-right font-semibold text-brand">S/ {{ c.basePrice }}</td>
-                            <td class="py-2.5 px-4 text-right">
-                              <span class="text-xs font-semibold"
-                                [class]="facade.course()?.id === c.id ? 'text-brand' : 'text-slate-400'">
-                                {{ facade.course()?.id === c.id ? 'Seleccionado' : 'Seleccionar' }}
-                              </span>
-                            </td>
-                          </tr>
-                        } @empty {
-                          <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-400">
-                              @if (facade.loading()) {
-                                Cargando cursos...
-                              } @else {
-                                No hay cursos habilitados para este estudiante o convenio.
-                              }
-                            </td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
               </div>
             }
             @case ('class') {
               <div class="section-card p-6 space-y-4">
-                <h2 class="text-lg font-bold">Clase / horario</h2>
-                @if (!facade.selectedClass() && facade.classesCache().length > 0) {
-                  <p class="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-                    Seleccione una clase con cupos disponibles para continuar.
+                <div>
+                  <h2 class="text-lg font-bold">Clase / horario</h2>
+                  <p class="text-sm text-slate-500 mt-1">
+                    @if (facade.selectedClass()) {
+                      Clase seleccionada. Puede continuar o elegir otra.
+                    } @else {
+                      Seleccione una clase con cupos disponibles.
+                    }
                   </p>
-                }
-                <div class="section-card overflow-hidden !shadow-none border border-slate-200">
-                  <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                      <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50 text-left">
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Clase</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Horario</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500">Docente</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-center">Cupos</th>
-                          <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Estado</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (c of facade.classesCache(); track c.id) {
-                          <tr class="border-b border-slate-100 transition-colors"
-                            [class.hover:bg-slate-50]="c.available > 0"
-                            [class.cursor-pointer]="c.available > 0"
-                            [class.opacity-50]="c.available <= 0"
-                            [class.bg-brand/5]="facade.selectedClass()?.id === c.id"
-                            (click)="c.available > 0 && facade.selectClass(c)">
-                            <td class="py-2.5 px-4 font-semibold">{{ c.name }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ c.days }} · {{ c.timeStart }}-{{ c.timeEnd }}</td>
-                            <td class="py-2.5 px-4 text-slate-600">{{ c.teacher }}</td>
-                            <td class="py-2.5 px-4 text-center text-xs">{{ c.enrolled }}/{{ c.capacity }} ({{ c.available }} libres)</td>
-                            <td class="py-2.5 px-4 text-right">
-                              <span class="text-xs font-semibold"
-                                [class]="facade.selectedClass()?.id === c.id ? 'text-brand' : c.available <= 0 ? 'text-red-500' : 'text-slate-400'">
-                                {{ facade.selectedClass()?.id === c.id ? 'Seleccionada' : c.available <= 0 ? 'Completa' : 'Seleccionar' }}
-                              </span>
-                            </td>
-                          </tr>
-                        } @empty {
-                          <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-400">
-                              @if (facade.course()) {
-                                No hay clases disponibles para el curso seleccionado.
-                              } @else {
-                                Seleccione un curso en el paso anterior.
-                              }
-                            </td>
-                          </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
+
+                @if (facade.selectedClass(); as selected) {
+                  <div class="rounded-xl bg-brand/5 p-4 border border-brand/20">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p class="font-bold text-lg text-slate-900">{{ selected.name }}</p>
+                        <p class="text-sm text-slate-600">{{ selected.days }} · {{ selected.timeStart }}-{{ selected.timeEnd }}</p>
+                        <p class="text-sm text-slate-600">Docente: {{ selected.teacher }}</p>
+                        <p class="text-xs text-slate-500 mt-1">{{ selected.enrolled }}/{{ selected.capacity }} matriculados · {{ selected.available }} cupos libres</p>
+                      </div>
+                      <button type="button" class="btn-ghost !text-sm shrink-0" (click)="facade.clearClass()">
+                        Cambiar clase
+                      </button>
+                    </div>
+                  </div>
+                } @else {
+                  @if (facade.classesCache().length > 0) {
+                    <p class="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                      Haga clic en una fila para seleccionar la clase.
+                    </p>
+                  }
+                  <div class="section-card overflow-hidden !shadow-none border border-slate-200">
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-sm">
+                        <thead>
+                          <tr class="border-b border-slate-200 bg-slate-50 text-left">
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Clase</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Horario</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500">Docente</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-center">Cupos</th>
+                            <th class="py-2 px-4 text-xs font-semibold text-slate-500 text-right">Acción</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (c of facade.classesCache(); track c.id) {
+                            <tr class="border-b border-slate-100 transition-colors"
+                              [class.hover:bg-slate-50]="c.available > 0"
+                              [class.cursor-pointer]="c.available > 0"
+                              [class.opacity-50]="c.available <= 0"
+                              (click)="c.available > 0 && facade.selectClass(c)">
+                              <td class="py-2.5 px-4 font-semibold">{{ c.name }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ c.days }} · {{ c.timeStart }}-{{ c.timeEnd }}</td>
+                              <td class="py-2.5 px-4 text-slate-600">{{ c.teacher }}</td>
+                              <td class="py-2.5 px-4 text-center text-xs">{{ c.enrolled }}/{{ c.capacity }} ({{ c.available }} libres)</td>
+                              <td class="py-2.5 px-4 text-right">
+                                <span class="text-xs font-semibold"
+                                  [class]="c.available <= 0 ? 'text-red-500' : 'text-brand'">
+                                  {{ c.available <= 0 ? 'Completa' : 'Seleccionar' }}
+                                </span>
+                              </td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td colspan="5" class="py-8 text-center text-slate-400">
+                                @if (facade.course()) {
+                                  No hay clases disponibles para el curso seleccionado.
+                                } @else {
+                                  Seleccione un curso en el paso anterior.
+                                }
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                }
               </div>
             }
             @case ('charges') {
@@ -396,6 +502,7 @@ export class EnrollmentWizardComponent implements OnInit {
   protected studentQuery = '';
   protected searchResults: EnrollmentStudent[] = [];
   protected payMethod: 'cash' | 'card' | 'transfer' | 'other' = 'cash';
+  protected readonly agreementChosen = signal(false);
 
   ngOnInit(): void {
     this.facade.init();
@@ -429,7 +536,17 @@ export class EnrollmentWizardComponent implements OnInit {
   protected onChangeStudent(): void {
     this.facade.clearStudent();
     this.studentQuery = '';
+    this.agreementChosen.set(false);
     this.loadInitialStudents();
+  }
+
+  protected chooseAgreement(id: number | null): void {
+    this.facade.selectAgreement(id);
+    this.agreementChosen.set(true);
+  }
+
+  protected changeAgreement(): void {
+    this.agreementChosen.set(false);
   }
 
   protected loadCourses(): void {

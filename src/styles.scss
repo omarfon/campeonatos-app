@@ -54,3 +54,6 @@
     transform: translateX(0);
   }
 }
+
+@import './app/features/student-portal/student-portal.theme.scss';
+@import './app/features/member-portal/member-portal.theme.scss';
