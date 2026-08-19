@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClassesFacade } from '../../facades/classes.facade';
@@ -12,7 +12,7 @@ import {
   getCapacityAvailability,
   CAPACITY_AVAILABILITY_LABELS,
 } from '../../models/class.model';
-import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef, ClassCampusRef } from '../../models/class.model';
+import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef } from '../../models/class.model';
 
 @Component({
   selector: 'app-class-list',
@@ -31,17 +31,6 @@ import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef, ClassCampusR
         <a routerLink="/clases/nueva" class="btn-primary shrink-0 self-start">+ Nueva clase</a>
       </div>
 
-      <!-- Alertas administrativas -->
-      @if (adminAlerts().length > 0 && !facade.loading()) {
-        <div class="section-card p-4 space-y-2" role="status">
-          @for (alert of adminAlerts(); track alert) {
-            <p class="text-sm text-amber-800 flex items-start gap-2">
-              <span aria-hidden="true">⚠</span> {{ alert }}
-            </p>
-          }
-        </div>
-      }
-
       <!-- Indicadores -->
       @if (facade.loading()) {
         <app-class-list-skeleton />
@@ -55,22 +44,26 @@ import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef, ClassCampusR
         }
       </div>
 
-      <!-- Buscador -->
-      <div class="section-card p-4">
-        <label for="class-search" class="sr-only">Buscar clase</label>
-        <input
-          id="class-search"
-          type="search"
-          class="input-modern w-full"
-          placeholder="Buscar clase..."
-          [(ngModel)]="searchQuery"
-          (ngModelChange)="onSearchChange()"
-        />
-      </div>
-
       <!-- Filtros -->
       <div class="section-card p-4 space-y-4">
-        <h2 class="text-sm font-semibold text-slate-700">Filtros</h2>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-sm font-semibold text-slate-700">Filtros</h2>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="btn-secondary !text-sm" (click)="clearFilters()">Limpiar filtros</button>
+            <button type="button" class="btn-primary !text-sm" (click)="applyFilters()">Aplicar</button>
+          </div>
+        </div>
+        <div>
+          <label for="class-search" class="block text-xs font-semibold text-slate-500 mb-1">Buscar clase</label>
+          <input
+            id="class-search"
+            type="search"
+            class="input-modern !text-sm w-full"
+            placeholder="Buscar clase..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+          />
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <label for="f-period" class="block text-xs font-semibold text-slate-500 mb-1">Periodo</label>
@@ -109,15 +102,6 @@ import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef, ClassCampusR
             </select>
           </div>
           <div>
-            <label for="f-campus" class="block text-xs font-semibold text-slate-500 mb-1">Sede</label>
-            <select id="f-campus" class="input-modern !text-sm w-full" [(ngModel)]="filterCampusId">
-              <option [ngValue]="0">Todas</option>
-              @for (s of campuses(); track s.id) {
-                <option [ngValue]="s.id">{{ s.name }}</option>
-              }
-            </select>
-          </div>
-          <div>
             <label for="f-modality" class="block text-xs font-semibold text-slate-500 mb-1">Modalidad</label>
             <select id="f-modality" class="input-modern !text-sm w-full" [(ngModel)]="filterModality">
               <option value="">Todas</option>
@@ -135,19 +119,6 @@ import { AcademicPeriod, Activity, ClassCourseRef, ClassTeacherRef, ClassCampusR
               }
             </select>
           </div>
-          <div>
-            <label for="f-avail" class="block text-xs font-semibold text-slate-500 mb-1">Disponibilidad</label>
-            <select id="f-avail" class="input-modern !text-sm w-full" [(ngModel)]="filterAvailability">
-              <option value="">Todas</option>
-              <option value="available">Con cupos</option>
-              <option value="last_spots">Últimos cupos</option>
-              <option value="full">Completas</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" class="btn-secondary !text-sm" (click)="clearFilters()">Limpiar filtros</button>
-          <button type="button" class="btn-primary !text-sm" (click)="applyFilters()">Aplicar</button>
         </div>
       </div>
 
@@ -261,16 +232,13 @@ export class ClassListPage implements OnInit {
   protected filterActivityId = 0;
   protected filterCourseId = 0;
   protected filterTeacherId = 0;
-  protected filterCampusId = 0;
   protected filterModality = '';
   protected filterStatus = '';
-  protected filterAvailability = '';
 
   protected readonly periods = signal<AcademicPeriod[]>([]);
   protected readonly activities = signal<Activity[]>([]);
   protected readonly courses = signal<ClassCourseRef[]>([]);
   protected readonly teachers = signal<ClassTeacherRef[]>([]);
-  protected readonly campuses = signal<ClassCampusRef[]>([]);
   protected readonly openMenuId = signal<number | null>(null);
 
   protected readonly statusLabels = ACADEMIC_CLASS_STATUS_LABELS;
@@ -294,7 +262,6 @@ export class ClassListPage implements OnInit {
     this.classService.getPeriods().subscribe(p => this.periods.set(p));
     this.classService.getActivities().subscribe(a => this.activities.set(a));
     this.classService.getTeachers().subscribe(t => this.teachers.set(t));
-    this.classService.getCampuses().subscribe(c => this.campuses.set(c));
     this.classService.getCoursesByActivity(0).subscribe(c => this.courses.set(c));
     this.facade.loadList();
   }
@@ -309,21 +276,6 @@ export class ClassListPage implements OnInit {
       { label: 'En borrador', value: s.draft },
     ];
   }
-
-  protected readonly adminAlerts = computed(() => {
-    const s = this.facade.stats();
-    const alerts: string[] = [];
-    if (s.withSpots > 0 && s.withSpots <= 6) {
-      alerts.push(`${Math.min(3, s.withSpots)} clases están próximas a completar cupos.`);
-    }
-    if (s.draft >= 2) {
-      alerts.push(`${s.draft} clases siguen en borrador.`);
-    }
-    if (s.full >= 1) {
-      alerts.push(`${s.full} clase(s) ya no tienen cupos disponibles.`);
-    }
-    return alerts.slice(0, 3);
-  });
 
   protected filteredCourses(): ClassCourseRef[] {
     if (!this.filterActivityId) return this.courses();
@@ -352,10 +304,8 @@ export class ClassListPage implements OnInit {
     this.filterActivityId = 0;
     this.filterCourseId = 0;
     this.filterTeacherId = 0;
-    this.filterCampusId = 0;
     this.filterModality = '';
     this.filterStatus = '';
-    this.filterAvailability = '';
     this.facade.clearFilters();
   }
 
@@ -414,10 +364,8 @@ export class ClassListPage implements OnInit {
       activityId: this.filterActivityId || undefined,
       courseId: this.filterCourseId || undefined,
       teacherId: this.filterTeacherId || undefined,
-      campusId: this.filterCampusId || undefined,
       modality: (this.filterModality as ClassModality) || undefined,
       status: (this.filterStatus as AcademicClassStatus) || undefined,
-      availability: (this.filterAvailability as 'available' | 'last_spots' | 'full') || undefined,
     };
   }
 }
