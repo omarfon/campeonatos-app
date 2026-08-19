@@ -48,6 +48,7 @@ const ICON_PATHS: Record<string, string> = {
   'credit-card': 'M1 4h22v16H1zM1 10h22',
   'user-check': 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM17 11l2 2 4-4',
   cube: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12',
+  'calendar-days': 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01',
   tag: 'M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82zM7 7h.01',
   briefcase: 'M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2',
   'clipboard-check': 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6v4H9V2zM9 12l2 2 4-4',
@@ -81,6 +82,15 @@ const NAV_ENTRIES: NavEntry[] = [
       { path: '/gestion/resultados', label: 'Resultados', icon: 'chart-bar' },
       { path: '/gestion/sanciones', label: 'Sanciones', icon: 'shield' },
       { path: '/gestion/estadisticas', label: 'Estadísticas', icon: 'trending' },
+    ],
+  },
+  {
+    label: 'Programación Académica',
+    icon: 'calendar-days',
+    children: [
+      { path: '/clases', label: 'Clases', icon: 'calendar-days' },
+      { path: '/academia/cursos', label: 'Cursos', icon: 'book' },
+      { path: '/academia/calendario', label: 'Calendario', icon: 'calendar' },
     ],
   },
   {

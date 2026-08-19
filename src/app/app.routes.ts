@@ -98,6 +98,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/academia/academia.routes').then((m) => m.ACADEMIA_ROUTES),
       },
       {
+        path: 'clases',
+        loadChildren: () => import('./features/classes/classes.routes').then((m) => m.CLASSES_ROUTES),
+      },
+      {
         path: 'matricula',
         loadChildren: () => import('./features/matricula/matricula.routes').then((m) => m.MATRICULA_ROUTES),
       },
